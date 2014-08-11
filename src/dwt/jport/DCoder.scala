@@ -45,11 +45,10 @@ class DCoder
   def join (seq: Seq[_ <: String], element: String): Unit = {
     for ((e, i) <- seq.view.zipWithIndex)
     {
+      append(e)
+
       if (i < seq.length - 1)
-      {
-        append(e)
         append(element)
-      }
     }
   }
 

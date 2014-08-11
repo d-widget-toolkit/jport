@@ -8,6 +8,8 @@ import com.sun.source.util.Trees
 import dwt.jport.writers.ClassWriter
 import org.eclipse.jdt.core.dom.TypeDeclaration
 import scala.util.DynamicVariable
+import org.eclipse.jdt.core.dom.SimpleType
+import org.eclipse.jdt.core.dom.Type
 
 object ClassAnalyzer
 {
@@ -28,14 +30,27 @@ class ClassAnalyzer
 
   def analyze (node: TypeDeclaration): Unit = {
     this.node = node
-    ClassWriter.write(node.getName.getIdentifier, modifiers, superclass, interfaces)
+    ClassWriter.write(node.getName.getIdentifier, modifiers, superclass,
+      interfaces)
   }
 
   def postAnalyze (node: TypeDeclaration): Unit = {
 
   }
 
-  def modifiers = ""
-  def superclass = ""
-  def interfaces = new Array[String](0)
+  private def modifiers = ""
+
+  private def superclass: String = nameOfType(node.getSuperclassType)
+
+  private def interfaces = node.superInterfaceTypes.
+    map(e => nameOfType(e.asInstanceOf[Type]))
+
+  private def nameOfType (typ: Type): String = {
+    if (typ == null) return null
+
+    if (typ.isSimpleType)
+      return typ.asInstanceOf[SimpleType].getName.getFullyQualifiedName
+
+    else null
+  }
 }

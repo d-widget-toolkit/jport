@@ -12,7 +12,7 @@ object ClassWriter extends Writer
       else superclass +: interfaces
 
     if (!bases.isEmpty)
-      buffer += ' '
+      buffer += " : "
 
     buffer.join(bases, ", ")
     buffer.append(nl, '{', nl, '}', nl, nl)
