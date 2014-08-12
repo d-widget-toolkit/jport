@@ -6,17 +6,21 @@ import org.eclipse.jdt.core.dom.AST
 import org.eclipse.jdt.core.dom.ASTVisitor
 import dwt.jport.analyzers.JPortAstVisitor
 
-class JPorter (private val filename: String)
+object JPorter
 {
-  def port() : Unit = {
+  def port (code: Array[Char]): String = {
     val parser = ASTParser.newParser(AST.JLS8)
-    parser.setSource(readFile(filename))
+    parser.setSource(code)
     parser.setKind(ASTParser.K_COMPILATION_UNIT)
     val compilationUnit = parser.createAST(null)
 
     compilationUnit.accept(new JPortAstVisitor)
+    DCoder.dcoder.toString()
   }
 
+  def port (code: String): String = port(code.toCharArray())
+  def portFromFile (filename: String): String = port(readFile(filename))
+  
   private def readFile (filename: String): Array[Char] = {
     Source.fromFile(filename).map(_.toChar).toArray
   }

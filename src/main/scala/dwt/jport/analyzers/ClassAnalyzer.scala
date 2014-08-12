@@ -26,8 +26,9 @@ class ClassAnalyzer
 
   def analyze (node: TypeDeclaration): Unit = {
     this.node = node
+
     ClassWriter.write(node.getName.getIdentifier, modifiers, superclass,
-      interfaces)
+      interfaces, !node.bodyDeclarations.isEmpty)
   }
 
   def postAnalyze (node: TypeDeclaration): Unit = {
