@@ -1,10 +1,6 @@
 package dwt.jport.analyzers
 
 import scala.collection.JavaConversions._
-import com.sun.source.tree.ClassTree
-import com.sun.source.tree.IdentifierTree
-import com.sun.source.tree.Tree
-import com.sun.source.util.Trees
 import dwt.jport.writers.ClassWriter
 import org.eclipse.jdt.core.dom.TypeDeclaration
 import scala.util.DynamicVariable

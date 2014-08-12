@@ -1,3 +1,5 @@
 .cache
 .DS_store
 /bin/
+target/
+.classpath
