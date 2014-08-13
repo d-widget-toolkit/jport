@@ -54,37 +54,56 @@ class Classes extends Spec
       }
     }
 
-    describe("with modifier")
+    describe("with modifiers")
     {
-      describe("public")
+      describe("abstract")
       {
         it("sucessfully converts to D")
         {
-          "public class Foo {}" should portTo ("class Foo {}")
+          "public abstract class Foo {}" should portTo ("abstract class Foo {}")
         }
       }
 
-      describe("none")
+      describe("final")
       {
         it("sucessfully converts to D")
         {
-          "class Foo {}" should portTo ("package class Foo {}")
+          "public final class Foo {}" should portTo ("final class Foo {}")
         }
       }
 
-      describe("protected")
+      describe("access")
       {
-        it("sucessfully converts to D")
+        describe("public")
         {
-          "protected class Foo {}" should portTo ("protected class Foo {}")
+          it("sucessfully converts to D")
+          {
+            "public class Foo {}" should portTo ("class Foo {}")
+          }
         }
-      }
 
-      describe("private")
-      {
-        it("sucessfully converts to D")
+        describe("none")
         {
-          "private class Foo {}" should portTo ("private class Foo {}")
+          it("sucessfully converts to D")
+          {
+            "class Foo {}" should portTo ("package class Foo {}")
+          }
+        }
+
+        describe("protected")
+        {
+          it("sucessfully converts to D")
+          {
+            "protected class Foo {}" should portTo ("protected class Foo {}")
+          }
+        }
+
+        describe("private")
+        {
+          it("sucessfully converts to D")
+          {
+            "private class Foo {}" should portTo ("private class Foo {}")
+          }
         }
       }
     }
