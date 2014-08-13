@@ -69,7 +69,6 @@ class JPorter(private val filename: Option[String])
   }
 
   private def checkCompilationErrors (unit: CompilationUnit): Unit = {
-    println(unit.getProblems.length)
     for (e <- unit.getProblems.filter(_.isError))
       diagnostic.error(filename.getOrElse(""), e.getSourceLineNumber,
         e.getMessage)

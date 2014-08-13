@@ -1,11 +1,14 @@
 package dwt.jport.analyzers
 
 import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 import dwt.jport.writers.ClassWriter
 import org.eclipse.jdt.core.dom.TypeDeclaration
 import scala.util.DynamicVariable
 import org.eclipse.jdt.core.dom.SimpleType
 import org.eclipse.jdt.core.dom.Type
+import org.eclipse.jdt.core.dom.Modifier
+import org.eclipse.jdt.core.dom.IExtendedModifier
 
 object ClassAnalyzer
 {
@@ -24,6 +27,17 @@ class ClassAnalyzer
 {
   private var node: TypeDeclaration = null
 
+  private val modifierMapping = Map(
+    Modifier.ABSTRACT -> "abstract",
+    Modifier.FINAL -> "final",
+    Modifier.PRIVATE -> "private",
+    Modifier.PROTECTED -> "protected",
+    Modifier.PUBLIC -> "public",
+    Modifier.STATIC -> "static",
+    Modifier.SYNCHRONIZED -> "synchronized",
+    Modifier.VOLATILE -> "volatile"
+  )
+
   def analyze (node: TypeDeclaration): Unit = {
     this.node = node
 
@@ -35,7 +49,10 @@ class ClassAnalyzer
 
   }
 
-  private def modifiers = ""
+  private def modifiers: String = {
+    val mods = node.modifiers.asInstanceOf[java.util.List[IExtendedModifier]]
+    Modifiers.convert(mods.asScala)
+  }
 
   private def superclass: String = nameOfType(node.getSuperclassType)
 

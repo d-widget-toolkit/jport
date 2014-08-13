@@ -12,7 +12,7 @@ class Classes extends Spec
     {
       it("sucessfully converts to D")
       {
-        "class Foo {}" shouldPortTo "class Foo {}"
+        "public class Foo {}" should portTo ("class Foo {}")
       }
     }
 
@@ -20,17 +20,17 @@ class Classes extends Spec
     {
       it("sucessfully converts to D")
       {
-        "class Foo extends Bar {}" shouldPortTo "class Foo : Bar {}"
+        "public class Foo extends Bar {}" should portTo ("class Foo : Bar {}")
       }
 
       describe("and interface")
       {
         it("sucessfully converts to D")
         {
-          val java = "class Foo extends Bar implements IBar {}"
+          val java = "public class Foo extends Bar implements IBar {}"
           val d = "class Foo : Bar, IBar {}"
 
-          java shouldPortTo d
+          java should portTo (d)
         }
       }
     }
@@ -39,17 +39,52 @@ class Classes extends Spec
     {
       it("sucessfully converts to D")
       {
-        "class Foo implements Bar {}" shouldPortTo "class Foo : Bar {}"
+        "public class Foo implements Bar {}" should portTo ("class Foo : Bar {}")
       }
 
       describe("with multiple interfaces")
       {
         it("sucessfully converts to D")
         {
-          val java = "class Foo implements Bar, Baz {}"
+          val java = "public class Foo implements Bar, Baz {}"
           val d = "class Foo : Bar, Baz {}"
 
-          java shouldPortTo d
+          java should portTo (d)
+        }
+      }
+    }
+
+    describe("with modifier")
+    {
+      describe("public")
+      {
+        it("sucessfully converts to D")
+        {
+          "public class Foo {}" should portTo ("class Foo {}")
+        }
+      }
+
+      describe("none")
+      {
+        it("sucessfully converts to D")
+        {
+          "class Foo {}" should portTo ("package class Foo {}")
+        }
+      }
+
+      describe("protected")
+      {
+        it("sucessfully converts to D")
+        {
+          "protected class Foo {}" should portTo ("protected class Foo {}")
+        }
+      }
+
+      describe("private")
+      {
+        it("sucessfully converts to D")
+        {
+          "private class Foo {}" should portTo ("private class Foo {}")
         }
       }
     }

@@ -2,13 +2,14 @@ package spec.support
 
 import org.scalatest.FunSpec
 import org.scalatest.Matchers
-
 import dwt.jport.JPorter
+import org.scalatest.matchers.Matcher
+import org.scalatest.matchers.MatchResult
 
 abstract class Spec extends FunSpec with Matchers
 {
-  implicit def stringToPortToMatcher (javaCode: String) = {
-    new ShouldPortToMatcher(javaCode)
+  def portTo (expected: String) = be(expected) compose { (java: String) =>
+    JPorter.port(java)
   }
 
   def code (code: String): String = trimCode(code).trim
