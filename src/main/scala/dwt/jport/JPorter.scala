@@ -15,7 +15,9 @@ object JPorter
     val compilationUnit = parser.createAST(null)
 
     compilationUnit.accept(new JPortAstVisitor)
-    DCoder.dcoder.toString()
+    val result = DCoder.dcoder.result
+    DCoder.dcoder.reset()
+    result
   }
 
   def port (code: String): String = port(code.toCharArray())

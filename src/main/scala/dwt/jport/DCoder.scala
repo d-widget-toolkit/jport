@@ -18,14 +18,16 @@ class DCoder
 {
   import DCoder.nl
 
-  private val buffer = new StringBuilder
+  private var buffer = new StringBuilder
   private var level = 0
   private var indent_? = false
 
-  override def toString = {
+  def result = {
     stripNewlines()
-    buffer.toString
+    buffer.result
   }
+
+  override def toString = result
 
   def += [T] (t: T): Unit = append(t)
   def += (c: nl.type): Unit = append(nl)
@@ -53,12 +55,14 @@ class DCoder
   }
 
   def stripNewlines (): Unit = {
-	val start = (buffer.length - 1).to(0).by(-1).find(buffer.charAt(_) != '\n').
+    val start = (buffer.length - 1).to(0).by(-1).find(buffer.charAt(_) != '\n').
     getOrElse(buffer.length)
 
     if (start < buffer.length)
       buffer.delete(start + 1, buffer.length)
   }
+
+  def reset (): Unit = buffer = new StringBuilder
 
   private def doIndent () = if (indent_?) buffer.append("\t" * level)
 }
