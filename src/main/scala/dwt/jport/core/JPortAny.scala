@@ -1,8 +1,7 @@
 package dwt.jport.core
 
-class JPortAny (val obj: String)
+class JPortAny[T] (val obj: T)
 {
-  type T = String
   def tap (block: T => Unit): T = {
     block.apply(obj)
     obj
@@ -11,6 +10,5 @@ class JPortAny (val obj: String)
 
 object JPortAny
 {
-  type T = String
-  implicit def anyToJPortAny (obj: T) = new JPortAny(obj)
+  implicit def anyToJPortAny[T] (obj: T) = new JPortAny(obj)
 }

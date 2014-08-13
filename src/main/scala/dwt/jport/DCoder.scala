@@ -11,7 +11,7 @@ object DCoder
   }
 
   private var _dcoder = new DynamicVariable[DCoder](new DCoder)
-  val dcoder = _dcoder.value
+  def dcoder = _dcoder.value
 }
 
 class DCoder
