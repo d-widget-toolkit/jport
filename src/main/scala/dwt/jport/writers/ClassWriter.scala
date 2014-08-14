@@ -1,41 +1,68 @@
 package dwt.jport.writers
 
-object ClassWriter extends Writer
+import dwt.jport.ast.TypeDeclaration
+
+object ClassWriter extends Writer[TypeDeclaration]
 {
-  def write (name: String, modifiers: String, superclass: String,
-    interfaces: Seq[String], generics: Iterable[String],
-    hasMembers: Boolean): Unit = {
+  def write(node: TypeDeclaration): Unit = {
+    this.node = node
 
-    if (modifiers.nonEmpty)
-      buffer.append(modifiers, ' ')
+    writeModifiers
+    writeDeclaration
+    writeTypeParameters
+    writeBases
+    writeTemplateConstraints
+    writeBody
+  }
 
-    buffer.append("class", ' ', name)
+  def postWrite = buffer.append('}', nl, nl)
 
-    if (generics.nonEmpty) {
-      buffer.append(' ', '(')
-      buffer.join(generics, ", ")
-      buffer.append(')')
+  private def writeModifiers =
+    if (node.modifiers.nonEmpty) buffer.append(node.modifiers, ' ')
+
+  private def writeDeclaration = {
+    buffer.append(typeName, ' ', node.name)
+  }
+
+  private def writeTypeParameters: Unit = {
+    if (node.typeParameters.isEmpty) return
+
+    val params = node.typeParameters.map { e =>
+      if (e._2.length == 1) s"${e._1} : ${e._2.head}" else e._1
     }
 
-    val bases: Seq[String] = if (superclass == null) interfaces
-      else superclass +: interfaces
+    buffer.append(' ', '(')
+    buffer.join(params)
+    buffer.append(')')
+  }
 
-    if (!bases.isEmpty)
-      buffer += " : "
+  private def writeBases = {
+    val bases = if (node.superclass == null) node.interfaces
+      else node.superclass +: node.interfaces
 
-    buffer.join(bases, ", ")
+    if (bases.nonEmpty)
+    {
+      buffer :+ " : "
+      buffer.join(bases)
+    }
+  }
 
-    if (hasMembers)
-      buffer.append(nl)
+  private def writeTemplateConstraints: Unit = {
+    val constraints = node.multipleBoundTypeParameters.
+      flatMap(p => p._2.map(e => s"is(${p._1} : ${e})"))
 
-    else
-      buffer.append(' ')
+    if (constraints.isEmpty) return
 
-    buffer.append('{')
+    buffer :+ " if ("
+    buffer.join(constraints, " && ")
+    buffer :+ ')'
+  }
 
-    if (hasMembers)
-      buffer.append(nl)
+  private def typeName = if (node.isInterface) "interface" else "class"
 
-    buffer.append('}', nl, nl)
+  private def writeBody = {
+    if (node.hasMembers) buffer :+ nl else buffer :+ ' '
+    buffer :+ '{'
+    if (node.hasMembers) buffer :+ nl
   }
 }

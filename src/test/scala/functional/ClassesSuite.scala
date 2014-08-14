@@ -56,12 +56,116 @@ class ClassesSuite extends Suite {
     "private class Foo {}" should portTo("private class Foo {}")
   }
 
-  // generic classes
-  test("basic generic class") {
+  // type parameters
+  test("class with type parameter") {
     "public class Foo<T> {}" should portTo("class Foo (T) {}")
   }
 
-  test("gerneric class with multiple type parameters") {
+  test("class with multiple type parameters") {
     "public class Foo<A, B, C> {}" should portTo("class Foo (A, B, C) {}")
+  }
+
+  test("class with bounded type parameter") {
+    val java = code {
+      """
+      public class A {}
+      public class Foo<T extends A> {}
+      """
+    }
+
+    val d = code {
+      """
+      class A {}
+
+      class Foo (T : A) {}
+      """
+    }
+
+    java should portTo(d)
+  }
+
+  test("class with multiple bounded type parameters") {
+    val java = code {
+      """
+      public class A {}
+      public class Foo<T extends A, U extends A> {}
+      """
+    }
+
+    val d = code {
+      """
+      class A {}
+
+      class Foo (T : A, U : A) {}
+      """
+    }
+
+    java should portTo(d)
+  }
+
+  test("class with type parameter with multiple bounds") {
+    val java = code {
+      """
+      public class A {}
+      public interface B {}
+      public class Foo<T extends A & B> {}
+      """
+    }
+
+    val d = code {
+      """
+      class A {}
+
+      interface B {}
+
+      class Foo (T) if (is(T : A) && is(T : B)) {}
+      """
+    }
+
+    java should portTo(d)
+  }
+
+  test("class with multiple type parameters with multiple bounds") {
+    val java = code {
+      """
+      public class A {}
+      public interface B {}
+      public class Foo<T extends A & B, U extends A & B> {}
+      """
+    }
+
+    val d = code {
+      """
+      class A {}
+
+      interface B {}
+
+      class Foo (T, U) if (is(T : A) && is(T : B) && is(U : A) && is(U : B)) {}
+      """
+    }
+
+    java should portTo(d)
+  }
+
+  test("class with mixed bounded type parameters") {
+    val java = code {
+      """
+      public class A {}
+      public interface B {}
+      public class Foo<T, U extends A, W extends A & B> {}
+      """
+    }
+
+    val d = code {
+      """
+      class A {}
+
+      interface B {}
+
+      class Foo (T, U : A, W) if (is(W : A) && is(W : B)) {}
+      """
+    }
+
+    java should portTo(d)
   }
 }

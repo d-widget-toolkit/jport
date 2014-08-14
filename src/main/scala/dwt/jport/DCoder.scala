@@ -31,6 +31,8 @@ class DCoder
 
   def += [T] (t: T): Unit = append(t)
   def += (c: nl.type): Unit = append(nl)
+  def :+ [T] (t: T): Unit = append(t)
+  def :+ (c: nl.type): Unit = append(nl)
 
   def append [T] (args: T*): Unit = {
     doIndent()
@@ -44,7 +46,7 @@ class DCoder
     level -= 1
   }
 
-  def join (iterable: Iterable[_ <: String], separator: String): Unit = {
+  def join (iterable: Iterable[_ <: String], separator: String = ", "): Unit = {
 		var first = true
 
     for (e <- iterable) {

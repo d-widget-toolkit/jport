@@ -13,11 +13,10 @@ class Suite extends FunSuite with Matchers {
 
   def trimCode(code: String) = {
     val firstBlankLine = code.linesWithSeparators.find(_ startsWith " ")
-    var margin = firstBlankLine.getOrElse("").takeWhile(_ == ' ').length
+    val margin = firstBlankLine.getOrElse("").takeWhile(_ == ' ').length
 
-    if (margin > 0)
-      margin -= 1
-
-    code.linesWithSeparators.map(e => e.slice(margin, e.length)).mkString.trim
+    code.linesWithSeparators.map { e =>
+      if (e == "\n") e else e.slice(margin, e.length)
+    }.mkString
   }
 }
