@@ -1,12 +1,14 @@
 package functional
 
 import functional.support.Suite
+import dwt.jport.JPorter
 
 class ClassesSuite extends Suite {
 	test("empty, simple class") {
 		"public class Foo {}" should portTo("class Foo {}")
 	}
 
+	// superclass and interface
 	test("superclass") {
 		"public class Foo extends Bar {}" should portTo("class Foo : Bar {}")
 	}
@@ -29,6 +31,7 @@ class ClassesSuite extends Suite {
 		java should portTo(d)
 	}
 
+	// modifiers
 	test("abstract modifier") {
 		"public abstract class Foo {}" should portTo("abstract class Foo {}")
 	}
@@ -51,5 +54,14 @@ class ClassesSuite extends Suite {
 
 	test("private access modifier") {
 		"private class Foo {}" should portTo("private class Foo {}")
+	}
+
+	// generic classes
+	test("basic generic class") {
+		"public class Foo<T> {}" should portTo("class Foo (T) {}")
+	}
+
+	test("gerneric class with multiple type parameters") {
+		"public class Foo<A, B, C> {}" should portTo("class Foo (A, B, C) {}")
 	}
 }

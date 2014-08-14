@@ -9,6 +9,7 @@ import org.eclipse.jdt.core.dom.SimpleType
 import org.eclipse.jdt.core.dom.Type
 import org.eclipse.jdt.core.dom.Modifier
 import org.eclipse.jdt.core.dom.IExtendedModifier
+import org.eclipse.jdt.core.dom.TypeParameter
 
 object ClassAnalyzer
 {
@@ -25,6 +26,8 @@ object ClassAnalyzer
 
 class ClassAnalyzer
 {
+	private type JavaList[T] = java.util.List[T]
+
   private var node: TypeDeclaration = null
 
   private val modifierMapping = Map(
@@ -42,7 +45,7 @@ class ClassAnalyzer
     this.node = node
 
     ClassWriter.write(node.getName.getIdentifier, modifiers, superclass,
-      interfaces, !node.bodyDeclarations.isEmpty)
+      interfaces, generics, !node.bodyDeclarations.isEmpty)
   }
 
   def postAnalyze (node: TypeDeclaration): Unit = {
@@ -67,4 +70,8 @@ class ClassAnalyzer
 
     else null
   }
+
+  def generics =
+  	node.typeParameters.asInstanceOf[JavaList[TypeParameter]].
+  		map(_.getName.toString)
 }

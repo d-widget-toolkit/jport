@@ -44,14 +44,20 @@ class DCoder
     level -= 1
   }
 
-  def join (seq: Seq[_ <: String], element: String): Unit = {
-    for ((e, i) <- seq.view.zipWithIndex)
-    {
-      append(e)
+  def join (iterable: Iterable[_ <: String], separator: String): Unit = {
+  	var first = true
 
-      if (i < seq.length - 1)
-        append(element)
-    }
+  	for (e <- iterable) {
+  		if (first) {
+  			append(e)
+  			first = false
+  		}
+
+  		else {
+  			append(separator)
+  			append(e)
+  		}
+  	}
   }
 
   def stripNewlines (): Unit = {
