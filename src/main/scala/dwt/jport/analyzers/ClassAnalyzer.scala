@@ -26,7 +26,7 @@ object ClassAnalyzer
 
 class ClassAnalyzer
 {
-	private type JavaList[T] = java.util.List[T]
+  private type JavaList[T] = java.util.List[T]
 
   private var node: TypeDeclaration = null
 
@@ -72,6 +72,6 @@ class ClassAnalyzer
   }
 
   def generics =
-  	node.typeParameters.asInstanceOf[JavaList[TypeParameter]].
-  		map(_.getName.toString)
+    node.typeParameters.asInstanceOf[JavaList[TypeParameter]].
+      map(_.getName.toString)
 }

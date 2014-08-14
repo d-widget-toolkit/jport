@@ -56,9 +56,9 @@ object Util
 
     var result = protection.toString
 
-	if (attribute != Attribute.NONE)
-	  result += " " + attribute.toString
+    if (attribute != Attribute.NONE)
+      result += " " + attribute.toString
 
-	result
+    result
   }
 }

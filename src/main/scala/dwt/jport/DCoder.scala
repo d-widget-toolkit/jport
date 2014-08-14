@@ -45,24 +45,24 @@ class DCoder
   }
 
   def join (iterable: Iterable[_ <: String], separator: String): Unit = {
-  	var first = true
+		var first = true
 
-  	for (e <- iterable) {
-  		if (first) {
-  			append(e)
-  			first = false
-  		}
+    for (e <- iterable) {
+      if (first) {
+        append(e)
+        first = false
+      }
 
-  		else {
-  			append(separator)
-  			append(e)
-  		}
-  	}
+      else {
+        append(separator)
+        append(e)
+      }
+    }
   }
 
   def stripNewlines (): Unit = {
     val start = (buffer.length - 1).to(0).by(-1).find(buffer.charAt(_) != '\n').
-    getOrElse(buffer.length)
+      getOrElse(buffer.length)
 
     if (start < buffer.length)
       buffer.delete(start + 1, buffer.length)

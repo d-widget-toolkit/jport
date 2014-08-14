@@ -3,8 +3,8 @@ package dwt.jport.writers
 object ClassWriter extends Writer
 {
   def write (name: String, modifiers: String, superclass: String,
-  		interfaces: Seq[String], generics: Iterable[String],
-  		hasMembers: Boolean): Unit = {
+    interfaces: Seq[String], generics: Iterable[String],
+    hasMembers: Boolean): Unit = {
 
     if (modifiers.nonEmpty)
       buffer.append(modifiers, ' ')
@@ -12,9 +12,9 @@ object ClassWriter extends Writer
     buffer.append("class", ' ', name)
 
     if (generics.nonEmpty) {
-    	buffer.append(' ', '(')
-    	buffer.join(generics, ", ")
-    	buffer.append(')')
+      buffer.append(' ', '(')
+      buffer.join(generics, ", ")
+      buffer.append(')')
     }
 
     val bases: Seq[String] = if (superclass == null) interfaces
