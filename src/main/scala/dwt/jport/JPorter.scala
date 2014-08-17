@@ -14,26 +14,23 @@ import org.eclipse.jdt.core.compiler.IProblem
 import dwt.jport.core.JPortAny._
 import dwt.jport.analyzers.JPortAstVisitor
 
-object JPorter
-{
-  def port (code: Array[Char], filename: Option[String] = Option.empty[String]):
-    String = (new JPorter(filename)).port(code)
+object JPorter {
+  def port(code: Array[Char], filename: Option[String] = Option.empty[String]): String = (new JPorter(filename)).port(code)
 
-  def port (code: String): String = port(code.toCharArray())
+  def port(code: String): String = port(code.toCharArray())
 
-  def portFromFile (filename: String): String =
+  def portFromFile(filename: String): String =
     port(readFile(filename), Option(filename))
- 
-  private def readFile (filename: String): Array[Char] =
+
+  private def readFile(filename: String): Array[Char] =
     Source.fromFile(filename).map(_.toChar).toArray
 }
 
-class JPorter(private val filename: Option[String])
-{
+class JPorter(private val filename: Option[String]) {
   private var _parser: ASTParser = null
   private val diagnostic = new Diagnostic
 
-  def port (code: Array[Char]): String = {
+  def port(code: Array[Char]): String = {
     parser.setUnitName(filename.getOrElse(null))
     parser.setSource(code)
     val unit = parser.createAST(null).asInstanceOf[CompilationUnit]
@@ -58,17 +55,16 @@ class JPorter(private val filename: Option[String])
   }
 
   private def compilerOptions = defaultCompilerOptions
-  
+
   private def defaultCompilerOptions: Map[String, String] = {
     Map(
       JavaCore.COMPILER_SOURCE -> "1.7",
       JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM -> "1.7",
       JavaCore.COMPILER_COMPLIANCE -> "1.7",
-      JavaCore.COMPILER_DOC_COMMENT_SUPPORT -> "enabled"
-    )
+      JavaCore.COMPILER_DOC_COMMENT_SUPPORT -> "enabled")
   }
 
-  private def checkCompilationErrors (unit: CompilationUnit): Unit = {
+  private def checkCompilationErrors(unit: CompilationUnit): Unit = {
     for (e <- unit.getProblems.filter(_.isError))
       diagnostic.error(filename.getOrElse(""), e.getSourceLineNumber,
         e.getMessage)

@@ -4,10 +4,8 @@ import javax.lang.model.element.Modifier
 import scala.collection.GenTraversableOnce
 import scala.collection.mutable.ArrayBuffer
 
-object Util
-{
-  private object Protection extends Enumeration
-  {
+object Util {
+  private object Protection extends Enumeration {
     type Protection = Value
 
     val PACKAGE = Value("package")
@@ -15,7 +13,7 @@ object Util
     val PROTECTED = Value("protected")
     val PRIVATE = Value("private")
 
-    def fromModifier (value: Modifier) = value match {
+    def fromModifier(value: Modifier) = value match {
       case Modifier.PUBLIC => PUBLIC
       case Modifier.PROTECTED => PROTECTED
       case Modifier.PRIVATE => PRIVATE
@@ -23,8 +21,7 @@ object Util
     }
   }
 
-  private object Attribute extends Enumeration
-  {
+  private object Attribute extends Enumeration {
     type Attribute = Value
 
     val ABSTRACT = Value("abstract")
@@ -32,7 +29,7 @@ object Util
     val FINAL = Value("final")
     val NONE = Value("")
 
-    def fromModifier (value: Modifier) = value match {
+    def fromModifier(value: Modifier) = value match {
       case Modifier.ABSTRACT => ABSTRACT
       case Modifier.STATIC => STATIC
       case Modifier.FINAL => FINAL
@@ -40,14 +37,13 @@ object Util
     }
   }
 
-  def modifiersToString (modifiers: GenTraversableOnce[javax.lang.model.element.Modifier]): String = {
+  def modifiersToString(modifiers: GenTraversableOnce[javax.lang.model.element.Modifier]): String = {
     val protection = modifiers.find(e => Protection.values.contains(Protection.apply(e.ordinal))).
       getOrElse(Protection.PACKAGE)
 
     var attribute = Attribute.NONE
 
-    for (e <- modifiers)
-    {
+    for (e <- modifiers) {
       val en = Attribute.apply(e.ordinal)
 
       if (Attribute.values.contains(en))

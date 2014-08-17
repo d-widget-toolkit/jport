@@ -3,10 +3,8 @@ package dwt.jport
 import scala.collection.mutable.StringBuilder
 import scala.util.DynamicVariable
 
-object DCoder
-{
-  object nl
-  {
+object DCoder {
+  object nl {
     override def toString = "\n"
   }
 
@@ -14,8 +12,7 @@ object DCoder
   def dcoder = _dcoder.value
 }
 
-class DCoder
-{
+class DCoder {
   import DCoder.nl
 
   private var buffer = new StringBuilder
@@ -29,25 +26,25 @@ class DCoder
 
   override def toString = result
 
-  def += [T] (t: T): Unit = append(t)
-  def += (c: nl.type): Unit = append(nl)
-  def :+ [T] (t: T): Unit = append(t)
-  def :+ (c: nl.type): Unit = append(nl)
+  def +=[T](t: T): Unit = append(t)
+  def +=(c: nl.type): Unit = append(nl)
+  def :+[T](t: T): Unit = append(t)
+  def :+(c: nl.type): Unit = append(nl)
 
-  def append [T] (args: T*): Unit = {
+  def append[T](args: T*): Unit = {
     doIndent()
     args.foreach(buffer.append(_))
     indent_? = false
   }
 
-  def indent (block: => Unit): Unit = {
+  def indent(block: => Unit): Unit = {
     level += 1
     block
     level -= 1
   }
 
-  def join (iterable: Iterable[_ <: String], separator: String = ", "): Unit = {
-		var first = true
+  def join(iterable: Iterable[_ <: String], separator: String = ", "): Unit = {
+    var first = true
 
     for (e <- iterable) {
       if (first) {
@@ -62,7 +59,7 @@ class DCoder
     }
   }
 
-  def stripNewlines (): Unit = {
+  def stripNewlines(): Unit = {
     val start = (buffer.length - 1).to(0).by(-1).find(buffer.charAt(_) != '\n').
       getOrElse(buffer.length)
 
@@ -70,7 +67,7 @@ class DCoder
       buffer.delete(start + 1, buffer.length)
   }
 
-  def reset (): Unit = buffer = new StringBuilder
+  def reset(): Unit = buffer = new StringBuilder
 
-  private def doIndent () = if (indent_?) buffer.append("\t" * level)
+  private def doIndent() = if (indent_?) buffer.append("\t" * level)
 }

@@ -14,7 +14,7 @@ class ModifiersSpec extends Spec {
   import Modifier.ModifierKeyword
   import Modifiers.convert
 
-  def newModifier (keyword: Modifier.ModifierKeyword): Modifier = {
+  def newModifier(keyword: Modifier.ModifierKeyword): Modifier = {
     val cls = Class.forName("org.eclipse.jdt.core.dom.Modifier")
     val con = cls.getDeclaredConstructors()(0).tap(_.setAccessible(true))
     con.setAccessible(true)
@@ -38,7 +38,7 @@ class ModifiersSpec extends Spec {
   describe("Modifiers") {
     describe("convert") {
       it("converts a list of IExtendedModifier to a string of D modifiers") {
-        val modifiers = Array(PRIVATE_KEYWORD, FINAL_KEYWORD,SYNCHRONIZED_KEYWORD)
+        val modifiers = Array(PRIVATE_KEYWORD, FINAL_KEYWORD, SYNCHRONIZED_KEYWORD)
         modifiers should convertTo("private final synchronized")
       }
 
@@ -87,7 +87,7 @@ class ModifiersSpec extends Spec {
         }
 
         context("when virtual method") {
-          def convert (modifiers: Iterable[IExtendedModifier]) =
+          def convert(modifiers: Iterable[IExtendedModifier]) =
             Modifiers.convert(modifiers, true)
 
           it("converts 'private' to 'private'") {

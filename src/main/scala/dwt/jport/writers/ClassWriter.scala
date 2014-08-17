@@ -2,8 +2,7 @@ package dwt.jport.writers
 
 import dwt.jport.ast.TypeDeclaration
 
-object ClassWriter extends Writer[TypeDeclaration]
-{
+object ClassWriter extends Writer[TypeDeclaration] {
   def write(node: TypeDeclaration): Unit = {
     this.node = node
 
@@ -15,14 +14,12 @@ object ClassWriter extends Writer[TypeDeclaration]
     writeBody
   }
 
-  def postWrite = buffer.append('}', nl, nl)
+  def postWrite(): Unit = buffer.append('}', nl, nl)
 
   private def writeModifiers =
     if (node.modifiers.nonEmpty) buffer.append(node.modifiers, ' ')
 
-  private def writeDeclaration = {
-    buffer.append(typeName, ' ', node.name)
-  }
+  private def writeDeclaration = buffer.append(typeName, ' ', node.name)
 
   private def writeTypeParameters: Unit = {
     if (node.typeParameters.isEmpty) return
@@ -38,10 +35,9 @@ object ClassWriter extends Writer[TypeDeclaration]
 
   private def writeBases = {
     val bases = if (node.superclass == null) node.interfaces
-      else node.superclass +: node.interfaces
+    else node.superclass +: node.interfaces
 
-    if (bases.nonEmpty)
-    {
+    if (bases.nonEmpty) {
       buffer :+ " : "
       buffer.join(bases)
     }

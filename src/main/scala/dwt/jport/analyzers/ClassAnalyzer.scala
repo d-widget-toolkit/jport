@@ -14,10 +14,9 @@ import org.eclipse.jdt.core.dom.SimpleName
 import org.eclipse.jdt.core.dom.QualifiedName
 import dwt.jport.ast.TypeDeclaration
 
-object ClassAnalyzer
-{
-  def analyze (node: JdtTypeDeclaration) =
+object ClassAnalyzer {
+  def analyze(node: JdtTypeDeclaration) =
     ClassWriter.write(new TypeDeclaration(node))
 
-  def postAnalyze (node: JdtTypeDeclaration) = ClassWriter.postWrite
+  def postAnalyze(node: JdtTypeDeclaration) = ClassWriter.postWrite
 }

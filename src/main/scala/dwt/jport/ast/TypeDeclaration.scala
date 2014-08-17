@@ -54,12 +54,11 @@ class TypeDeclaration(node: JdtTypeDeclaration) extends AstNode(node) {
     Modifier.PUBLIC -> "public",
     Modifier.STATIC -> "static",
     Modifier.SYNCHRONIZED -> "synchronized",
-    Modifier.VOLATILE -> "volatile"
-  )
+    Modifier.VOLATILE -> "volatile")
 
   private def simpleTypeBounds(bounds: JavaList[_]) =
     bounds.asInstanceOf[JavaList[Type]].
-    filter(_.isSimpleType).map(_.asInstanceOf[SimpleType])
+      filter(_.isSimpleType).map(_.asInstanceOf[SimpleType])
 
   private def namesOfBounds(bounds: Buffer[SimpleType]) = bounds.map { e =>
     e.getName match {
