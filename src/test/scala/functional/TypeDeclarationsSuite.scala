@@ -3,7 +3,7 @@ package functional
 import functional.support.Suite
 import dwt.jport.JPorter
 
-class ClassesSuite extends Suite {
+class TypeDeclarationsSuite extends Suite {
   test("empty, simple class") {
     "public class Foo {}" should portTo("class Foo {}")
   }

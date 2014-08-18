@@ -2,7 +2,7 @@ package dwt.jport.writers
 
 import dwt.jport.ast.TypeDeclaration
 
-object ClassWriter extends Writer[TypeDeclaration] {
+object TypeDeclarationWriter extends Writer[TypeDeclaration] {
   def write(node: TypeDeclaration): Unit = {
     this.node = node
 
