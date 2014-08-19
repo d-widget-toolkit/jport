@@ -5,7 +5,6 @@ import org.eclipse.jdt.core.dom.{ TypeDeclaration => JdtTypeDeclaration }
 
 import dwt.jport.ast.TypeDeclaration
 import dwt.jport.writers.TypeDeclarationWriter
-import dwt.jport.writers.TypeDeclarationWriter
 
 class JPortAstVisitor extends ASTVisitor {
   override def visit(node: JdtTypeDeclaration) = {

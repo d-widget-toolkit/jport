@@ -19,5 +19,6 @@ libraryDependencies ++= Seq(
   "org.eclipse.equinox" % "common" % "3.6.200-v20130402-1505",
   "org.eclipse.equinox" % "preferences" % "3.5.200-v20140224-1527",
   "org.eclipse.tycho" % "org.eclipse.jdt.core" % "3.10.0.v20140604-1726",
+  "com.github.scala-incubator.io" % "scala-io-file_2.11" % "0.4.3-1",
   "org.scalatest" % "scalatest_2.11" % "2.2.1" % Test
 )

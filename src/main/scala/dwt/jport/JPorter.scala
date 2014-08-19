@@ -15,23 +15,40 @@ import dwt.jport.core.JPortAny._
 import dwt.jport.analyzers.JPortAstVisitor
 
 object JPorter {
-  def port(code: Array[Char], filename: Option[String] = Option.empty[String]): String = (new JPorter(filename)).port(code)
+  private val filename: String = null
+  private val classpathEntries = Array(".")
+  private val sourcepathEntries = Array(".")
+  private val includeRunningVMBootclasspath = true
 
-  def port(code: String): String = port(code.toCharArray())
+  def port(code: Array[Char], filename: String, sourcepathEntries: Array[String],
+    classpathEntries: Array[String], includeRunningVMBootclasspath: Boolean): String =
+    new JPorter(filename, sourcepathEntries, classpathEntries, includeRunningVMBootclasspath).port(code)
 
-  def portFromFile(filename: String): String =
-    port(readFile(filename), Option(filename))
+  def port(code: String, filename: String = JPorter.filename,
+    sourcepathEntries: Array[String] = JPorter.sourcepathEntries,
+    classpathEntries: Array[String] = JPorter.classpathEntries,
+    includeRunningVMBootclasspath: Boolean = JPorter.includeRunningVMBootclasspath): String =
+    port(code.toCharArray(), filename, sourcepathEntries, classpathEntries, includeRunningVMBootclasspath)
+
+  def portFromFile(filename: String,
+    sourcepathEntries: Array[String] = JPorter.sourcepathEntries,
+    classpathEntries: Array[String] = JPorter.classpathEntries,
+    includeRunningVMBootclasspath: Boolean = JPorter.includeRunningVMBootclasspath): String =
+    port(readFile(filename), filename, sourcepathEntries, classpathEntries, includeRunningVMBootclasspath)
 
   private def readFile(filename: String): Array[Char] =
     Source.fromFile(filename).map(_.toChar).toArray
 }
 
-class JPorter(private val filename: Option[String]) {
+class JPorter(val filename: String = JPorter.filename,
+  val sourcepathEntries: Array[String] = JPorter.sourcepathEntries,
+  val classpathEntries: Array[String] = JPorter.classpathEntries,
+  val includeRunningVMBootclasspath: Boolean = JPorter.includeRunningVMBootclasspath) {
+
   private var _parser: ASTParser = null
   private val diagnostic = new Diagnostic
 
   def port(code: Array[Char]): String = {
-    parser.setUnitName(filename.getOrElse(null))
     parser.setSource(code)
     val unit = parser.createAST(null).asInstanceOf[CompilationUnit]
     checkCompilationErrors(unit)
@@ -48,8 +65,11 @@ class JPorter(private val filename: Option[String]) {
     if (_parser != null) return _parser
 
     _parser = ASTParser.newParser(AST.JLS8)
+    _parser.setUnitName(filename)
     _parser.setResolveBindings(true)
     _parser.setCompilerOptions(compilerOptions)
+    _parser.setEnvironment(classpathEntries, sourcepathEntries, null,
+      includeRunningVMBootclasspath)
     //parser.setKind(ASTParser.K_COMPILATION_UNIT)
     _parser
   }
@@ -66,7 +86,7 @@ class JPorter(private val filename: Option[String]) {
 
   private def checkCompilationErrors(unit: CompilationUnit): Unit = {
     for (e <- unit.getProblems.filter(_.isError))
-      diagnostic.error(filename.getOrElse(""), e.getSourceLineNumber,
+      diagnostic.error(filename, e.getSourceLineNumber,
         e.getMessage)
   }
 }
