@@ -28,12 +28,20 @@ class DCoder {
 
   def +=[T](t: T): Unit = append(t)
   def +=(c: nl.type): Unit = append(nl)
+  def +=:[T](t: T): Unit = prepend(t)
+
   def :+[T](t: T): Unit = append(t)
   def :+(c: nl.type): Unit = append(nl)
 
   def append[T](args: T*): Unit = {
     doIndent()
     args.foreach(buffer.append(_))
+    indent_? = false
+  }
+
+  def prepend[T](args: T*): Unit = {
+    doIndent()
+    args.foreach(buffer.insert(0, _))
     indent_? = false
   }
 
@@ -50,9 +58,7 @@ class DCoder {
       if (first) {
         append(e)
         first = false
-      }
-
-      else {
+      } else {
         append(separator)
         append(e)
       }

@@ -3,8 +3,9 @@ package dwt.jport.writers
 import dwt.jport.ast.TypeDeclaration
 
 object TypeDeclarationWriter extends Writer[TypeDeclaration] {
-  def write(node: TypeDeclaration): Unit = {
+  def write(importWriter: ImportWriter, node: TypeDeclaration): Unit = {
     this.node = node
+    this.importWriter = importWriter
 
     writeModifiers
     writeDeclaration
@@ -12,6 +13,8 @@ object TypeDeclarationWriter extends Writer[TypeDeclaration] {
     writeBases
     writeTemplateConstraints
     writeBody
+
+    importWriter :+ node.imports
   }
 
   def postWrite(): Unit = buffer.append('}', nl, nl)

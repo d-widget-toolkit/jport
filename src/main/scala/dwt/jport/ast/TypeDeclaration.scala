@@ -21,6 +21,13 @@ class TypeDeclaration(node: JdtTypeDeclaration) extends AstNode(node) {
   val name = node.getName.getIdentifier
   private val binding = node.resolveBinding
 
+  val imports: Array[String] = {
+    val superImport = fullyQualfiedName(binding.getSuperclass)
+    val interfaceImports = binding.getInterfaces.map(fullyQualfiedName(_))
+
+    interfaceImports :+ superImport
+  }
+
   val modifiers = {
     var mods = node.modifiers.asInstanceOf[JavaList[IExtendedModifier]]
     Modifiers.convert(mods.asScala)
@@ -67,5 +74,11 @@ class TypeDeclaration(node: JdtTypeDeclaration) extends AstNode(node) {
       return typ.asInstanceOf[SimpleType].getName.getFullyQualifiedName
 
     else null
+  }
+
+  private def fullyQualfiedName(binding: ITypeBinding): String = {
+    val pac = binding.getPackage
+    val name = binding.getName
+    if (pac.isUnnamed) name else pac.getName + "." + name
   }
 }

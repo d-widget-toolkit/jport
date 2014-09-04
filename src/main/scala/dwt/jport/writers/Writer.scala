@@ -8,4 +8,5 @@ trait Writer[T] {
   protected val buffer = DCoder.dcoder
 
   protected var node: T = _
+  protected var importWriter: ImportWriter = null
 }

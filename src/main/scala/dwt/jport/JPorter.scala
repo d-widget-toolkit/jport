@@ -3,16 +3,15 @@ package dwt.jport
 import collection.JavaConversions._
 import scala.io.Source
 import scala.util.DynamicVariable
-
 import org.eclipse.jdt.core.dom.ASTParser
 import org.eclipse.jdt.core.dom.AST
 import org.eclipse.jdt.core.dom.ASTVisitor
 import org.eclipse.jdt.core.JavaCore
-import org.eclipse.jdt.core.dom.CompilationUnit
+import org.eclipse.jdt.core.dom.{ CompilationUnit => JdtCompilationUnit }
 import org.eclipse.jdt.core.compiler.IProblem
-
 import dwt.jport.core.JPortAny._
 import dwt.jport.analyzers.JPortAstVisitor
+import dwt.jport.analyzers.CompilationUnit
 
 object JPorter {
   private val filename: String = null
@@ -50,15 +49,13 @@ class JPorter(val filename: String = JPorter.filename,
 
   def port(code: Array[Char]): String = {
     parser.setSource(code)
-    val unit = parser.createAST(null).asInstanceOf[CompilationUnit]
+    val unit = parser.createAST(null).asInstanceOf[JdtCompilationUnit]
     checkCompilationErrors(unit)
 
     if (diagnostic.hasDiagnostics)
       return null
 
-    DCoder.dcoder.reset()
-    unit.accept(new JPortAstVisitor)
-    DCoder.dcoder.result
+    (new CompilationUnit(unit)).process()
   }
 
   private def parser: ASTParser = {
@@ -84,7 +81,7 @@ class JPorter(val filename: String = JPorter.filename,
       JavaCore.COMPILER_DOC_COMMENT_SUPPORT -> "enabled")
   }
 
-  private def checkCompilationErrors(unit: CompilationUnit): Unit = {
+  private def checkCompilationErrors(unit: JdtCompilationUnit): Unit = {
     for (e <- unit.getProblems.filter(_.isError))
       diagnostic.error(filename, e.getSourceLineNumber,
         e.getMessage)
