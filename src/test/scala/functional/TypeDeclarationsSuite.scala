@@ -13,7 +13,15 @@ class TypeDeclarationsSuite extends Suite {
     codeToFile("Bar")("public class Bar {}")
     val java = "public class Foo extends Bar {}"
 
-    java should portFromFileTo("Foo", "class Foo : Bar {}")
+    val d = code {
+      """
+      import Bar;
+
+      class Foo : Bar {}
+      """
+    }
+
+    java should portFromFileTo("Foo", d)
   }
 
   test("superclass and interface") {
@@ -21,7 +29,14 @@ class TypeDeclarationsSuite extends Suite {
     codeToFile("IBar")("public interface IBar {}")
     val java = "public class Foo extends Bar implements IBar {}"
 
-    val d = "class Foo : Bar, IBar {}"
+    val d = code {
+      """
+      import Bar;
+      import IBar;
+
+      class Foo : Bar, IBar {}
+      """
+    }
 
     java should portFromFileTo("Foo", d)
   }

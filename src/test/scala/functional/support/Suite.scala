@@ -8,8 +8,9 @@ import scalax.file.Path
 import dwt.jport.JPorter
 import dwt.jport.core.JPortAny.anyToJPortAny
 import org.scalatest.matchers.Matcher
+import support.Code
 
-class Suite extends FunSuite with Matchers with BeforeAndAfter {
+class Suite extends FunSuite with Matchers with BeforeAndAfter with Code {
   private val createdFiles = new HashSet[Path]
   var basePath: Path = null
 
@@ -66,8 +67,6 @@ class Suite extends FunSuite with Matchers with BeforeAndAfter {
       JPorter.portFromFile(path.path, sourcepathEntries = Array(basePath.path))
     }
 
-  def code(code: String): String = trimCode(code)
-
   /**
    * Creates a new file with the given filename and the given contents.
    *
@@ -84,14 +83,5 @@ class Suite extends FunSuite with Matchers with BeforeAndAfter {
     val segments = path.segments
     val dir = segments.slice(1, segments.length - 1).mkString(path.separator)
     Path.fromString(path.separator + dir)
-  }
-
-  def trimCode(code: String) = {
-    val firstBlankLine = code.linesWithSeparators.find(_ startsWith " ")
-    val margin = firstBlankLine.getOrElse("").takeWhile(_ == ' ').length
-
-    code.linesWithSeparators.map { e =>
-      if (e == "\n") e else e.slice(margin, e.length)
-    }.mkString.trim
   }
 }

@@ -20,12 +20,14 @@ class TypeDeclaration(node: JdtTypeDeclaration) extends AstNode(node) {
   val isInterface = node.isInterface
   val name = node.getName.getIdentifier
   private val binding = node.resolveBinding
+  private val base = binding.getSuperclass
+  private val isJavaLangObject = base.getQualifiedName == "java.lang.Object"
 
   val imports: Array[String] = {
-    val superImport = fullyQualfiedName(binding.getSuperclass)
+    val superImport = fullyQualfiedName(base)
     val interfaceImports = binding.getInterfaces.map(fullyQualfiedName(_))
 
-    interfaceImports :+ superImport
+    if (isJavaLangObject) interfaceImports else interfaceImports :+ superImport
   }
 
   val modifiers = {
@@ -33,10 +35,7 @@ class TypeDeclaration(node: JdtTypeDeclaration) extends AstNode(node) {
     Modifiers.convert(mods.asScala)
   }
 
-  val superclass = {
-    val base = binding.getSuperclass
-    if (base.getQualifiedName == "java.lang.Object") null else base.getName
-  }
+  val superclass = if (isJavaLangObject) null else base.getName
 
   val interfaces = node.superInterfaceTypes.
     map(e => nameOfType(e.asInstanceOf[Type]))
