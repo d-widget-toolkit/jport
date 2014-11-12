@@ -45,7 +45,15 @@ class TypeDeclarationsSuite extends Suite {
     codeToFile("Bar")("public interface Bar {}")
     val java = "public class Foo implements Bar {}"
 
-    java should portFromFileTo("Foo", "class Foo : Bar {}")
+    val d = code {
+      """
+      import Bar;
+
+      class Foo : Bar {}
+      """
+    }
+
+    java should portFromFileTo("Foo", d)
   }
 
   test("multiple interfaces") {
@@ -53,7 +61,14 @@ class TypeDeclarationsSuite extends Suite {
     codeToFile("Baz")("public interface Baz {}")
     val java = "public class Foo implements Bar, Baz {}"
 
-    val d = "class Foo : Bar, Baz {}"
+    val d = code {
+      """
+      import Bar;
+      import Baz;
+
+      class Foo : Bar, Baz {}
+      """
+    }
 
     java should portFromFileTo("Foo", d)
   }
