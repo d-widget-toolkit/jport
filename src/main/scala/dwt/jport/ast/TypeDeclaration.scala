@@ -13,12 +13,15 @@ import org.eclipse.jdt.core.dom.QualifiedName
 import org.eclipse.jdt.core.dom.TypeParameter
 import dwt.jport.analyzers.Modifiers
 import org.eclipse.jdt.core.dom.ITypeBinding
+import dwt.jport.Symbol
 
 class TypeDeclaration(node: JdtTypeDeclaration) extends AstNode(node) {
   private type JavaList[T] = java.util.List[T]
 
   val isInterface = node.isInterface
-  val name = node.getName.getIdentifier
+  val unescapedName = node.getName.getIdentifier
+  val name = Symbol.translate(unescapedName)
+
   private val binding = node.resolveBinding
   private val base = binding.getSuperclass
   private val isJavaLangObject = base.getQualifiedName == "java.lang.Object"
@@ -35,14 +38,15 @@ class TypeDeclaration(node: JdtTypeDeclaration) extends AstNode(node) {
     Modifiers.convert(mods.asScala)
   }
 
-  val superclass = if (isJavaLangObject) null else base.getName
+  val superclass = if (isJavaLangObject) null else Symbol.translate(base.getName)
 
   val interfaces = node.superInterfaceTypes.
     map(e => nameOfType(e.asInstanceOf[Type]))
 
   val typeParameters = typedTypeParameters.map { p =>
     val bounds = simpleTypeBounds(p.typeBounds)
-    (p.getName.getIdentifier, namesOfBounds(bounds))
+    val typeName = Symbol.translate(p.getName.getIdentifier)
+    (typeName, namesOfBounds(bounds))
   }
 
   val unboundTypeParameters = typeParameters.filter(_._2.isEmpty)
@@ -60,8 +64,8 @@ class TypeDeclaration(node: JdtTypeDeclaration) extends AstNode(node) {
 
   private def namesOfBounds(bounds: Buffer[SimpleType]) = bounds.map { e =>
     e.getName match {
-      case s: SimpleName => s.getIdentifier
-      case q: QualifiedName => q.getQualifier + "." + q.getName
+      case s: SimpleName => Symbol.translate(s.getIdentifier)
+      case q: QualifiedName => Symbol.translate(q.getFullyQualifiedName)
       case t => throw new Exception(s"Unhalded bounds type '$t'")
     }
   }
@@ -70,7 +74,7 @@ class TypeDeclaration(node: JdtTypeDeclaration) extends AstNode(node) {
     if (typ == null) return null
 
     if (typ.isSimpleType)
-      return typ.asInstanceOf[SimpleType].getName.getFullyQualifiedName
+      return Symbol.translate(typ.asInstanceOf[SimpleType].getName.getFullyQualifiedName)
 
     else null
   }
@@ -78,6 +82,7 @@ class TypeDeclaration(node: JdtTypeDeclaration) extends AstNode(node) {
   private def fullyQualfiedName(binding: ITypeBinding): String = {
     val pac = binding.getPackage
     val name = binding.getName
-    if (pac.isUnnamed) name else pac.getName + "." + name
+    val fullyQualfiedName = if (pac.isUnnamed) name else pac.getName + "." + name
+    Symbol.translate(fullyQualfiedName)
   }
 }

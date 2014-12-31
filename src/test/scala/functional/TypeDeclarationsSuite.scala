@@ -8,6 +8,10 @@ class TypeDeclarationsSuite extends Suite {
     "public class Foo {}" should portFromFileTo("Foo", "class Foo {}")
   }
 
+  test("class with illegal D identifier") {
+    "public class out {}" should portFromFileTo("out", "class out_ {}")
+  }
+
   // superclass and interface
   test("superclass") {
     codeToFile("Bar")("public class Bar {}")
@@ -18,6 +22,21 @@ class TypeDeclarationsSuite extends Suite {
       import Bar;
 
       class Foo : Bar {}
+      """
+    }
+
+    java should portFromFileTo("Foo", d)
+  }
+
+  test("superclass with illegal D identifier") {
+    codeToFile("out")("public class out {}")
+    val java = "public class Foo extends out {}"
+
+    val d = code {
+      """
+      import out_;
+
+      class Foo : out_ {}
       """
     }
 
@@ -50,6 +69,21 @@ class TypeDeclarationsSuite extends Suite {
       import Bar;
 
       class Foo : Bar {}
+      """
+    }
+
+    java should portFromFileTo("Foo", d)
+  }
+
+  test("interface with illegal D identifier") {
+    codeToFile("out")("public interface out {}")
+    val java = "public class Foo implements out {}"
+
+    val d = code {
+      """
+      import out_;
+
+      class Foo : out_ {}
       """
     }
 
@@ -97,6 +131,10 @@ class TypeDeclarationsSuite extends Suite {
     "public class Foo<T> {}" should portFromFileTo("Foo", "class Foo (T) {}")
   }
 
+  test("type parameter with illegal D identifier") {
+    "public class Foo<out> {}" should portFromFileTo("Foo", "class Foo (out_) {}")
+  }
+
   test("class with multiple type parameters") {
     val java = "public class Foo<A, B, C> {}"
     java should portFromFileTo("Foo", "class Foo (A, B, C) {}")
@@ -109,6 +147,19 @@ class TypeDeclarationsSuite extends Suite {
     val d = code {
       """
       class Foo (T : A) {}
+      """
+    }
+
+    java should portFromFileTo("Foo", d)
+  }
+
+  test("bounded type parameter with illegal D identifier") {
+    codeToFile("out")("public class out {}")
+    val java = code("public class Foo<T extends out> {}")
+
+    val d = code {
+      """
+      class Foo (T : out_) {}
       """
     }
 
@@ -136,6 +187,20 @@ class TypeDeclarationsSuite extends Suite {
     val d = code {
       """
       class Foo (T) if (is(T : A) && is(T : B)) {}
+      """
+    }
+
+    java should portFromFileTo("Foo", d)
+  }
+
+  test("type parameter with multiple bounds and illegal D identifier") {
+    codeToFile("in")("public class in {}")
+    codeToFile("out")("public interface out {}")
+    val java = code("public class Foo<T extends in & out> {}")
+
+    val d = code {
+      """
+      class Foo (T) if (is(T : in_) && is(T : out_)) {}
       """
     }
 
