@@ -2,7 +2,9 @@ package dwt.jport.writers
 
 import dwt.jport.ast.MethodDeclaration
 
-object MethodDeclarationWriter extends BodyDeclarationWriter[MethodDeclaration] {
+object MethodDeclarationWriter extends WriterObject[MethodDeclaration, MethodDeclarationWriter]
+
+class MethodDeclarationWriter extends BodyDeclarationWriter[MethodDeclaration] {
   def write(importWriter: ImportWriter, node: MethodDeclaration): Unit = {
     this.node = node
     this.importWriter = importWriter

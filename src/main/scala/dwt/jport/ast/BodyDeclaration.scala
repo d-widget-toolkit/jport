@@ -9,7 +9,7 @@ import org.eclipse.jdt.core.dom.IExtendedModifier
 import dwt.jport.Symbol
 import dwt.jport.analyzers.Modifiers
 
-class BodyDeclaration(node: JdtBodyDeclaration) extends AstNode(node) {
+abstract class BodyDeclaration(node: JdtBodyDeclaration) extends AstNode(node) {
   protected type JavaList[T] = java.util.List[T]
 
   val modifiers = {

@@ -8,6 +8,8 @@ unmanagedSourceDirectories in Compile := (scalaSource in Compile).value :: Nil
 
 unmanagedSourceDirectories in Test := (scalaSource in Test).value :: Nil
 
+parallelExecution in Test := false
+
 EclipseKeys.withSource := true
 
 libraryDependencies ++= Seq(
@@ -22,5 +24,3 @@ libraryDependencies ++= Seq(
   "com.github.scala-incubator.io" % "scala-io-file_2.11" % "0.4.3-1",
   "org.scalatest" % "scalatest_2.11" % "2.2.1" % Test
 )
-
-parallelExecution in Test := false

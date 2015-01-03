@@ -1,6 +1,6 @@
 package dwt.jport.writers
 
-class ImportWriter extends Writer[AnyRef] {
+class ImportWriter extends Buffer {
   private type StringArray = scala.collection.mutable.ArrayBuffer[String]
   private var imports = new StringArray
 

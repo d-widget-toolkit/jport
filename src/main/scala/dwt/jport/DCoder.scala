@@ -1,15 +1,15 @@
 package dwt.jport
 
 import scala.collection.mutable.StringBuilder
-import scala.util.DynamicVariable
+import dwt.jport.util.ThreadLocalVariable
 
 object DCoder {
   object nl {
     override def toString = "\n"
   }
 
-  private var _dcoder = new DynamicVariable[DCoder](new DCoder)
-  def dcoder = _dcoder.value
+  private var _dcoder = new ThreadLocalVariable(new DCoder)
+  def dcoder = _dcoder.get
 }
 
 class DCoder {
