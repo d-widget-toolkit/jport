@@ -35,8 +35,7 @@ class TypeDeclarationWriter extends BodyDeclarationWriter[TypeDeclaration] {
   }
 
   private def writeBases = {
-    val bases = if (node.superclass == null) node.interfaces
-    else node.superclass +: node.interfaces
+    val bases = node.superclass ++ node.interfaces
 
     if (bases.nonEmpty)
       buffer.append(" : ").join(bases)

@@ -16,6 +16,6 @@ class MethodDeclaration(node: JdtMethodDeclaration) extends BodyDeclaration(node
 
   val body = node.getBody
   val hasBody = body != null
-  val hasEmptyBody = body.statements.isEmpty
-  val hasNonEmptyBody = body.statements.nonEmpty
+  val hasEmptyBody = hasBody && body.statements.isEmpty
+  val hasNonEmptyBody = hasBody && body.statements.nonEmpty
 }

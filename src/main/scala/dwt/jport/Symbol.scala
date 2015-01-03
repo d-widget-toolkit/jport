@@ -2,6 +2,8 @@ package dwt.jport
 
 object Symbol {
   def translate(str: String) = if (isDKeyword(str)) str + '_' else str
+  def translate(str: Option[String]): Option[String] =
+    if (str.isEmpty) None else Option(translate(str.get))
 
   def isDKeyword(str: String): Boolean = str match {
     case "abstract" |

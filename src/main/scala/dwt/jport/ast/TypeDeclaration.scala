@@ -21,17 +21,17 @@ class TypeDeclaration(node: JdtTypeDeclaration) extends BodyDeclaration(node) {
   val name = Symbol.translate(unescapedName)
 
   private val binding = node.resolveBinding
-  private val base = binding.getSuperclass
-  private val isJavaLangObject = base.getQualifiedName == "java.lang.Object"
+  private val base = Option(binding.getSuperclass)
+  private val isJavaLangObject = base.map(_.getQualifiedName).exists(_ == "java.lang.Object")
 
   val imports: Array[String] = {
-    val superImport = fullyQualfiedName(base)
+    val superImport = base.map(fullyQualfiedName(_))
     val interfaceImports = binding.getInterfaces.map(fullyQualfiedName(_))
 
-    if (isJavaLangObject) interfaceImports else interfaceImports :+ superImport
+    if (isJavaLangObject) interfaceImports else interfaceImports ++ superImport
   }
 
-  val superclass = if (isJavaLangObject) null else Symbol.translate(base.getName)
+  val superclass = if (isJavaLangObject) None else Symbol.translate(base.map(_.getName))
 
   val interfaces = node.superInterfaceTypes.
     map(e => nameOfType(e.asInstanceOf[Type]))
