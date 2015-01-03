@@ -22,3 +22,5 @@ libraryDependencies ++= Seq(
   "com.github.scala-incubator.io" % "scala-io-file_2.11" % "0.4.3-1",
   "org.scalatest" % "scalatest_2.11" % "2.2.1" % Test
 )
+
+parallelExecution in Test := false

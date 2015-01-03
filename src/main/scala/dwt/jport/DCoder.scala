@@ -27,11 +27,16 @@ class DCoder {
   override def toString = result
 
   def +=[T](t: T): Unit = append(t)
-  def +=(c: nl.type): Unit = append(nl)
+  def +=(c: nl.type): Unit = appendNewline
   def +=:[T](t: T): Unit = prepend(t)
 
   def :+[T](t: T): Unit = append(t)
-  def :+(c: nl.type): Unit = append(nl)
+  def :+(c: nl.type): Unit = appendNewline
+
+  private def appendNewline: Unit = {
+    append(nl)
+    indent_? = true
+  }
 
   def append[T](args: T*): Unit = {
     doIndent()
@@ -51,6 +56,9 @@ class DCoder {
     level -= 1
   }
 
+  def increaseIndentation: Unit = level += 1
+  def decreaseIndentation: Unit = level -= 1
+
   def join(iterable: Iterable[_ <: String], separator: String = ", "): Unit = {
     var first = true
 
@@ -58,7 +66,8 @@ class DCoder {
       if (first) {
         append(e)
         first = false
-      } else {
+      }
+      else {
         append(separator)
         append(e)
       }
@@ -75,5 +84,5 @@ class DCoder {
 
   def reset(): Unit = buffer = new StringBuilder
 
-  private def doIndent() = if (indent_?) buffer.append("\t" * level)
+  private def doIndent() = if (indent_?) buffer.append(" " * 4 * level)
 }

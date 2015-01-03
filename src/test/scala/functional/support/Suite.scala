@@ -9,6 +9,8 @@ import dwt.jport.JPorter
 import dwt.jport.core.JPortAny.anyToJPortAny
 import org.scalatest.matchers.Matcher
 import support.Code
+import org.scalatest.BeforeAndAfterEach
+import dwt.jport.DCoder
 
 class Suite extends FunSuite with Matchers with BeforeAndAfter with Code {
   private val createdFiles = new HashSet[Path]
@@ -21,6 +23,7 @@ class Suite extends FunSuite with Matchers with BeforeAndAfter with Code {
   after {
     createdFiles.foreach(_.deleteIfExists())
     createdFiles.clear()
+    DCoder.dcoder.reset()
   }
 
   def portTo(expected: String) = be(expected).

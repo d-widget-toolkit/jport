@@ -15,9 +15,7 @@ import dwt.jport.analyzers.Modifiers
 import org.eclipse.jdt.core.dom.ITypeBinding
 import dwt.jport.Symbol
 
-class TypeDeclaration(node: JdtTypeDeclaration) extends AstNode(node) {
-  private type JavaList[T] = java.util.List[T]
-
+class TypeDeclaration(node: JdtTypeDeclaration) extends BodyDeclaration(node) {
   val isInterface = node.isInterface
   val unescapedName = node.getName.getIdentifier
   val name = Symbol.translate(unescapedName)
@@ -31,11 +29,6 @@ class TypeDeclaration(node: JdtTypeDeclaration) extends AstNode(node) {
     val interfaceImports = binding.getInterfaces.map(fullyQualfiedName(_))
 
     if (isJavaLangObject) interfaceImports else interfaceImports :+ superImport
-  }
-
-  val modifiers = {
-    var mods = node.modifiers.asInstanceOf[JavaList[IExtendedModifier]]
-    Modifiers.convert(mods.asScala)
   }
 
   val superclass = if (isJavaLangObject) null else Symbol.translate(base.getName)

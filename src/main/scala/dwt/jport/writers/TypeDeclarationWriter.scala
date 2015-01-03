@@ -2,7 +2,7 @@ package dwt.jport.writers
 
 import dwt.jport.ast.TypeDeclaration
 
-object TypeDeclarationWriter extends Writer[TypeDeclaration] {
+object TypeDeclarationWriter extends BodyDeclarationWriter[TypeDeclaration] {
   def write(importWriter: ImportWriter, node: TypeDeclaration): Unit = {
     this.node = node
     this.importWriter = importWriter
@@ -15,12 +15,14 @@ object TypeDeclarationWriter extends Writer[TypeDeclaration] {
     writeBody
 
     importWriter :+ node.imports
+    buffer.increaseIndentation
   }
 
-  def postWrite(): Unit = buffer.append('}', nl, nl)
-
-  private def writeModifiers =
-    if (node.modifiers.nonEmpty) buffer.append(node.modifiers, ' ')
+  def postWrite(): Unit = {
+    buffer.decreaseIndentation
+    buffer :+ '}'
+    buffer.append(nl, nl)
+  }
 
   private def writeDeclaration = buffer.append(typeName, ' ', node.name)
 
