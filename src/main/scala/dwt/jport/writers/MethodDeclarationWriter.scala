@@ -11,11 +11,8 @@ class MethodDeclarationWriter extends BodyDeclarationWriter[MethodDeclaration] {
 
     //writeModifiers
     writeReturnType
-    buffer :+ ' '
     writeName
-    buffer :+ '('
     writeParameters
-    buffer :+ ')'
     writeBody
     //importWriter :+ node.imports
   }
@@ -27,9 +24,12 @@ class MethodDeclarationWriter extends BodyDeclarationWriter[MethodDeclaration] {
       buffer :+ nl;
   }
 
-  private def writeReturnType = buffer.append(node.returnType)
-  private def writeName = buffer.append(node.name)
-  private def writeParameters = buffer.join(node.parameters)
+  private def writeReturnType = buffer.append(node.returnType, ' ')
+  private def writeName = buffer.append(node.name, '(')
+  private def writeParameters = {
+    buffer.join(node.parameters)
+    buffer :+ ')'
+  }
 
   private def writeBody = {
     if (!node.hasBody)
