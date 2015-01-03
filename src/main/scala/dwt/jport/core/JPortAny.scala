@@ -5,6 +5,11 @@ class JPortAny[T](val obj: T) {
     block.apply(obj)
     obj
   }
+
+  def tap(block: => Unit): T = {
+    block
+    obj
+  }
 }
 
 object JPortAny {

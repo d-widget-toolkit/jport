@@ -26,10 +26,7 @@ class MethodDeclarationWriter extends BodyDeclarationWriter[MethodDeclaration] {
 
   private def writeReturnType = buffer.append(node.returnType, ' ')
   private def writeName = buffer.append(node.name, '(')
-  private def writeParameters = {
-    buffer.join(node.parameters)
-    buffer :+ ')'
-  }
+  private def writeParameters = buffer.join(node.parameters).append(')')
 
   private def writeBody = {
     if (!node.hasBody)
