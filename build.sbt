@@ -2,7 +2,7 @@ name := "jport"
 
 version := "0.0.1"
 
-scalaVersion := "2.11.2"
+scalaVersion := "2.11.4"
 
 unmanagedSourceDirectories in Compile := (scalaSource in Compile).value :: Nil
 
