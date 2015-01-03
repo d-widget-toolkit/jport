@@ -23,4 +23,24 @@ class MethodDeclarationSuite extends Suite {
     }
     java should portFromFileTo("Foo", d)
   }
+
+  test("method without body") {
+    val java = code {
+      """
+      public interface Foo {
+        public void bar();
+      }
+      """
+    }
+
+    val d = code {
+      """
+      interface Foo
+      {
+          void bar();
+      }
+      """
+    }
+    java should portFromFileTo("Foo", d)
+  }
 }
