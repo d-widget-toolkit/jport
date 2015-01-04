@@ -43,4 +43,44 @@ class MethodDeclarationSuite extends Suite {
     }
     java should portFromFileTo("Foo", d)
   }
+
+  test("final modifier") {
+    val java = code {
+      """
+      public class Foo {
+        public final void bar() {}
+      }
+      """
+    }
+
+    val d = code {
+      """
+      class Foo
+      {
+          final void bar() {}
+      }
+      """
+    }
+    java should portFromFileTo("Foo", d)
+  }
+
+  test("no modifier") {
+    val java = code {
+      """
+      public class Foo {
+        void bar() {}
+      }
+      """
+    }
+
+    val d = code {
+      """
+      class Foo
+      {
+          /* package */ void bar() {}
+      }
+      """
+    }
+    java should portFromFileTo("Foo", d)
+  }
 }

@@ -1,6 +1,7 @@
 package dwt.jport.writers
 
 import dwt.jport.ast.MethodDeclaration
+import dwt.jport.analyzers.Modifiers
 
 object MethodDeclarationWriter extends WriterObject[MethodDeclaration, MethodDeclarationWriter]
 
@@ -9,7 +10,7 @@ class MethodDeclarationWriter extends BodyDeclarationWriter[MethodDeclaration] {
     this.node = node
     this.importWriter = importWriter
 
-    //writeModifiers
+    writeModifiers
     writeReturnType
     writeName
     writeParameters

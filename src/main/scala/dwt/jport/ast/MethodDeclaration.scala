@@ -1,12 +1,21 @@
 package dwt.jport.ast
 
 import scala.collection.JavaConversions._
+
 import org.eclipse.jdt.core.dom.{ MethodDeclaration => JdtMethodDeclaration }
+import org.eclipse.jdt.core.dom.IExtendedModifier
+import org.eclipse.jdt.core.dom.Modifier
+
 import dwt.jport.Symbol
 import dwt.jport.Type
+import dwt.jport.analyzers.Modifiers
 
 class MethodDeclaration(node: JdtMethodDeclaration) extends BodyDeclaration(node) {
   private val binding = node.resolveBinding
+
+  val isVirtual = !isFinal && !isPrivate && !isStatic
+
+  override val translatedModifiers = Modifiers.convert(modifiers, isVirtual)
 
   val unescapedName = node.getName.getIdentifier
   val name = Symbol.translate(unescapedName)
