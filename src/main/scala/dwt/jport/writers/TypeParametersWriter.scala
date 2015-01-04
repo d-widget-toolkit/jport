@@ -11,7 +11,7 @@ trait TypeParametersWriter[T <: TypeParameters] extends Node[T] with Buffer {
       if (e._2.length == 1) s"${e._1} : ${e._2.head}" else e._1
     }
 
-    buffer.append(' ', '(').join(params).append(')')
+    buffer.append('(').join(params).append(')')
   }
 
   protected def writeTemplateConstraints: Unit = {

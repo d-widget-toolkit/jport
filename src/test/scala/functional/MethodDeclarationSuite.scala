@@ -98,7 +98,7 @@ class MethodDeclarationSuite extends Suite {
       """
       class Foo
       {
-          void bar (T)() {}
+          void bar(T)() {}
       }
       """
     }

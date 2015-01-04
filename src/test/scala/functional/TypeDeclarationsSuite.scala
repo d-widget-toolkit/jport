@@ -128,16 +128,16 @@ class TypeDeclarationsSuite extends Suite {
 
   // type parameters
   test("class with type parameter") {
-    "public class Foo<T> {}" should portFromFileTo("Foo", "class Foo (T) {}")
+    "public class Foo<T> {}" should portFromFileTo("Foo", "class Foo(T) {}")
   }
 
   test("type parameter with illegal D identifier") {
-    "public class Foo<out> {}" should portFromFileTo("Foo", "class Foo (out_) {}")
+    "public class Foo<out> {}" should portFromFileTo("Foo", "class Foo(out_) {}")
   }
 
   test("class with multiple type parameters") {
     val java = "public class Foo<A, B, C> {}"
-    java should portFromFileTo("Foo", "class Foo (A, B, C) {}")
+    java should portFromFileTo("Foo", "class Foo(A, B, C) {}")
   }
 
   test("class with bounded type parameter") {
@@ -146,7 +146,7 @@ class TypeDeclarationsSuite extends Suite {
 
     val d = code {
       """
-      class Foo (T : A) {}
+      class Foo(T : A) {}
       """
     }
 
@@ -159,7 +159,7 @@ class TypeDeclarationsSuite extends Suite {
 
     val d = code {
       """
-      class Foo (T : out_) {}
+      class Foo(T : out_) {}
       """
     }
 
@@ -172,7 +172,7 @@ class TypeDeclarationsSuite extends Suite {
 
     val d = code {
       """
-      class Foo (T : A, U : A) {}
+      class Foo(T : A, U : A) {}
       """
     }
 
@@ -186,7 +186,7 @@ class TypeDeclarationsSuite extends Suite {
 
     val d = code {
       """
-      class Foo (T) if (is(T : A) && is(T : B)) {}
+      class Foo(T) if (is(T : A) && is(T : B)) {}
       """
     }
 
@@ -200,7 +200,7 @@ class TypeDeclarationsSuite extends Suite {
 
     val d = code {
       """
-      class Foo (T) if (is(T : in_) && is(T : out_)) {}
+      class Foo(T) if (is(T : in_) && is(T : out_)) {}
       """
     }
 
@@ -214,7 +214,7 @@ class TypeDeclarationsSuite extends Suite {
 
     val d = code {
       """
-      class Foo (T, U) if (is(T : A) && is(T : B) && is(U : A) && is(U : B)) {}
+      class Foo(T, U) if (is(T : A) && is(T : B) && is(U : A) && is(U : B)) {}
       """
     }
 
@@ -228,7 +228,7 @@ class TypeDeclarationsSuite extends Suite {
 
     val d = code {
       """
-      class Foo (T, U : A, W) if (is(W : A) && is(W : B)) {}
+      class Foo(T, U : A, W) if (is(W : A) && is(W : B)) {}
       """
     }
 
