@@ -83,4 +83,26 @@ class MethodDeclarationSuite extends Suite {
     }
     java should portFromFileTo("Foo", d)
   }
+
+  // type parameters
+  test("method with type parameter") {
+    val java = code {
+      """
+      public class Foo {
+        public <T> void bar() {}
+      }
+      """
+    }
+
+    val d = code {
+      """
+      class Foo
+      {
+          void bar (T)() {}
+      }
+      """
+    }
+
+    java should portFromFileTo("Foo", d)
+  }
 }

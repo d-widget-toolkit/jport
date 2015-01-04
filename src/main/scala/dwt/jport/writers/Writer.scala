@@ -8,8 +8,11 @@ trait Buffer {
   protected val buffer = DCoder.dcoder
 }
 
-trait Writer[T] extends Buffer {
+trait Node[T] {
   protected var node: T = _
+}
+
+trait Writer[T] extends Node[T] with Buffer {
   protected var importWriter: ImportWriter = null
 
   def write(importWriter: ImportWriter, node: T): Unit
