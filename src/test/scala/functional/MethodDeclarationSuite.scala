@@ -21,6 +21,28 @@ class MethodDeclarationSuite extends Suite {
       }
       """
     }
+
+    java should portFromFileTo("Foo", d)
+  }
+
+  test("method with illegal D identifier") {
+    val java = code {
+      """
+      public class Foo {
+        public void out() {}
+      }
+      """
+    }
+
+    val d = code {
+      """
+      class Foo
+      {
+          void out_() {}
+      }
+      """
+    }
+
     java should portFromFileTo("Foo", d)
   }
 
@@ -41,6 +63,7 @@ class MethodDeclarationSuite extends Suite {
       }
       """
     }
+
     java should portFromFileTo("Foo", d)
   }
 
@@ -61,6 +84,7 @@ class MethodDeclarationSuite extends Suite {
       }
       """
     }
+
     java should portFromFileTo("Foo", d)
   }
 
@@ -81,6 +105,7 @@ class MethodDeclarationSuite extends Suite {
       }
       """
     }
+
     java should portFromFileTo("Foo", d)
   }
 
