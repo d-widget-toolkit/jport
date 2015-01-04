@@ -15,7 +15,7 @@ import dwt.jport.analyzers.Modifiers
 import org.eclipse.jdt.core.dom.ITypeBinding
 import dwt.jport.Symbol
 
-class TypeDeclaration(node: JdtTypeDeclaration) extends BodyDeclaration(node) {
+class TypeDeclaration(node: JdtTypeDeclaration) extends BodyDeclaration(node) with TypeParameters {
   val isInterface = node.isInterface
   val unescapedName = node.getName.getIdentifier
   val name = Symbol.translate(unescapedName)
@@ -36,20 +36,10 @@ class TypeDeclaration(node: JdtTypeDeclaration) extends BodyDeclaration(node) {
   val interfaces = node.superInterfaceTypes.
     map(e => nameOfType(e.asInstanceOf[Type]))
 
-  val typeParameters = typedTypeParameters.map { p =>
-    val bounds = simpleTypeBounds(p.typeBounds)
-    val typeName = Symbol.translate(p.getName.getIdentifier)
-    (typeName, namesOfBounds(bounds))
-  }
-
-  val unboundTypeParameters = typeParameters.filter(_._2.isEmpty)
-  val singleBoundTypeParameters = typeParameters.filter(_._2.length == 1)
-  val multipleBoundTypeParameters = typeParameters.filter(_._2.length >= 2)
-
   val hasMembers = !node.bodyDeclarations.isEmpty
 
-  private def typedTypeParameters = node.typeParameters.
-    asInstanceOf[JavaList[TypeParameter]]
+  protected override def typedTypeParameters =
+    node.typeParameters.asInstanceOf[JavaList[TypeParameter]]
 
   private def simpleTypeBounds(bounds: JavaList[_]) =
     bounds.asInstanceOf[JavaList[Type]].

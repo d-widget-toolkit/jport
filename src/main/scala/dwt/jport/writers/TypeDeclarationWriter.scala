@@ -4,7 +4,7 @@ import dwt.jport.ast.TypeDeclaration
 
 object TypeDeclarationWriter extends WriterObject[TypeDeclaration, TypeDeclarationWriter]
 
-class TypeDeclarationWriter extends BodyDeclarationWriter[TypeDeclaration] {
+class TypeDeclarationWriter extends BodyDeclarationWriter[TypeDeclaration] with TypeParametersWriter[TypeDeclaration] {
   def write(importWriter: ImportWriter, node: TypeDeclaration): Unit = {
     this.node = node
     this.importWriter = importWriter
@@ -24,30 +24,11 @@ class TypeDeclarationWriter extends BodyDeclarationWriter[TypeDeclaration] {
 
   private def writeDeclaration = buffer.append(typeName, ' ', node.name)
 
-  private def writeTypeParameters: Unit = {
-    if (node.typeParameters.isEmpty) return
-
-    val params = node.typeParameters.map { e =>
-      if (e._2.length == 1) s"${e._1} : ${e._2.head}" else e._1
-    }
-
-    buffer.append(' ', '(').join(params).append(')')
-  }
-
   private def writeBases = {
     val bases = node.superclass ++ node.interfaces
 
     if (bases.nonEmpty)
       buffer.append(" : ").join(bases)
-  }
-
-  private def writeTemplateConstraints: Unit = {
-    val constraints = node.multipleBoundTypeParameters.
-      flatMap(p => p._2.map(e => s"is(${p._1} : ${e})"))
-
-    if (constraints.isEmpty) return
-
-    buffer.append(" if (").join(constraints, " && ").append(')')
   }
 
   private def typeName = if (node.isInterface) "interface" else "class"
