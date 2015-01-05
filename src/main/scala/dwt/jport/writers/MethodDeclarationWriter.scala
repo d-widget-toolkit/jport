@@ -1,7 +1,11 @@
 package dwt.jport.writers
 
+import scala.collection.JavaConversions._
+
+import org.eclipse.jdt.core.dom.{ BodyDeclaration => JdtBodyDeclaration }
+import org.eclipse.jdt.core.dom.{ MethodDeclaration => JdtMethodDeclaration }
+
 import dwt.jport.ast.MethodDeclaration
-import dwt.jport.analyzers.Modifiers
 
 object MethodDeclarationWriter extends WriterObject[MethodDeclaration, MethodDeclarationWriter]
 
@@ -9,6 +13,9 @@ class MethodDeclarationWriter extends BodyDeclarationWriter[MethodDeclaration] w
   def write(importWriter: ImportWriter, node: MethodDeclaration): Unit = {
     this.node = node
     this.importWriter = importWriter
+
+    if (hasNonEmptyBody(node.prev))
+      buffer :+ nl
 
     writeModifiers
     writeReturnType
@@ -20,10 +27,13 @@ class MethodDeclarationWriter extends BodyDeclarationWriter[MethodDeclaration] w
   }
 
   def postWrite(): Unit = {
-    if (node.hasNonEmptyBody)
-      buffer.append('}', nl, nl)
-    else
-      buffer :+ nl;
+    if (node.hasBody)
+      buffer :+ '}'
+
+    buffer :+ nl
+
+    if (hasNonEmptyBody(node.next))
+      buffer :+ nl
   }
 
   private def writeReturnType = buffer.append(node.returnType, ' ')
@@ -37,9 +47,14 @@ class MethodDeclarationWriter extends BodyDeclarationWriter[MethodDeclaration] w
       buffer :+ ';'
 
     else if (node.hasEmptyBody)
-      buffer :+ " {}"
+      buffer :+ " {"
 
     else
-      buffer.append('{', nl)
+      buffer.append(nl, '{', nl)
   }
+
+  private def hasNonEmptyBody(node: Option[JdtBodyDeclaration]) =
+    node.filter(_.isInstanceOf[JdtMethodDeclaration]).
+      map(_.asInstanceOf[JdtMethodDeclaration]).
+      filter(e => e.getBody != null && e.getBody.statements.nonEmpty).nonEmpty
 }

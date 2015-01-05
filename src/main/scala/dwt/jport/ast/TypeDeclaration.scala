@@ -3,19 +3,24 @@ package dwt.jport.ast
 import scala.collection.JavaConversions._
 import scala.collection.JavaConverters._
 import scala.collection.mutable.Buffer
-import org.eclipse.jdt.core.dom.{ TypeDeclaration => JdtTypeDeclaration }
-import org.eclipse.jdt.core.dom.IExtendedModifier
-import org.eclipse.jdt.core.dom.Modifier
-import org.eclipse.jdt.core.dom.Type
-import org.eclipse.jdt.core.dom.SimpleType
-import org.eclipse.jdt.core.dom.SimpleName
-import org.eclipse.jdt.core.dom.QualifiedName
-import org.eclipse.jdt.core.dom.TypeParameter
-import dwt.jport.analyzers.Modifiers
-import org.eclipse.jdt.core.dom.ITypeBinding
-import dwt.jport.Symbol
 
-class TypeDeclaration(node: JdtTypeDeclaration) extends BodyDeclaration(node) with TypeParameters {
+import org.eclipse.jdt.core.dom.{ AbstractTypeDeclaration => JdtAbstractTypeDeclaration }
+import org.eclipse.jdt.core.dom.ITypeBinding
+import org.eclipse.jdt.core.dom.QualifiedName
+import org.eclipse.jdt.core.dom.SimpleName
+import org.eclipse.jdt.core.dom.SimpleType
+import org.eclipse.jdt.core.dom.Type
+import org.eclipse.jdt.core.dom.{ TypeDeclaration => JdtTypeDeclaration }
+import org.eclipse.jdt.core.dom.TypeParameter
+
+import dwt.jport.Symbol
+import dwt.jport.analyzers.VisitData
+
+class TypeDeclaration(node: JdtTypeDeclaration, protected override val visitData: VisitData[JdtAbstractTypeDeclaration])
+  extends BodyDeclaration(node)
+  with TypeParameters
+  with Siblings[JdtAbstractTypeDeclaration] {
+
   val isInterface = node.isInterface
   val unescapedName = node.getName.getIdentifier
   val name = Symbol.translate(unescapedName)

@@ -29,21 +29,28 @@ class DCoder {
   override def toString = result
 
   def +=[T](t: T): Unit = append(t)
-  def +=(c: nl.type): Unit = appendNewline
+  def +=(c: nl.type): Unit = append(nl)
   def +=:[T](t: T): Unit = prepend(t)
 
   def :+[T](t: T): Unit = append(t)
-  def :+(c: nl.type): Unit = appendNewline
-
-  private def appendNewline = this.tap {
-    append(nl)
-    indent_? = true
-  }
+  def :+(c: nl.type): Unit = append(nl)
 
   def append[T](args: T*) = this.tap {
-    doIndent()
-    args.foreach(buffer.append(_))
-    indent_? = false
+    args.foreach(doAppend(_))
+  }
+
+  private def doAppend[T](arg: T) = {
+    arg match {
+      case DCoder.nl => {
+        buffer.append(nl)
+        indent_? = true
+      }
+      case _ => {
+        doIndent()
+        buffer.append(arg)
+        indent_? = false
+      }
+    }
   }
 
   def prepend[T](args: T*) = this.tap {

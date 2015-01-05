@@ -1,14 +1,22 @@
 package dwt.jport.ast
 
 import scala.collection.JavaConversions._
-import scala.collection.mutable.Buffer
+import scala.collection.JavaConverters._
+
+import org.eclipse.jdt.core.dom.{ BodyDeclaration => JdtBodyDeclaration }
 import org.eclipse.jdt.core.dom.{ MethodDeclaration => JdtMethodDeclaration }
+import org.eclipse.jdt.core.dom.TypeParameter
+
 import dwt.jport.Symbol
 import dwt.jport.Type
 import dwt.jport.analyzers.Modifiers
-import org.eclipse.jdt.core.dom.TypeParameter
+import dwt.jport.analyzers.VisitData
 
-class MethodDeclaration(node: JdtMethodDeclaration) extends BodyDeclaration(node) with TypeParameters {
+class MethodDeclaration(node: JdtMethodDeclaration, protected override val visitData: VisitData[JdtBodyDeclaration])
+  extends BodyDeclaration(node)
+  with TypeParameters
+  with Siblings[JdtBodyDeclaration] {
+
   private val binding = node.resolveBinding
 
   val isVirtual = !isFinal && !isPrivate && !isStatic

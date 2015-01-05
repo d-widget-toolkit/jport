@@ -67,6 +67,43 @@ class MethodDeclarationSuite extends Suite {
     java should portFromFileTo("Foo", d)
   }
 
+  test("formatting of multiple method") {
+    val java = code {
+      """
+      public abstract class Foo {
+        public abstract void a();
+        public abstract void b();
+
+        public void c() {
+          int a = 3;
+        }
+
+        public void d() {}
+        public void e() {}
+      }
+      """
+    }
+
+    val d = code {
+      """
+      abstract class Foo
+      {
+          abstract void a();
+          abstract void b();
+
+          void c()
+          {
+          }
+
+          void d() {}
+          void e() {}
+      }
+      """
+    }
+
+    java should portFromFileTo("Foo", d)
+  }
+
   test("final modifier") {
     val java = code {
       """
