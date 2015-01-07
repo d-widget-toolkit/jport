@@ -23,7 +23,8 @@ class MethodDeclaration(node: JdtMethodDeclaration, protected override val visit
   private val binding = node.resolveBinding
 
   val imports = binding.getParameterTypes.:+(binding.getReturnType).
-    filter(!_.isPrimitive).map(fullyQualfiedName(_))
+    filterNot(e => e.isPrimitive || e.isTypeVariable).
+    map(fullyQualfiedName(_))
 
   val isVirtual = !isFinal && !isPrivate && !isStatic
 
