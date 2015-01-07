@@ -104,6 +104,72 @@ class MethodDeclarationSuite extends Suite {
     java should portFromFileTo("Foo", d)
   }
 
+  test("parameters") {
+    val java = code {
+      """
+      public class Foo {
+        public void bar(int a, int b) {}
+      }
+      """
+    }
+
+    val d = code {
+      """
+      class Foo
+      {
+          void bar(int a, int b) {}
+      }
+      """
+    }
+
+    java should portFromFileTo("Foo", d)
+  }
+
+  test("parameters with illegal D identifiers") {
+    val java = code {
+      """
+      public class Foo {
+        public void bar(int in, int out) {}
+      }
+      """
+    }
+
+    val d = code {
+      """
+      class Foo
+      {
+          void bar(int in_, int out_) {}
+      }
+      """
+    }
+
+    java should portFromFileTo("Foo", d)
+  }
+
+  test("parameters with illegal D types") {
+    codeToFile("in")("public class in {}")
+    codeToFile("out")("public class out {}")
+
+    val java = code {
+      """
+      public class Foo {
+        public void bar(in a, out b) {}
+      }
+      """
+    }
+
+    val d = code {
+      """
+      class Foo
+      {
+          void bar(in_ a, out_ b) {}
+      }
+      """
+    }
+
+    java should portFromFileTo("Foo", d)
+  }
+
   test("final modifier") {
     val java = code {
       """

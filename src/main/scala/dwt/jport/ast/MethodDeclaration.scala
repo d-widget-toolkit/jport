@@ -5,6 +5,7 @@ import scala.collection.JavaConverters._
 
 import org.eclipse.jdt.core.dom.{ BodyDeclaration => JdtBodyDeclaration }
 import org.eclipse.jdt.core.dom.{ MethodDeclaration => JdtMethodDeclaration }
+import org.eclipse.jdt.core.dom.SingleVariableDeclaration
 import org.eclipse.jdt.core.dom.TypeParameter
 
 import dwt.jport.Symbol
@@ -27,7 +28,9 @@ class MethodDeclaration(node: JdtMethodDeclaration, protected override val visit
   val name = Symbol.translate(unescapedName)
 
   val returnType = Type.translate(binding.getReturnType)
-  val parameters = binding.getParameterTypes.map(Type.translate(_))
+
+  private val typedParameters = node.parameters.asInstanceOf[JavaList[SingleVariableDeclaration]]
+  val parameters = typedParameters.map(buildParameter(_))
 
   val body = node.getBody
   val hasBody = body != null
@@ -36,4 +39,10 @@ class MethodDeclaration(node: JdtMethodDeclaration, protected override val visit
 
   protected override def typedTypeParameters =
     node.typeParameters.asInstanceOf[JavaList[TypeParameter]]
+
+  private def buildParameter(param: SingleVariableDeclaration) = {
+    val typ = Type.translate(param.getType.resolveBinding)
+    val name = Symbol.translate(param.getName.getIdentifier)
+    s"$typ $name"
+  }
 }
