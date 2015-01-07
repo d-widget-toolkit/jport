@@ -333,4 +333,29 @@ class MethodDeclarationSuite extends Suite {
 
     java should portFromFileTo("Foo", d)
   }
+
+  test("external type as bound for type parameter") {
+    codeToFile("Bar")("public class Bar {}")
+
+    val java = code {
+      """
+      public class Foo {
+        public <T extends Bar> void bar(T t) {}
+      }
+      """
+    }
+
+    val d = code {
+      """
+      import Bar;
+
+      class Foo
+      {
+          void bar(T : Bar)(T t) {}
+      }
+      """
+    }
+
+    java should portFromFileTo("Foo", d)
+  }
 }
