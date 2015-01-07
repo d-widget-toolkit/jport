@@ -160,6 +160,9 @@ class MethodDeclarationSuite extends Suite {
 
     val d = code {
       """
+      import in_;
+      import out_;
+
       class Foo
       {
           void bar(in_ a, out_ b) {}
@@ -205,6 +208,59 @@ class MethodDeclarationSuite extends Suite {
       class Foo
       {
           /* package */ void bar() {}
+      }
+      """
+    }
+
+    java should portFromFileTo("Foo", d)
+  }
+
+  // imports
+  test("method with external return type") {
+    codeToFile("Bar")("public class Bar {}")
+
+    val java = code {
+      """
+      public class Foo {
+        public Bar bar() { return null; }
+      }
+      """
+    }
+
+    val d = code {
+      """
+      import Bar;
+
+      class Foo
+      {
+          Bar bar()
+          {
+          }
+      }
+      """
+    }
+
+    java should portFromFileTo("Foo", d)
+  }
+
+  test("method with external parameter types") {
+    codeToFile("Bar")("public class Bar {}")
+
+    val java = code {
+      """
+      public class Foo {
+        public void bar(Bar a) {}
+      }
+      """
+    }
+
+    val d = code {
+      """
+      import Bar;
+
+      class Foo
+      {
+          void bar(Bar a) {}
       }
       """
     }

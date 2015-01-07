@@ -9,17 +9,20 @@ import org.eclipse.jdt.core.dom.ITypeBinding
 import org.eclipse.jdt.core.dom.QualifiedName
 import org.eclipse.jdt.core.dom.SimpleName
 import org.eclipse.jdt.core.dom.SimpleType
-import org.eclipse.jdt.core.dom.Type
+import org.eclipse.jdt.core.dom.{ Type => JdtType }
 import org.eclipse.jdt.core.dom.{ TypeDeclaration => JdtTypeDeclaration }
 import org.eclipse.jdt.core.dom.TypeParameter
 
 import dwt.jport.Symbol
+import dwt.jport.Type
 import dwt.jport.analyzers.VisitData
 
 class TypeDeclaration(node: JdtTypeDeclaration, protected override val visitData: VisitData[JdtAbstractTypeDeclaration])
   extends BodyDeclaration(node)
   with TypeParameters
   with Siblings[JdtAbstractTypeDeclaration] {
+
+  import Type.fullyQualfiedName
 
   val isInterface = node.isInterface
   val unescapedName = node.getName.getIdentifier
@@ -39,7 +42,7 @@ class TypeDeclaration(node: JdtTypeDeclaration, protected override val visitData
   val superclass = if (isJavaLangObject) None else Symbol.translate(base.map(_.getName))
 
   val interfaces = node.superInterfaceTypes.
-    map(e => nameOfType(e.asInstanceOf[Type]))
+    map(e => nameOfType(e.asInstanceOf[JdtType]))
 
   val hasMembers = !node.bodyDeclarations.isEmpty
 
@@ -47,7 +50,7 @@ class TypeDeclaration(node: JdtTypeDeclaration, protected override val visitData
     node.typeParameters.asInstanceOf[JavaList[TypeParameter]]
 
   private def simpleTypeBounds(bounds: JavaList[_]) =
-    bounds.asInstanceOf[JavaList[Type]].
+    bounds.asInstanceOf[JavaList[JdtType]].
       filter(_.isSimpleType).map(_.asInstanceOf[SimpleType])
 
   private def namesOfBounds(bounds: Buffer[SimpleType]) = bounds.map { e =>
@@ -58,19 +61,12 @@ class TypeDeclaration(node: JdtTypeDeclaration, protected override val visitData
     }
   }
 
-  private def nameOfType(typ: Type): String = {
+  private def nameOfType(typ: JdtType): String = {
     if (typ == null) return null
 
     if (typ.isSimpleType)
       return Symbol.translate(typ.asInstanceOf[SimpleType].getName.getFullyQualifiedName)
 
     else null
-  }
-
-  private def fullyQualfiedName(binding: ITypeBinding): String = {
-    val pac = binding.getPackage
-    val name = binding.getName
-    val fullyQualfiedName = if (pac.isUnnamed) name else pac.getName + "." + name
-    Symbol.translate(fullyQualfiedName)
   }
 }

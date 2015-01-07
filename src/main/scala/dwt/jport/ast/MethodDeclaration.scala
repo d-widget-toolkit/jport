@@ -18,7 +18,12 @@ class MethodDeclaration(node: JdtMethodDeclaration, protected override val visit
   with TypeParameters
   with Siblings[JdtBodyDeclaration] {
 
+  import Type.fullyQualfiedName
+
   private val binding = node.resolveBinding
+
+  val imports = binding.getParameterTypes.:+(binding.getReturnType).
+    filter(!_.isPrimitive).map(fullyQualfiedName(_))
 
   val isVirtual = !isFinal && !isPrivate && !isStatic
 

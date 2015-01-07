@@ -11,4 +11,13 @@ object Type {
     else
       return Symbol.translate(name)
   }
+
+  def fullyQualfiedName(binding: ITypeBinding): String = {
+    val pac = binding.getPackage
+    assert(pac != null)
+
+    val name = binding.getName
+    val fullyQualfiedName = if (pac.isUnnamed) name else pac.getName + "." + name
+    Symbol.translate(fullyQualfiedName)
+  }
 }

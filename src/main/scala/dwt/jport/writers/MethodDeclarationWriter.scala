@@ -23,7 +23,8 @@ class MethodDeclarationWriter extends BodyDeclarationWriter[MethodDeclaration] w
     writeTypeParameters
     writeParameters
     writeBody
-    //importWriter :+ node.imports
+
+    importWriter :+ node.imports
   }
 
   def postWrite(): Unit = {
