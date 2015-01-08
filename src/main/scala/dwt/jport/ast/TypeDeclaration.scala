@@ -28,7 +28,7 @@ class TypeDeclaration(node: JdtTypeDeclaration, protected override val visitData
   val unescapedName = node.getName.getIdentifier
   val name = Symbol.translate(unescapedName)
 
-  private val binding = node.resolveBinding
+  private lazy val binding = node.resolveBinding
   private val base = Option(binding.getSuperclass)
   private val isJavaLangObject = base.map(_.getQualifiedName).exists(_ == "java.lang.Object")
 
@@ -46,20 +46,7 @@ class TypeDeclaration(node: JdtTypeDeclaration, protected override val visitData
 
   val hasMembers = !node.bodyDeclarations.isEmpty
 
-  protected override def typedTypeParameters =
-    node.typeParameters.asInstanceOf[JavaList[TypeParameter]]
-
-  private def simpleTypeBounds(bounds: JavaList[_]) =
-    bounds.asInstanceOf[JavaList[JdtType]].
-      filter(_.isSimpleType).map(_.asInstanceOf[SimpleType])
-
-  private def namesOfBounds(bounds: Buffer[SimpleType]) = bounds.map { e =>
-    e.getName match {
-      case s: SimpleName => Symbol.translate(s.getIdentifier)
-      case q: QualifiedName => Symbol.translate(q.getFullyQualifiedName)
-      case t => throw new Exception(s"Unhalded bounds type '$t'")
-    }
-  }
+  protected override def typeParametersBinding = binding.getTypeParameters
 
   private def nameOfType(typ: JdtType): String = {
     if (typ == null) return null

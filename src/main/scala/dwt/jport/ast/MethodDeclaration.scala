@@ -20,7 +20,7 @@ class MethodDeclaration(node: JdtMethodDeclaration, protected override val visit
 
   import Type.fullyQualfiedName
 
-  private val binding = node.resolveBinding
+  private lazy val binding = node.resolveBinding
 
   val imports = {
     val paramTypes = binding.getParameterTypes
@@ -49,8 +49,7 @@ class MethodDeclaration(node: JdtMethodDeclaration, protected override val visit
   val hasEmptyBody = hasBody && body.statements.isEmpty
   val hasNonEmptyBody = hasBody && body.statements.nonEmpty
 
-  protected override def typedTypeParameters =
-    node.typeParameters.asInstanceOf[JavaList[TypeParameter]]
+  protected override def typeParametersBinding = binding.getTypeParameters
 
   private def buildParameter(param: SingleVariableDeclaration) = {
     val typ = Type.translate(param.getType.resolveBinding)
