@@ -358,4 +358,34 @@ class MethodDeclarationSuite extends Suite {
 
     java should portFromFileTo("Foo", d)
   }
+
+  test("methods in multiple classes in the same file") {
+    val java = code {
+      """
+      public class Foo {
+        public void foo() {}
+      }
+
+      class Bar {
+        void bar() {}
+      }
+      """
+    }
+
+    val d = code {
+      """
+      class Foo
+      {
+          void foo() {}
+      }
+
+      package class Bar
+      {
+          /* package */ void bar() {}
+      }
+      """
+    }
+
+    java should portFromFileTo("Foo", d)
+  }
 }

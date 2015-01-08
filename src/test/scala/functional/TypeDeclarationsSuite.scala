@@ -234,4 +234,25 @@ class TypeDeclarationsSuite extends Suite {
 
     java should portFromFileTo("Foo", d)
   }
+
+  // multiple classes
+  test("multiple classes in the same file") {
+
+    val java = code {
+      """
+      public class Foo {}
+      class Bar {}
+      """
+    }
+
+    val d = code {
+      """
+      class Foo {}
+
+      package class Bar {}
+      """
+    }
+
+    java should portFromFileTo("Foo", d)
+  }
 }
