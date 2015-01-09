@@ -1,7 +1,9 @@
 package dwt.jport.writers
 
+import org.eclipse.jdt.core.dom.ASTNode
+import org.eclipse.jdt.core.dom.BodyDeclaration
+
 import dwt.jport.ast.FieldDeclaration
-import org.eclipse.jdt.core.dom.{ FieldDeclaration => JdtFieldDeclaration }
 
 object FieldDeclarationWriter extends WriterObject[FieldDeclaration, FieldDeclarationWriter]
 
@@ -18,10 +20,13 @@ class FieldDeclarationWriter extends BodyDeclarationWriter[FieldDeclaration] {
   def postWrite(): Unit = {
     buffer :+ nl
 
-    if (node.next.isDefined && !node.next.get.isInstanceOf[JdtFieldDeclaration])
+    if (node.next.isDefined && !isField(node.next))
       buffer :+ nl
   }
 
   private def writeType = buffer.append(node.typ, ' ')
   private def writeNames = buffer.join(node.names).append(';')
+
+  private def isField(node: Option[BodyDeclaration]) =
+    node.isDefined && node.get.getNodeType == ASTNode.FIELD_DECLARATION
 }

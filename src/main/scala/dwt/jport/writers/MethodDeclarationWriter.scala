@@ -2,6 +2,7 @@ package dwt.jport.writers
 
 import scala.collection.JavaConversions._
 
+import org.eclipse.jdt.core.dom.ASTNode
 import org.eclipse.jdt.core.dom.{ BodyDeclaration => JdtBodyDeclaration }
 import org.eclipse.jdt.core.dom.{ MethodDeclaration => JdtMethodDeclaration }
 
@@ -33,7 +34,7 @@ class MethodDeclarationWriter extends BodyDeclarationWriter[MethodDeclaration] w
 
     buffer :+ nl
 
-    if (hasNonEmptyBody(node.next))
+    if (hasNonEmptyBody(node.next) || node.next.isDefined && !isMethod(node.next))
       buffer :+ nl
   }
 
@@ -55,7 +56,10 @@ class MethodDeclarationWriter extends BodyDeclarationWriter[MethodDeclaration] w
   }
 
   private def hasNonEmptyBody(node: Option[JdtBodyDeclaration]) =
-    node.filter(_.isInstanceOf[JdtMethodDeclaration]).
+    node.filter(_.getNodeType == ASTNode.METHOD_DECLARATION).
       map(_.asInstanceOf[JdtMethodDeclaration]).
       filter(e => e.getBody != null && e.getBody.statements.nonEmpty).nonEmpty
+
+  private def isMethod(node: Option[JdtBodyDeclaration]) =
+    node.isDefined && node.get.getNodeType == ASTNode.METHOD_DECLARATION
 }

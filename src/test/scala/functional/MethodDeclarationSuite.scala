@@ -67,6 +67,7 @@ class MethodDeclarationSuite extends Suite {
     java should portFromFileTo("Foo", d)
   }
 
+  // formatting
   test("formatting of multiple method") {
     val java = code {
       """
@@ -97,6 +98,31 @@ class MethodDeclarationSuite extends Suite {
 
           void d() {}
           void e() {}
+      }
+      """
+    }
+
+    java should portFromFileTo("Foo", d)
+  }
+
+  test("method followed by instance variable") {
+    val java = code {
+      """
+      public class Foo {
+        public void foo() {}
+
+        public int a;
+      }
+      """
+    }
+
+    val d = code {
+      """
+      class Foo
+      {
+          void foo() {}
+
+          int a;
       }
       """
     }
