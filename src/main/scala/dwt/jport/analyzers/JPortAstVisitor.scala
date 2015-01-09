@@ -4,11 +4,14 @@ import scala.collection.JavaConversions._
 
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration
 import org.eclipse.jdt.core.dom.BodyDeclaration
+import org.eclipse.jdt.core.dom.{ FieldDeclaration => JdtFieldDeclaration }
 import org.eclipse.jdt.core.dom.{ MethodDeclaration => JdtMethodDeclaration }
 import org.eclipse.jdt.core.dom.{ TypeDeclaration => JdtTypeDeclaration }
 
+import dwt.jport.ast.FieldDeclaration
 import dwt.jport.ast.MethodDeclaration
 import dwt.jport.ast.TypeDeclaration
+import dwt.jport.writers.FieldDeclarationWriter
 import dwt.jport.writers.ImportWriter
 import dwt.jport.writers.MethodDeclarationWriter
 import dwt.jport.writers.TypeDeclarationWriter
@@ -28,7 +31,8 @@ class JPortAstVisitor(private val importWriter: ImportWriter) extends Visitor {
     accept(nodes.to[Array]) { (node, v) =>
       node match {
         case n: JdtMethodDeclaration => visit(n, v)
-        case _ => println(s"unhandled node $node")
+        case n: JdtFieldDeclaration => visit(n, v)
+        case _ => println(s"unhandled node ${node.getClass.getName} in ${getClass.getName}")
       }
     }
 
@@ -39,5 +43,11 @@ class JPortAstVisitor(private val importWriter: ImportWriter) extends Visitor {
     val jportNode = new MethodDeclaration(node, visitData)
     MethodDeclarationWriter.write(importWriter, jportNode)
     MethodDeclarationWriter.postWrite
+  }
+
+  def visit(node: JdtFieldDeclaration, visitData: VisitData[BodyDeclaration]): Unit = {
+    val jportNode = new FieldDeclaration(node, visitData)
+    FieldDeclarationWriter.write(importWriter, jportNode)
+    FieldDeclarationWriter.postWrite
   }
 }
