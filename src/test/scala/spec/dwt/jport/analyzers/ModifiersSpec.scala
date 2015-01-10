@@ -88,7 +88,7 @@ class ModifiersSpec extends Spec {
 
         context("when virtual method") {
           def convert(modifiers: Iterable[IExtendedModifier]) =
-            Modifiers.convert(modifiers, true)
+            Modifiers.convert(modifiers, virtual = true)
 
           it("converts 'private' to 'private'") {
             PRIVATE_KEYWORD should convertTo("private")
@@ -107,6 +107,16 @@ class ModifiersSpec extends Spec {
               val modifiers = new Array[IExtendedModifier](0)
               convert(modifiers) shouldBe "/* package */"
             }
+          }
+        }
+
+        context("when declaration is a variable of primitive type") {
+          def convert(modifiers: Iterable[IExtendedModifier]) =
+            Modifiers.convert(modifiers = modifiers, variable = true, primitiveType = true)
+
+          it("converts 'final' to 'package const'") {
+            val modifiers = Array(newModifier(FINAL_KEYWORD))
+            convert(modifiers) shouldBe "package const"
           }
         }
       }

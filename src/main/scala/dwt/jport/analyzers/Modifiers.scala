@@ -16,11 +16,21 @@ object Modifiers {
     Modifier.SYNCHRONIZED,
     Modifier.VOLATILE)
 
-  def convert(modifiers: Iterable[IExtendedModifier], virtual: Boolean = false): String = {
+  def convert(modifiers: Iterable[IExtendedModifier], virtual: Boolean = false,
+    variable: Boolean = false, primitiveType: Boolean = false): String = {
+
     val mods = filterModifiers(modifiers)
     val accessModifier = getAccessModifier(mods, virtual)
     val rest = mods.filterNot(isAccessModifier)
     val keywords = Array(accessModifier) ++ rest.map(_.getKeyword.toString())
+
+    if (variable && primitiveType) {
+      val index = keywords.indexOf("final")
+
+      if (index != -1)
+        keywords(index) = "const"
+    }
+
     keywords.filter(_.nonEmpty).mkString(" ")
   }
 
