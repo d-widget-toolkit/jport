@@ -25,7 +25,7 @@ class CompilationUnit(val node: JdtCompilationUnit) extends Visitor {
     accept(nodes) { (node, visitData) =>
       node match {
         case n: TypeDeclaration => visitor.visit(n, visitData)
-        case _ => println(s"unhandled node $node")
+        case _ => println(s"unhandled node ${node.getClass.getName}")
       }
     }
 
