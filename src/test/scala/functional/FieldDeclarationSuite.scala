@@ -24,6 +24,69 @@ class FieldDeclarationSuite extends Suite {
     java should portFromFileTo("Foo", d)
   }
 
+  test("instance variable with illegal D identifier") {
+    val java = code {
+      """
+      public class Foo {
+        public int out;
+      }
+      """
+    }
+
+    val d = code {
+      """
+      class Foo
+      {
+          int out_;
+      }
+      """
+    }
+
+    java should portFromFileTo("Foo", d)
+  }
+
+  test("no modifier") {
+    val java = code {
+      """
+      public class Foo {
+        int a;
+      }
+      """
+    }
+
+    val d = code {
+      """
+      class Foo
+      {
+          package int a;
+      }
+      """
+    }
+
+    java should portFromFileTo("Foo", d)
+  }
+
+  test("final modifier") {
+    val java = code {
+      """
+      public class Foo {
+        public final int a = 0;
+      }
+      """
+    }
+
+    val d = code {
+      """
+      class Foo
+      {
+          const int a;
+      }
+      """
+    }
+
+    java should portFromFileTo("Foo", d)
+  }
+
   // formatting
   test("two instance variables") {
     val java = code {
