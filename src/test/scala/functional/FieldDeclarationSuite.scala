@@ -3,7 +3,7 @@ package functional
 import functional.support.Suite
 
 class FieldDeclarationSuite extends Suite {
-  test("class with instance variable") {
+  test("class with field declaration") {
     val java = code {
       """
       public class Foo {
@@ -24,7 +24,7 @@ class FieldDeclarationSuite extends Suite {
     java should portFromFileTo("Foo", d)
   }
 
-  test("instance variable with illegal D identifier") {
+  test("field declaration with illegal D identifier") {
     val java = code {
       """
       public class Foo {
@@ -109,7 +109,7 @@ class FieldDeclarationSuite extends Suite {
   }
 
   // formatting
-  test("two instance variables") {
+  test("two field declarations") {
     val java = code {
       """
       public class Foo {
@@ -132,7 +132,7 @@ class FieldDeclarationSuite extends Suite {
     java should portFromFileTo("Foo", d)
   }
 
-  test("instance variables followed by method") {
+  test("field declarations followed by method") {
     val java = code {
       """
       public class Foo {
