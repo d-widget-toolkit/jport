@@ -1,21 +1,20 @@
 package dwt.jport.analyzers
 
 import scala.collection.JavaConversions._
-
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration
 import org.eclipse.jdt.core.dom.{ CompilationUnit => JdtCompilationUnit }
 import org.eclipse.jdt.core.dom.TypeDeclaration
-
 import dwt.jport.DCoder
 import dwt.jport.writers.ImportWriter
+import org.eclipse.jdt.core.dom.ASTNode
 
-class CompilationUnit(val node: JdtCompilationUnit) extends Visitor {
+class CompilationUnit(val unit: JdtCompilationUnit) extends Visitor {
   private type NodeType = AbstractTypeDeclaration
   private type JavaList[T] = java.util.List[T]
 
   private val importWriter = new ImportWriter
   private val visitor = new JPortAstVisitor(importWriter)
-  private val nodes = node.types.asInstanceOf[JavaList[NodeType]].to[Array]
+  private val nodes = unit.types.asInstanceOf[JavaList[NodeType]].to[Array]
 
   def dcoder = DCoder.dcoder
 
@@ -32,4 +31,6 @@ class CompilationUnit(val node: JdtCompilationUnit) extends Visitor {
     importWriter.write()
     dcoder.result
   }
+
+  def getLineNumber(node: ASTNode) = unit.getLineNumber(node.getStartPosition)
 }

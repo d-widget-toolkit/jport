@@ -1,19 +1,22 @@
 package dwt.jport
 
-import collection.JavaConversions._
+import scala.collection.JavaConversions._
 import scala.io.Source
-import scala.util.DynamicVariable
-import org.eclipse.jdt.core.dom.ASTParser
-import org.eclipse.jdt.core.dom.AST
-import org.eclipse.jdt.core.dom.ASTVisitor
+
 import org.eclipse.jdt.core.JavaCore
+import org.eclipse.jdt.core.dom.AST
+import org.eclipse.jdt.core.dom.ASTParser
 import org.eclipse.jdt.core.dom.{ CompilationUnit => JdtCompilationUnit }
-import org.eclipse.jdt.core.compiler.IProblem
-import dwt.jport.core.JPortAny._
-import dwt.jport.analyzers.JPortAstVisitor
+
 import dwt.jport.analyzers.CompilationUnit
+import dwt.jport.core.JPortAny._
+import dwt.jport.util.ThreadLocalVariable
 
 object JPorter {
+  def compilationUnit = _compilationUnit
+
+  private var _compilationUnit: ThreadLocalVariable[CompilationUnit] = null
+
   private val filename: String = null
   private val classpathEntries = Array(".")
   private val sourcepathEntries = Array(".")
@@ -55,7 +58,9 @@ class JPorter(val filename: String = JPorter.filename,
     if (diagnostic.hasDiagnostics)
       return null
 
-    (new CompilationUnit(unit)).process()
+    val cu = (new CompilationUnit(unit))
+    JPorter._compilationUnit = new ThreadLocalVariable(cu)
+    cu.process()
   }
 
   private def parser: ASTParser = {

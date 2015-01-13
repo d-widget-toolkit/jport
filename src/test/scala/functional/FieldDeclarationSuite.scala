@@ -156,4 +156,39 @@ class FieldDeclarationSuite extends Suite {
 
     java should portFromFileTo("Foo", d)
   }
+
+  test("grouped field declarations") {
+    val java =
+      """
+      public class Foo {
+        public int a;
+        public int b;
+
+        public int c;
+        public
+int d;
+
+        public int e;
+        public int f;
+      }
+      """
+
+    val d = code {
+      """
+      class Foo
+      {
+          int a;
+          int b;
+
+          int c;
+          int d;
+
+          int e;
+          int f;
+      }
+      """
+    }
+
+    java should portFromFileTo("Foo", d)
+  }
 }
