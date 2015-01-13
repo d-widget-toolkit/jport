@@ -45,6 +45,27 @@ class FieldDeclarationSuite extends Suite {
     java should portFromFileTo("Foo", d)
   }
 
+  test("multiple variables in single declaration") {
+    val java = code {
+      """
+      public class Foo {
+        public int a, b, c, out;
+      }
+      """
+    }
+
+    val d = code {
+      """
+      class Foo
+      {
+          int a, b, c, out_;
+      }
+      """
+    }
+
+    java should portFromFileTo("Foo", d)
+  }
+
   test("no modifier") {
     val java = code {
       """
@@ -66,7 +87,7 @@ class FieldDeclarationSuite extends Suite {
     java should portFromFileTo("Foo", d)
   }
 
-  test("final modifier") {
+  test("final modifier for primitive type") {
     val java = code {
       """
       public class Foo {
