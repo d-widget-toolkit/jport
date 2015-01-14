@@ -17,7 +17,9 @@ class ImportWriter extends Buffer {
     str +=: buffer
   }
 
-  def importsWPackage = this.imports.filter(_.contains('.')).sortWith(_ < _)
+  def importsWPackage = this.imports.filter(_.contains('.')).
+    filterNot(_ == "java.lang.Object").sortWith(_ < _)
+
   def importsWOPackage = this.imports.filter(!_.contains('.')).sortWith(_ < _)
 
   private def toImportString(s: String) = s"import $s;"

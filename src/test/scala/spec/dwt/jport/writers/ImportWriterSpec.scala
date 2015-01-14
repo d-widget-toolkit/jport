@@ -38,6 +38,13 @@ class ImportWriterSpec extends Spec with BeforeAndAfter {
           wpackage shouldBe Array("a.b", "foo.bar", "x.y")
         }
       }
+
+      context("when import list contains 'java.lang.Object'") {
+        it("does not include 'java.lang.Object'") {
+          writer :+ Array("x.y", "foo.bar", "java.lang.Object", "a.b")
+          wpackage shouldBe Array("a.b", "foo.bar", "x.y")
+        }
+      }
     }
 
     describe("importsWOPackage") {
