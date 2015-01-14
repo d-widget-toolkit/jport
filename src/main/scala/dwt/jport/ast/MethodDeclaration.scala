@@ -23,7 +23,9 @@ class MethodDeclaration(node: JdtMethodDeclaration, protected override val visit
   private lazy val binding = node.resolveBinding
 
   val imports = {
-    val paramTypes = binding.getParameterTypes
+    val paramTypes = binding.getParameterTypes.
+      map(e => if (e.isArray) e.getElementType else e)
+
     val boundTypes = binding.getTypeParameters.flatMap(_.getTypeBounds)
     val returnType = binding.getReturnType
     val imps = boundTypes ++ paramTypes :+ returnType
@@ -54,6 +56,7 @@ class MethodDeclaration(node: JdtMethodDeclaration, protected override val visit
   private def buildParameter(param: SingleVariableDeclaration) = {
     val typ = Type.translate(param.getType.resolveBinding)
     val name = Symbol.translate(param.getName.getIdentifier)
-    s"$typ $name"
+
+    if (param.isVarargs) s"$typ[] $name ..." else s"$typ $name"
   }
 }

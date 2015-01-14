@@ -8,7 +8,7 @@ class ImportWriter extends Buffer {
   def :+(imports: String) = this.imports += imports
 
   def write(): Unit = {
-    if (this.imports.isEmpty) return
+    if (importsWPackage.isEmpty && importsWOPackage.isEmpty) return
 
     val groups = importsWPackage.groupBy(e => e.split('.').head).values.toArray
     val sortedGroups = groups.sortWith(sort) ++ Array(importsWOPackage)
@@ -17,10 +17,11 @@ class ImportWriter extends Buffer {
     str +=: buffer
   }
 
-  def importsWPackage = this.imports.filter(_.contains('.')).
+  lazy val importsWPackage = this.imports.filter(_.contains('.')).
     filterNot(_ == "java.lang.Object").sortWith(_ < _)
 
-  def importsWOPackage = this.imports.filter(!_.contains('.')).sortWith(_ < _)
+  lazy val importsWOPackage = this.imports.filter(!_.contains('.')).
+    sortWith(_ < _)
 
   private def toImportString(s: String) = s"import $s;"
   private def sort(a: StringArray, b: StringArray) =
