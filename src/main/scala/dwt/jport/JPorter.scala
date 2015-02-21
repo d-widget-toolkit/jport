@@ -13,18 +13,23 @@ import dwt.jport.core.JPortAny._
 import dwt.jport.util.ThreadLocalVariable
 
 object JPorter {
-  def compilationUnit = _compilationUnit
-
-  private var _compilationUnit: ThreadLocalVariable[CompilationUnit] = null
-
   private val filename: String = null
   private val classpathEntries = Array(".")
   private val sourcepathEntries = Array(".")
   private val includeRunningVMBootclasspath = true
 
+  private var jporter: ThreadLocalVariable[JPorter] = null
+  private var _diagnostic: ThreadLocalVariable[Diagnostic] = new ThreadLocalVariable(new Diagnostic)
+
+  def diagnostic = _diagnostic.get
+  def compilationUnit = jporter.get.compilationUnit
+
   def port(code: Array[Char], filename: String, sourcepathEntries: Array[String],
-    classpathEntries: Array[String], includeRunningVMBootclasspath: Boolean): String =
-    new JPorter(filename, sourcepathEntries, classpathEntries, includeRunningVMBootclasspath).port(code)
+    classpathEntries: Array[String], includeRunningVMBootclasspath: Boolean): String = {
+    val jp = new JPorter(filename, sourcepathEntries, classpathEntries, includeRunningVMBootclasspath)
+    jporter = new ThreadLocalVariable(jp)
+    jp.port(code)
+  }
 
   def port(code: String, filename: String = JPorter.filename,
     sourcepathEntries: Array[String] = JPorter.sourcepathEntries,
@@ -48,19 +53,18 @@ class JPorter(val filename: String = JPorter.filename,
   val includeRunningVMBootclasspath: Boolean = JPorter.includeRunningVMBootclasspath) {
 
   private var _parser: ASTParser = null
-  private val diagnostic = new Diagnostic
+  private var compilationUnit: CompilationUnit = null
 
   def port(code: Array[Char]): String = {
     parser.setSource(code)
     val unit = parser.createAST(null).asInstanceOf[JdtCompilationUnit]
     checkCompilationErrors(unit)
 
-    if (diagnostic.hasDiagnostics)
+    if (JPorter.diagnostic.hasDiagnostics)
       return null
 
-    val cu = (new CompilationUnit(unit))
-    JPorter._compilationUnit = new ThreadLocalVariable(cu)
-    cu.process()
+    compilationUnit = new CompilationUnit(unit)
+    compilationUnit.process()
   }
 
   private def parser: ASTParser = {
@@ -88,7 +92,7 @@ class JPorter(val filename: String = JPorter.filename,
 
   private def checkCompilationErrors(unit: JdtCompilationUnit): Unit = {
     for (e <- unit.getProblems.filter(_.isError))
-      diagnostic.error(filename, e.getSourceLineNumber,
+      JPorter.diagnostic.error(filename, e.getSourceLineNumber,
         e.getMessage)
   }
 }

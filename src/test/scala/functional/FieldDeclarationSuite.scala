@@ -100,7 +100,7 @@ class FieldDeclarationSuite extends Suite {
       """
       class Foo
       {
-          const int a;
+          const int a = 0;
       }
       """
     }
@@ -185,6 +185,27 @@ int d;
 
           int e;
           int f;
+      }
+      """
+    }
+
+    java should portFromFileTo("Foo", d)
+  }
+
+  test("field declaration with simple initializer") {
+    val java = code {
+      """
+      public class Foo {
+        public final int a = 1;
+      }
+      """
+    }
+
+    val d = code {
+      """
+      class Foo
+      {
+          const int a = 1;
       }
       """
     }

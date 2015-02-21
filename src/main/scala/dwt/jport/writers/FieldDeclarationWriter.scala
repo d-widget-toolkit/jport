@@ -5,6 +5,7 @@ import org.eclipse.jdt.core.dom.BodyDeclaration
 
 import dwt.jport.JPorter
 import dwt.jport.ast.FieldDeclaration
+import dwt.jport.translators.Constant
 
 object FieldDeclarationWriter extends WriterObject[FieldDeclaration, FieldDeclarationWriter]
 
@@ -15,7 +16,7 @@ class FieldDeclarationWriter extends BodyDeclarationWriter[FieldDeclaration] {
 
     writeModifiers
     writeType
-    writeNames
+    writeNamesAndConstantValues
   }
 
   def postWrite(): Unit = {
@@ -28,7 +29,8 @@ class FieldDeclarationWriter extends BodyDeclarationWriter[FieldDeclaration] {
   }
 
   private def writeType = buffer.append(node.typ, ' ')
-  private def writeNames = buffer.join(node.names).append(';')
+  private def writeNamesAndConstantValues =
+    buffer.join(namesConstantValues).append(';')
 
   private def isField(node: Option[BodyDeclaration]) =
     node.isDefined && node.get.getNodeType == ASTNode.FIELD_DECLARATION
@@ -37,5 +39,12 @@ class FieldDeclarationWriter extends BodyDeclarationWriter[FieldDeclaration] {
     lineNumber(node) == this.node.lineNumber + 1
 
   private def lineNumber(node: BodyDeclaration) =
-    JPorter.compilationUnit.get.getLineNumber(node)
+    JPorter.compilationUnit.getLineNumber(node)
+
+  private def namesConstantValues: scala.collection.mutable.Buffer[String] =
+    node.names.zip(node.constantValues).map {
+      case (name, value) =>
+        val constValue = Constant.translate(value)
+        if (constValue.isEmpty) name else s"${name} = ${constValue}"
+    }
 }

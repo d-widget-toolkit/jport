@@ -24,4 +24,6 @@ class FieldDeclaration(node: JdtFieldDeclaration, protected override val visitDa
   override val translatedModifiers =
     Modifiers.convert(modifiers, variable = true,
       primitiveType = node.getType.isPrimitiveType())
+
+  val constantValues = fragmentBindings.map(_.getConstantValue)
 }
