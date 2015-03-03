@@ -20,7 +20,9 @@ import dwt.jport.analyzers.VisitData
 class TypeDeclaration(node: JdtTypeDeclaration, protected override val visitData: VisitData[JdtAbstractTypeDeclaration])
   extends BodyDeclaration(node)
   with TypeParameters
-  with Siblings[JdtAbstractTypeDeclaration] {
+  with Siblings {
+
+  type JdtNodeType = JdtAbstractTypeDeclaration
 
   import Type.fullyQualfiedName
 

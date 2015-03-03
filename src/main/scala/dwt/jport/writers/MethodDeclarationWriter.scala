@@ -26,9 +26,12 @@ class MethodDeclarationWriter extends BodyDeclarationWriter[MethodDeclaration] w
     writeBody
 
     importWriter :+ node.imports
+    buffer.increaseIndentation
   }
 
   def postWrite(): Unit = {
+    buffer.decreaseIndentation
+
     if (node.hasBody)
       buffer :+ '}'
 

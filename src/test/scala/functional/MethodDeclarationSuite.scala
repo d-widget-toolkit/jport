@@ -94,6 +94,7 @@ class MethodDeclarationSuite extends Suite {
 
           void c()
           {
+              int a = 3;
           }
 
           void d() {}

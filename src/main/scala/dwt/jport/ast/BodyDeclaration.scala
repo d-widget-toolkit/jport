@@ -8,10 +8,8 @@ import dwt.jport.analyzers.Modifiers
 import org.eclipse.jdt.core.dom.Modifier
 
 abstract class BodyDeclaration(node: JdtBodyDeclaration) extends AstNode(node) {
-  protected type JavaList[T] = java.util.List[T]
-
-  val modifiers = node.modifiers.asInstanceOf[JavaList[IExtendedModifier]]
-  val translatedModifiers = Modifiers.convert(modifiers)
+  def modifiers = node.modifiers.asInstanceOf[JavaList[IExtendedModifier]]
+  def translatedModifiers = Modifiers.convert(modifiers)
 
   private val modifierFlags = node.getModifiers
 

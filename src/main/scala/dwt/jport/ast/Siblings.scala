@@ -4,8 +4,10 @@ import org.eclipse.jdt.core.dom.ASTNode
 
 import dwt.jport.analyzers.VisitData
 
-trait Siblings[T <: ASTNode] {
-  protected val visitData: VisitData[T]
+trait Siblings {
+  type JdtNodeType <: ASTNode
+
+  protected val visitData: VisitData[JdtNodeType]
 
   val hasNext = visitData.next.isDefined
   val hasPrev = visitData.prev.isDefined

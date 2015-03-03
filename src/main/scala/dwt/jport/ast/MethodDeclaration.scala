@@ -1,12 +1,14 @@
 package dwt.jport.ast
 
+import java.util.ArrayList
+
 import scala.collection.JavaConversions._
 import scala.collection.JavaConverters._
 
 import org.eclipse.jdt.core.dom.{ BodyDeclaration => JdtBodyDeclaration }
 import org.eclipse.jdt.core.dom.{ MethodDeclaration => JdtMethodDeclaration }
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration
-import org.eclipse.jdt.core.dom.TypeParameter
+import org.eclipse.jdt.core.dom.Statement
 
 import dwt.jport.Symbol
 import dwt.jport.Type
@@ -16,7 +18,9 @@ import dwt.jport.analyzers.VisitData
 class MethodDeclaration(node: JdtMethodDeclaration, protected override val visitData: VisitData[JdtBodyDeclaration])
   extends BodyDeclaration(node)
   with TypeParameters
-  with Siblings[JdtBodyDeclaration] {
+  with Siblings {
+
+  type JdtNodeType = JdtBodyDeclaration
 
   import Type.fullyQualfiedName
 
@@ -46,10 +50,15 @@ class MethodDeclaration(node: JdtMethodDeclaration, protected override val visit
   private val typedParameters = node.parameters.asInstanceOf[JavaList[SingleVariableDeclaration]]
   val parameters = typedParameters.map(buildParameter(_))
 
-  val body = node.getBody
-  val hasBody = body != null
-  val hasEmptyBody = hasBody && body.statements.isEmpty
-  val hasNonEmptyBody = hasBody && body.statements.nonEmpty
+  val body = Option(node.getBody)
+
+  val statements =
+    body.map(e => e.statements.asInstanceOf[JavaList[Statement]]).
+      getOrElse(new ArrayList[Statement])
+
+  val hasBody = body.isDefined
+  val hasEmptyBody = hasBody && statements.isEmpty
+  val hasNonEmptyBody = hasBody && statements.nonEmpty
 
   protected override def typeParametersBinding = binding.getTypeParameters
 
