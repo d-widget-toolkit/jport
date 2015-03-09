@@ -54,4 +54,30 @@ class VariabelDeclarationStatementSuite extends Suite {
 
     java should portFromFileTo("Foo", d)
   }
+
+  test("infix expression") {
+    val java = code {
+      """
+      public class Foo {
+        public void foo () {
+          int a = 3 + 3;
+        }
+      }
+      """
+    }
+
+    val d = code {
+      """
+      class Foo
+      {
+          void foo()
+          {
+              int a = 3 + 3;
+          }
+      }
+      """
+    }
+
+    java should portFromFileTo("Foo", d)
+  }
 }
