@@ -11,4 +11,26 @@ trait Code {
       if (e == "\n") e else e.slice(margin, e.length)
     }.mkString.trim
   }
+
+  def javaCode(source: String) = code {
+    s"""
+    public class Foo {
+      public void foo() {
+        ${source}
+      }
+    }
+    """
+  }
+
+  def dCode(source: String) = code {
+    s"""
+    class Foo
+    {
+        void foo()
+        {
+            ${source}
+        }
+    }
+    """
+  }
 }

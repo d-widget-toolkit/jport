@@ -2,6 +2,7 @@ package dwt.jport.ast.expressions
 
 import org.eclipse.jdt.core.dom.{ ArrayAccess => JdtArrayAccess }
 import org.eclipse.jdt.core.dom.{ ArrayInitializer => JdtArrayInitializer }
+import org.eclipse.jdt.core.dom.{ ArrayCreation => JdtArrayCreation }
 
 import org.eclipse.jdt.core.dom.{ Expression => JdtExpression }
 import org.eclipse.jdt.core.dom.{ InfixExpression => JdtInfixExpression }
@@ -19,6 +20,7 @@ object Expression {
       case n: JdtArrayAccess => new ArrayAccess(n)
       case n: JdtSimpleName => new SimpleName(n)
       case n: JdtArrayInitializer => new ArrayInitializer(n)
+      case n: JdtArrayCreation => new ArrayCreation(n)
       case _ =>
         JPorter.diagnostic.unhandled(s"Unhandled type ${node.getClass.getName} in ${getClass.getName}")
         null
