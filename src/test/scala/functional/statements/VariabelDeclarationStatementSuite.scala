@@ -23,4 +23,13 @@ class VariabelDeclarationStatementSuite extends Suite {
 
     java should portFromFileTo("Foo", d)
   }
+
+  test("user defined type") {
+    codeToFile("Bar")("public class Bar {}")
+
+    val java = javaCode("Bar a;")
+    val d = "import Bar;\n\n" + dCode("Bar a;")
+
+    java should portFromFileTo("Foo", d)
+  }
 }
