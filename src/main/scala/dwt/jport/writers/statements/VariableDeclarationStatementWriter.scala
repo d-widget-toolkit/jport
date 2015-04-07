@@ -18,6 +18,8 @@ class VariableDeclarationStatementWriter extends Writer[VariableDeclarationState
     writeType
     writeNamesAndInitializers
     buffer += ';'
+
+    importWriter += node.imports
   }
 
   def postWrite(): Unit = {

@@ -4,8 +4,11 @@ class ImportWriter extends Buffer {
   private type StringArray = scala.collection.mutable.ArrayBuffer[String]
   private var imports = new StringArray
 
-  def :+(imports: Array[String]) = this.imports ++= imports
+  def :+(imports: Iterable[String]) = this.imports ++= imports
   def :+(imports: String) = this.imports += imports
+
+  def +=(imports: Iterable[String]) = this.imports ++= imports
+  def +=(imports: String) = this.imports += imports
 
   def write(): Unit = {
     if (importsWPackage.isEmpty && importsWOPackage.isEmpty) return

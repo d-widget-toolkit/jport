@@ -10,6 +10,7 @@ import dwt.jport.Symbol
 import dwt.jport.Type
 import dwt.jport.analyzers.Modifiers
 import dwt.jport.ast.Siblings
+import dwt.jport.translators.ImportTranslator
 
 trait VariableDeclaration extends Siblings {
   private type JavaList[T] = java.util.List[T]
@@ -19,7 +20,18 @@ trait VariableDeclaration extends Siblings {
   protected def rawType: JdtType
   protected def fragmentBindings = fragments.map(_.resolveBinding)
 
-  val typ = Type.translate(rawType.resolveBinding)
+  private val typeBinding = rawType.resolveBinding
+  val typ = Type.translate(typeBinding)
+
+  val imports = {
+    val typ = if (typeBinding.isArray())
+      typeBinding.getElementType
+    else
+      typeBinding
+
+    ImportTranslator.translate(Some(typ))
+  }
+
   def names = fragmentBindings.map(e => Symbol.translate(e.getName))
 
   def translatedModifiers =

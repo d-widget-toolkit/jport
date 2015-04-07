@@ -14,6 +14,7 @@ import dwt.jport.Symbol
 import dwt.jport.Type
 import dwt.jport.analyzers.Modifiers
 import dwt.jport.analyzers.VisitData
+import dwt.jport.translators.ImportTranslator
 
 class MethodDeclaration(node: JdtMethodDeclaration, protected override val visitData: VisitData[JdtBodyDeclaration])
   extends BodyDeclaration(node)
@@ -32,10 +33,8 @@ class MethodDeclaration(node: JdtMethodDeclaration, protected override val visit
 
     val boundTypes = binding.getTypeParameters.flatMap(_.getTypeBounds)
     val returnType = binding.getReturnType
-    val imps = boundTypes ++ paramTypes :+ returnType
 
-    imps.filterNot(e => e.isPrimitive || e.isTypeVariable).
-      map(fullyQualfiedName(_))
+    ImportTranslator.translate(boundTypes ++ paramTypes :+ returnType)
   }
 
   val isVirtual = !isFinal && !isPrivate && !isStatic
