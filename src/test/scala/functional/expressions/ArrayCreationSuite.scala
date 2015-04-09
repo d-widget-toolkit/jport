@@ -32,4 +32,14 @@ class ArrayCreationSuite extends Suite {
 
     java should portFromFileTo("Foo", d)
   }
+
+  test("subtyping and user defined types") {
+    codeToFile("Bar")("public class Bar {}")
+    codeToFile("Baz")("public class Baz extends Bar {}")
+
+    val java = javaCode("Bar[] a = new Baz[3];")
+    val d = "import Bar;\nimport Baz;\n\n" + dCode("Bar[] a = new Baz[3];")
+
+    java should portFromFileTo("Foo", d)
+  }
 }

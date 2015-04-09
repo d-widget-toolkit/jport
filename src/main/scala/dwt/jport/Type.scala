@@ -20,4 +20,15 @@ object Type {
     val fullyQualfiedName = if (pac.isUnnamed) name else pac.getName + "." + name
     Symbol.translate(fullyQualfiedName)
   }
+
+  def canonicalType(binding: ITypeBinding) = if (binding.isArray()) binding.getElementType
+}
+
+class ITypeBindingCanonicalType(val binding: ITypeBinding) {
+  def canonicalType = if (binding.isArray()) binding.getElementType else binding
+}
+
+object ITypeBindigImplicits {
+  implicit def ITypeBindingToITypeBindingCanonicalType(binding: ITypeBinding) =
+    new ITypeBindingCanonicalType(binding)
 }

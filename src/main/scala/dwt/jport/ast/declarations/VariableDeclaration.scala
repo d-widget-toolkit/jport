@@ -12,6 +12,8 @@ import dwt.jport.analyzers.Modifiers
 import dwt.jport.ast.Siblings
 import dwt.jport.translators.ImportTranslator
 
+import dwt.jport.ITypeBindigImplicits.ITypeBindingToITypeBindingCanonicalType
+
 trait VariableDeclaration extends Siblings {
   private type JavaList[T] = java.util.List[T]
 
@@ -29,7 +31,10 @@ trait VariableDeclaration extends Siblings {
     else
       typeBinding
 
-    ImportTranslator.translate(Some(typ))
+    val types = fragments.map(_.getInitializer).filterNot(_ == null).
+      map(_.resolveTypeBinding.canonicalType)
+
+    ImportTranslator.translate(types :+ typ)
   }
 
   def names = fragmentBindings.map(e => Symbol.translate(e.getName))
