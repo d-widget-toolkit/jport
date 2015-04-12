@@ -1,14 +1,14 @@
 package dwt.jport.ast.expressions
 
 import org.eclipse.jdt.core.dom.{ ArrayAccess => JdtArrayAccess }
-import org.eclipse.jdt.core.dom.{ ArrayInitializer => JdtArrayInitializer }
 import org.eclipse.jdt.core.dom.{ ArrayCreation => JdtArrayCreation }
-
+import org.eclipse.jdt.core.dom.{ ArrayInitializer => JdtArrayInitializer }
+import org.eclipse.jdt.core.dom.{ ClassInstanceCreation => JdtClassInstanceCreation }
 import org.eclipse.jdt.core.dom.{ Expression => JdtExpression }
 import org.eclipse.jdt.core.dom.{ InfixExpression => JdtInfixExpression }
+import org.eclipse.jdt.core.dom.{ NullLiteral => JdtNullLiteral }
 import org.eclipse.jdt.core.dom.{ NumberLiteral => JdtNumberLiteral }
 import org.eclipse.jdt.core.dom.{ SimpleName => JdtSimpleName }
-import org.eclipse.jdt.core.dom.{ NullLiteral => JdtNullLiteral }
 
 import dwt.jport.ast.AstNode
 import dwt.jport.JPorter
@@ -23,6 +23,7 @@ object Expression {
       case n: JdtArrayInitializer => new ArrayInitializer(n)
       case n: JdtArrayCreation => new ArrayCreation(n)
       case n: JdtNullLiteral => new NullLiteral(n)
+      case n: JdtClassInstanceCreation => new ClassInstanceCreation(n)
       case _ =>
         JPorter.diagnostic.unhandled(s"Unhandled type ${node.getClass.getName} in ${getClass.getName}")
         null
@@ -32,4 +33,13 @@ object Expression {
 
 abstract class Expression(node: JdtExpression) extends AstNode(node) {
   def translate: String
+}
+
+class ToJPortExpression(val node: JdtExpression) {
+  def toJPort = Expression.toJPort(node)
+}
+
+object ExpressionImplicits {
+  implicit def ExpressionToJPortExpression(node: JdtExpression) =
+    new ToJPortExpression(node)
 }
