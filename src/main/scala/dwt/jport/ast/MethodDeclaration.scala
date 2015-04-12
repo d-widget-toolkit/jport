@@ -33,8 +33,9 @@ class MethodDeclaration(node: JdtMethodDeclaration, protected override val visit
 
     val boundTypes = binding.getTypeParameters.flatMap(_.getTypeBounds)
     val returnType = binding.getReturnType
+    val types = boundTypes ++ paramTypes :+ returnType
 
-    ImportTranslator.translate(boundTypes ++ paramTypes :+ returnType)
+    ImportTranslator.translate(types, declaringClass)
   }
 
   val isVirtual = !isFinal && !isPrivate && !isStatic
