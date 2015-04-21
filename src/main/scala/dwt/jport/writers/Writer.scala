@@ -1,6 +1,10 @@
 package dwt.jport.writers
 
+import org.eclipse.jdt.core.dom.ASTNode
+
 import dwt.jport.DCoder
+import dwt.jport.JPorter
+import dwt.jport.ast.AstNode
 import dwt.jport.util.ThreadLocalVariable
 
 trait Buffer {
@@ -12,14 +16,23 @@ trait Node[T] {
   protected var node: T = _
 }
 
-trait Writer[T] extends Node[T] with Buffer {
+trait Writer[T <: AstNode[_]] extends Node[T] with Buffer {
   protected var importWriter: ImportWriter = null
 
   def write(importWriter: ImportWriter, node: T): Unit
   def postWrite
+
+  protected def isAdjacentLine(node: ASTNode) =
+    lineNumber(node) == this.node.lineNumber + 1
+
+  protected def lineNumber(node: ASTNode) =
+    JPorter.compilationUnit.getLineNumber(node)
+
+  protected def isExpressionStatement(node: Option[ASTNode]) =
+    node.isDefined && node.get.getNodeType == ASTNode.EXPRESSION_STATEMENT
 }
 
-abstract class WriterObject[Node, Subclass <: Writer[Node]](implicit manifest: Manifest[Subclass]) {
+abstract class WriterObject[Node <: AstNode[_], Subclass <: Writer[Node]](implicit manifest: Manifest[Subclass]) {
   private def newInstance = manifest.runtimeClass.newInstance.asInstanceOf[Subclass]
   private val _writer = new ThreadLocalVariable(newInstance)
   private def writer = _writer.get

@@ -26,7 +26,9 @@ class VariableDeclarationStatementWriter extends Writer[VariableDeclarationState
     buffer :+ nl
 
     if (node.next.isDefined) {
-      if (!isField(node.next) || !isAdjacentLine(node.next.get))
+      if (!isField(node.next) &&
+        !isExpressionStatement(node.next) &&
+        !isAdjacentLine(node.next.get))
         buffer :+ nl
     }
   }
@@ -35,14 +37,8 @@ class VariableDeclarationStatementWriter extends Writer[VariableDeclarationState
   private def writeNamesAndInitializers =
     buffer.join(namesInitializers)
 
-  private def isField(node: Option[VariableDeclarationStatement#JdtNodeType]) =
+  protected def isField(node: Option[ASTNode]) =
     node.isDefined && node.get.getNodeType == ASTNode.FIELD_DECLARATION
-
-  private def isAdjacentLine(node: VariableDeclarationStatement#JdtNodeType) =
-    lineNumber(node) == this.node.lineNumber + 1
-
-  private def lineNumber(node: VariableDeclarationStatement#JdtNodeType) =
-    JPorter.compilationUnit.getLineNumber(node)
 
   private def namesInitializers: scala.collection.mutable.Buffer[String] =
     node.names.zip(node.initializers).map {

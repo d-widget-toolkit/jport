@@ -9,6 +9,7 @@ import org.eclipse.jdt.core.dom.{ InfixExpression => JdtInfixExpression }
 import org.eclipse.jdt.core.dom.{ NullLiteral => JdtNullLiteral }
 import org.eclipse.jdt.core.dom.{ NumberLiteral => JdtNumberLiteral }
 import org.eclipse.jdt.core.dom.{ SimpleName => JdtSimpleName }
+import org.eclipse.jdt.core.dom.{ Assignment => JdtAssignment }
 
 import dwt.jport.ast.AstNode
 import dwt.jport.JPorter
@@ -24,6 +25,7 @@ object Expression {
       case n: JdtArrayCreation => new ArrayCreation(n)
       case n: JdtNullLiteral => new NullLiteral(n)
       case n: JdtClassInstanceCreation => new ClassInstanceCreation(n)
+      case n: JdtAssignment => new Assignment(n)
       case _ =>
         JPorter.diagnostic.unhandled(s"Unhandled type ${node.getClass.getName} in ${getClass.getName}")
         null

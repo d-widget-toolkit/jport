@@ -1,24 +1,29 @@
 package dwt.jport.analyzers
 
 import scala.collection.JavaConversions._
+
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration
 import org.eclipse.jdt.core.dom.BodyDeclaration
+import org.eclipse.jdt.core.dom.{ ExpressionStatement => JdtExpressionStatement }
 import org.eclipse.jdt.core.dom.{ FieldDeclaration => JdtFieldDeclaration }
 import org.eclipse.jdt.core.dom.{ MethodDeclaration => JdtMethodDeclaration }
+import org.eclipse.jdt.core.dom.ReturnStatement
 import org.eclipse.jdt.core.dom.Statement
 import org.eclipse.jdt.core.dom.{ TypeDeclaration => JdtTypeDeclaration }
 import org.eclipse.jdt.core.dom.{ VariableDeclarationStatement => JdtVariableDeclarationStatement }
+
 import dwt.jport.JPorter
 import dwt.jport.ast.FieldDeclaration
 import dwt.jport.ast.MethodDeclaration
 import dwt.jport.ast.TypeDeclaration
+import dwt.jport.ast.statements.ExpressionStatement
 import dwt.jport.ast.statements.VariableDeclarationStatement
 import dwt.jport.writers.FieldDeclarationWriter
 import dwt.jport.writers.ImportWriter
 import dwt.jport.writers.MethodDeclarationWriter
 import dwt.jport.writers.TypeDeclarationWriter
+import dwt.jport.writers.statements.ExpressionStatementWriter
 import dwt.jport.writers.statements.VariableDeclarationStatementWriter
-import org.eclipse.jdt.core.dom.ReturnStatement
 
 class VisitData[T](val isFirst: Boolean, val next: Option[T],
   val prev: Option[T])
@@ -52,6 +57,7 @@ class JPortAstVisitor(private val importWriter: ImportWriter) extends Visitor {
       node match {
         case n: JdtVariableDeclarationStatement => visit(n, visitData)
         case n: ReturnStatement => /* ignore during development */
+        case n: JdtExpressionStatement => visit(n, visitData)
         case _ => JPorter.diagnostic.unhandled(s"unhandled node ${node.getClass.getName} in ${getClass.getName}")
       }
     }
@@ -69,5 +75,11 @@ class JPortAstVisitor(private val importWriter: ImportWriter) extends Visitor {
     val jportNode = new VariableDeclarationStatement(node, visitData)
     VariableDeclarationStatementWriter.write(importWriter, jportNode)
     VariableDeclarationStatementWriter.postWrite
+  }
+
+  def visit(node: JdtExpressionStatement, visitData: VisitData[Statement]): Unit = {
+    val jportNode = new ExpressionStatement(node, visitData)
+    ExpressionStatementWriter.write(importWriter, jportNode)
+    ExpressionStatementWriter.postWrite
   }
 }
