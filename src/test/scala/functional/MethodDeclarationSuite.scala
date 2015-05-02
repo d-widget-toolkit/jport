@@ -25,6 +25,27 @@ class MethodDeclarationSuite extends Suite {
     java should portFromFileTo("Foo", d)
   }
 
+  test("constructor with empty body") {
+    val java = code {
+      """
+      public class Foo {
+        public Foo() {}
+      }
+      """
+    }
+
+    val d = code {
+      """
+      class Foo
+      {
+          this() {}
+      }
+      """
+    }
+
+    java should portFromFileTo("Foo", d)
+  }
+
   test("method with illegal D identifier") {
     val java = code {
       """

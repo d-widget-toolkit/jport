@@ -41,7 +41,9 @@ class MethodDeclarationWriter extends BodyDeclarationWriter[MethodDeclaration] w
       buffer :+ nl
   }
 
-  private def writeReturnType = buffer.append(node.returnType, ' ')
+  private def writeReturnType =
+    buffer += node.returnType.map(_ + ' ').getOrElse("")
+
   private def writeName = buffer :+ node.name
 
   private def writeParameters =

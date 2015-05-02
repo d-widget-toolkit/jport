@@ -43,9 +43,14 @@ class MethodDeclaration(node: JdtMethodDeclaration, protected override val visit
   override val translatedModifiers = Modifiers.convert(modifiers, isVirtual)
 
   val unescapedName = node.getName.getIdentifier
-  val name = Symbol.translate(unescapedName)
 
-  val returnType = Type.translate(binding.getReturnType)
+  val name =
+    if (node.isConstructor) "this" else Symbol.translate(unescapedName)
+
+  val returnType = if (node.isConstructor)
+    None
+  else
+    Some(Type.translate(binding.getReturnType))
 
   private val typedParameters = node.parameters.asInstanceOf[JavaList[SingleVariableDeclaration]]
   val parameters = typedParameters.map(buildParameter(_))
