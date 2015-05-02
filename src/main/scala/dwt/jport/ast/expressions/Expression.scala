@@ -4,6 +4,7 @@ import org.eclipse.jdt.core.dom.{ ArrayAccess => JdtArrayAccess }
 import org.eclipse.jdt.core.dom.{ ArrayCreation => JdtArrayCreation }
 import org.eclipse.jdt.core.dom.{ ArrayInitializer => JdtArrayInitializer }
 import org.eclipse.jdt.core.dom.{ Assignment => JdtAssignment }
+import org.eclipse.jdt.core.dom.{ CastExpression => JdtCastExpression }
 import org.eclipse.jdt.core.dom.{ ClassInstanceCreation => JdtClassInstanceCreation }
 import org.eclipse.jdt.core.dom.{ Expression => JdtExpression }
 import org.eclipse.jdt.core.dom.ITypeBinding
@@ -28,6 +29,7 @@ object Expression {
       case n: JdtNullLiteral => new NullLiteral(n)
       case n: JdtClassInstanceCreation => new ClassInstanceCreation(n)
       case n: JdtAssignment => new Assignment(n)
+      case n: JdtCastExpression => new CastExpression(n)
       case _ =>
         JPorter.diagnostic.unhandled(s"Unhandled type ${node.getClass.getName} in ${getClass.getName}")
         null

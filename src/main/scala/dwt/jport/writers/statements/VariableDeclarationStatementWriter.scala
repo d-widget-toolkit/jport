@@ -43,7 +43,7 @@ class VariableDeclarationStatementWriter extends Writer[VariableDeclarationState
   private def namesInitializers: scala.collection.mutable.Buffer[String] =
     node.names.zip(node.initializers).map {
       case (name, value) =>
-        val initializer = if (value != null) value.translate else ""
+        val initializer = value.map(_.translate).getOrElse("")
         //val constValue = Expression.toJPort(value, null) //Constant.translate(value)
         if (initializer.isEmpty) name else s"${name} = ${initializer}"
     }

@@ -8,11 +8,12 @@ import org.eclipse.jdt.core.dom.ITypeBinding
 import org.eclipse.jdt.core.dom.{ Type => JdtType }
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment
 
-import dwt.jport.ITypeBindigImplicits.ITypeBindingToITypeBindingCanonicalType
+import dwt.jport.ITypeBindigImplicits._
 import dwt.jport.Symbol
 import dwt.jport.Type
 import dwt.jport.analyzers.Modifiers
 import dwt.jport.ast.Siblings
+import dwt.jport.ast.expressions.ExpressionImplicits._
 import dwt.jport.translators.ImportTranslator
 
 trait VariableDeclaration extends Siblings {
@@ -25,17 +26,16 @@ trait VariableDeclaration extends Siblings {
   protected def node: ASTNode
   protected def declaringClass: ITypeBinding
 
+  def initializers =
+    fragments.map(e => Option(e.getInitializer).map(_.toJPort))
+
   private val typeBinding = rawType.resolveBinding
   val typ = Type.translate(typeBinding)
 
   val imports = {
-    val typ = if (typeBinding.isArray())
-      typeBinding.getElementType
-    else
-      typeBinding
-
-    val types = fragments.map(_.getInitializer).filterNot(_ == null).
-      map(_.resolveTypeBinding.canonicalType) :+ typ
+    val types = initializers.
+      flatMap(_.map(_.importTypeBindings).getOrElse(Array())) :+
+      typeBinding.canonicalType
 
     ImportTranslator.translate(types, declaringClass)
   }
@@ -47,4 +47,5 @@ trait VariableDeclaration extends Siblings {
       primitiveType = rawType.isPrimitiveType())
 
   def constantValues = fragmentBindings.map(_.getConstantValue)
+
 }

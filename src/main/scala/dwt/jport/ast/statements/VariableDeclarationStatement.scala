@@ -18,9 +18,6 @@ class VariableDeclarationStatement(node: JdtVariableDeclarationStatement, protec
 
   type JdtNodeType = Statement
 
-  def initializers = fragments.map(_.getInitializer).
-    map(e => if (e != null) Expression.toJPort(e) else null)
-
   override def modifiers = new java.util.ArrayList[IExtendedModifier]
 
   protected override def fragments = node.fragments.asInstanceOf[JavaList[VariableDeclarationFragment]]
