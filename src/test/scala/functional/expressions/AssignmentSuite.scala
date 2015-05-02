@@ -30,4 +30,38 @@ class AssignmentSuite extends Suite {
 
     java should portFromFileTo("Foo", d)
   }
+
+  test("subtyping") {
+    codeToFile("Bar")("public class Bar {}")
+    codeToFile("Baz")("public class Baz extends Bar {}")
+
+    val java = code {
+      """
+      public class Foo {
+        public void foo() {
+          Bar a;
+          a = new Baz();
+        }
+      }
+      """
+    }
+
+    val d = code {
+      """
+      import Bar;
+      import Baz;
+
+      class Foo
+      {
+          void foo()
+          {
+              Bar a;
+              a = new Baz();
+          }
+      }
+      """
+    }
+
+    java should portFromFileTo("Foo", d)
+  }
 }

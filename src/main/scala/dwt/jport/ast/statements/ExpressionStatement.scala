@@ -14,5 +14,6 @@ class ExpressionStatement(node: JDtExpressionStatement, protected override val v
 
   type JdtNodeType = Statement
 
-  def expression = node.getExpression.toJPort.translate
+  val expression = node.getExpression.toJPort
+  val imports = expression.imports
 }

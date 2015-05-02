@@ -3,16 +3,18 @@ package dwt.jport.ast.expressions
 import org.eclipse.jdt.core.dom.{ ArrayAccess => JdtArrayAccess }
 import org.eclipse.jdt.core.dom.{ ArrayCreation => JdtArrayCreation }
 import org.eclipse.jdt.core.dom.{ ArrayInitializer => JdtArrayInitializer }
+import org.eclipse.jdt.core.dom.{ Assignment => JdtAssignment }
 import org.eclipse.jdt.core.dom.{ ClassInstanceCreation => JdtClassInstanceCreation }
 import org.eclipse.jdt.core.dom.{ Expression => JdtExpression }
+import org.eclipse.jdt.core.dom.ITypeBinding
 import org.eclipse.jdt.core.dom.{ InfixExpression => JdtInfixExpression }
 import org.eclipse.jdt.core.dom.{ NullLiteral => JdtNullLiteral }
 import org.eclipse.jdt.core.dom.{ NumberLiteral => JdtNumberLiteral }
 import org.eclipse.jdt.core.dom.{ SimpleName => JdtSimpleName }
-import org.eclipse.jdt.core.dom.{ Assignment => JdtAssignment }
 
 import dwt.jport.ast.AstNode
 import dwt.jport.JPorter
+import dwt.jport.translators.ImportTranslator
 
 object Expression {
   def toJPort(node: JdtExpression): Expression = {
@@ -35,6 +37,10 @@ object Expression {
 
 abstract class Expression(node: JdtExpression) extends AstNode(node) {
   def translate: String
+
+  lazy val importTypeBindings = Array[ITypeBinding]()
+  lazy val imports =
+    ImportTranslator.translate(importTypeBindings, declaringClass)
 }
 
 class ToJPortExpression(val node: JdtExpression) {

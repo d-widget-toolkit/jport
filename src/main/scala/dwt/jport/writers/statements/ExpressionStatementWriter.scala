@@ -14,7 +14,9 @@ class ExpressionStatementWriter extends Writer[ExpressionStatement] {
     this.node = node
     this.importWriter = importWriter
 
-    buffer.append(node.expression, ';')
+    buffer.append(node.expression.translate, ';')
+
+    importWriter += node.imports
   }
 
   def postWrite(): Unit = {

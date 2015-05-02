@@ -16,6 +16,7 @@ class ClassInstanceCreation(node: JdtClassInstanceCreation)
   private val typedArguments = node.arguments.typed[JdtExpression]
   val arguments = typedArguments.map(_.toJPort.translate)
   val typ = Type.translate(node.resolveTypeBinding)
+  override lazy val importTypeBindings = Array(node.resolveTypeBinding)
 
   def translate = ClassInstanceCreationTranslator.translate(this)
 }
