@@ -19,4 +19,34 @@ class ClassInstanceCreationSuite extends Suite {
 
     java should portFromFileTo("Foo", d)
   }
+
+  test("class instance creation with arguments") {
+    val java = code {
+      """
+      public class Foo {
+        public Foo(int a, int b) {}
+
+        public void foo() {
+          Foo foo = new Foo(1, 2);
+        }
+      }
+      """
+    }
+
+    val d = code {
+      """
+      class Foo
+      {
+          this(int a, int b) {}
+
+          void foo()
+          {
+              Foo foo = new Foo(1, 2);
+          }
+      }
+      """
+    }
+
+    java should portFromFileTo("Foo", d)
+  }
 }
