@@ -89,7 +89,7 @@ class MethodDeclarationSuite extends Suite {
   }
 
   // formatting
-  test("formatting of multiple method") {
+  test("formatting of multiple methods") {
     val java = code {
       """
       public abstract class Foo {
@@ -100,8 +100,12 @@ class MethodDeclarationSuite extends Suite {
           int a = 3;
         }
 
-        public void d() {}
+        public void d() {
+          int a = 3;
+        }
+
         public void e() {}
+        public void f() {}
       }
       """
     }
@@ -118,8 +122,13 @@ class MethodDeclarationSuite extends Suite {
               int a = 3;
           }
 
-          void d() {}
+          void d()
+          {
+              int a = 3;
+          }
+
           void e() {}
+          void f() {}
       }
       """
     }

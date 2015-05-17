@@ -25,6 +25,8 @@ class MethodDeclaration(node: JdtMethodDeclaration, protected override val visit
 
   import Type.fullyQualfiedName
 
+  val jdtNode = node
+
   private lazy val binding = node.resolveBinding
 
   val imports = {

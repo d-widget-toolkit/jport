@@ -15,9 +15,6 @@ class MethodDeclarationWriter extends BodyDeclarationWriter[MethodDeclaration] w
     this.node = node
     this.importWriter = importWriter
 
-    if (hasNonEmptyBody(node.prev))
-      buffer :+ nl
-
     writeModifiers
     writeReturnType
     writeName
@@ -37,7 +34,8 @@ class MethodDeclarationWriter extends BodyDeclarationWriter[MethodDeclaration] w
 
     buffer :+ nl
 
-    if (hasNonEmptyBody(node.next) || node.next.isDefined && !isMethod(node.next))
+    if (hasNonEmptyBody(node.next) || node.next.isDefined &&
+      (hasNonEmptyBody(node) || !isMethod(node.next)))
       buffer :+ nl
   }
 
@@ -64,6 +62,9 @@ class MethodDeclarationWriter extends BodyDeclarationWriter[MethodDeclaration] w
     node.filter(_.getNodeType == ASTNode.METHOD_DECLARATION).
       map(_.asInstanceOf[JdtMethodDeclaration]).
       filter(e => e.getBody != null && e.getBody.statements.nonEmpty).nonEmpty
+
+  private def hasNonEmptyBody(node: MethodDeclaration): Boolean =
+    hasNonEmptyBody(Some(node.jdtNode))
 
   private def isMethod(node: Option[JdtBodyDeclaration]) =
     node.isDefined && node.get.getNodeType == ASTNode.METHOD_DECLARATION
