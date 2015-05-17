@@ -12,10 +12,11 @@ import org.eclipse.jdt.core.dom.{ ConditionalExpression => JdtConditionalExpress
 import org.eclipse.jdt.core.dom.{ Expression => JdtExpression }
 import org.eclipse.jdt.core.dom.ITypeBinding
 import org.eclipse.jdt.core.dom.{ InfixExpression => JdtInfixExpression }
+import org.eclipse.jdt.core.dom.{ MethodInvocation => JdtMethodInvocation }
 import org.eclipse.jdt.core.dom.{ NullLiteral => JdtNullLiteral }
 import org.eclipse.jdt.core.dom.{ NumberLiteral => JdtNumberLiteral }
 import org.eclipse.jdt.core.dom.{ SimpleName => JdtSimpleName }
-import org.eclipse.jdt.core.dom.{ MethodInvocation => JdtMethodInvocation }
+import org.eclipse.jdt.core.dom.{ ThisExpression => JdtThisExpression }
 
 import dwt.jport.ast.AstNode
 import dwt.jport.JPorter
@@ -38,6 +39,7 @@ object Expression {
       case n: JdtConditionalExpression => new ConditionalExpression(n)
       case n: JdtBooleanLiteral => new BooleanLiteral(n)
       case n: JdtMethodInvocation => new MethodInvocation(n)
+      case n: JdtThisExpression => new ThisExpression(n)
       case _ =>
         JPorter.diagnostic.unhandled(s"Unhandled type ${node.getClass.getName} in ${getClass.getName}")
         null
