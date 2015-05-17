@@ -28,7 +28,14 @@ class ITypeBindingCanonicalType(val binding: ITypeBinding) {
   def canonicalType = if (binding.isArray()) binding.getElementType else binding
 }
 
+class ITypeBindingTranslate(val binding: ITypeBinding) {
+  def translate = Type.translate(binding)
+}
+
 object ITypeBindigImplicits {
   implicit def ITypeBindingToITypeBindingCanonicalType(binding: ITypeBinding) =
     new ITypeBindingCanonicalType(binding)
+
+  implicit def ITypeBindingToITypeBindingTranslate(binding: ITypeBinding) =
+    new ITypeBindingTranslate(binding)
 }
