@@ -6,8 +6,8 @@ import dwt.jport.ast.expressions.MethodInvocation
 
 object MethodInvocationTranslator extends ExpressionTranslator {
   def translate(node: MethodInvocation) =
-    node.expression.translate +
-      "." + node.name.translate +
+    expression(node) +
+      node.name.translate +
       typeArguments(node) +
       s"(${arguments(node)})"
 
@@ -18,4 +18,7 @@ object MethodInvocationTranslator extends ExpressionTranslator {
     val args = node.typeArguments.map(_.translate).mkString(", ")
     if (args.isEmpty) "" else s"!(${args})"
   }
+
+  private def expression(node: MethodInvocation) =
+    node.expression.map(_.translate + ".").getOrElse("")
 }
