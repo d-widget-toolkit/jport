@@ -9,4 +9,33 @@ class MethodInvocationSuite extends Suite {
 
     java should portFromFileTo("Foo", d)
   }
+
+  test("with arguments") {
+    val java = code {
+      """
+      public class Foo {
+        public void foo(int a, int b) {}
+        public void bar() {
+          foo(3, 4);
+        }
+      }
+      """
+    }
+
+    val d = code {
+      """
+      class Foo
+      {
+          void foo(int a, int b) {}
+
+          void bar()
+          {
+              foo(3, 4);
+          }
+      }
+      """
+    }
+
+    java should portFromFileTo("Foo", d)
+  }
 }
