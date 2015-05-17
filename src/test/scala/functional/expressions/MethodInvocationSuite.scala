@@ -38,4 +38,37 @@ class MethodInvocationSuite extends Suite {
 
     java should portFromFileTo("Foo", d)
   }
+
+  test("with external types") {
+    codeToFile("Bar")("public class Bar extends Foo {}")
+
+    val java = code {
+      """
+      public class Foo {
+        public void foo(Foo a, Foo b) {}
+        public void bar() {
+          foo(new Foo(), new Bar());
+        }
+      }
+      """
+    }
+
+    val d = code {
+      """
+      import Bar;
+
+      class Foo
+      {
+          void foo(Foo a, Foo b) {}
+
+          void bar()
+          {
+              foo(new Foo(), new Bar());
+          }
+      }
+      """
+    }
+
+    java should portFromFileTo("Foo", d)
+  }
 }

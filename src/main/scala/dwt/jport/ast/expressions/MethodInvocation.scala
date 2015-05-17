@@ -16,5 +16,8 @@ class MethodInvocation(node: JdtMethodInvocation) extends Expression(node) {
 
   val arguments = typedArguments.map(_.toJPort)
 
+  override lazy val importTypeBindings =
+    arguments.flatMap(_.importTypeBindings)
+
   override def translate = MethodInvocationTranslator.translate(this)
 }

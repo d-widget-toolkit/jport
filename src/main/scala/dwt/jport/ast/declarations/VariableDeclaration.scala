@@ -1,6 +1,7 @@
 package dwt.jport.ast.declarations
 
 import scala.collection.JavaConversions._
+import scala.collection.mutable.Buffer
 
 import org.eclipse.jdt.core.dom.ASTNode
 import org.eclipse.jdt.core.dom.IExtendedModifier
@@ -34,7 +35,7 @@ trait VariableDeclaration extends Siblings {
 
   val imports = {
     val types = initializers.
-      flatMap(_.map(_.importTypeBindings).getOrElse(Array())) :+
+      flatMap(_.map(_.importTypeBindings).getOrElse(Buffer())) :+
       typeBinding.canonicalType
 
     ImportTranslator.translate(types, declaringClass)

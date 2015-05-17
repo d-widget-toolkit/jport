@@ -48,7 +48,7 @@ object Expression {
 abstract class Expression(node: JdtExpression) extends AstNode(node) {
   def translate: String
 
-  lazy val importTypeBindings = Array[ITypeBinding]()
+  lazy val importTypeBindings: Seq[ITypeBinding] = Array[ITypeBinding]()
   lazy val imports =
     ImportTranslator.translate(importTypeBindings, declaringClass)
 }
