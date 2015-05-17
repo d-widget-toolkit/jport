@@ -15,6 +15,7 @@ import org.eclipse.jdt.core.dom.{ InfixExpression => JdtInfixExpression }
 import org.eclipse.jdt.core.dom.{ NullLiteral => JdtNullLiteral }
 import org.eclipse.jdt.core.dom.{ NumberLiteral => JdtNumberLiteral }
 import org.eclipse.jdt.core.dom.{ SimpleName => JdtSimpleName }
+import org.eclipse.jdt.core.dom.{ MethodInvocation => JdtMethodInvocation }
 
 import dwt.jport.ast.AstNode
 import dwt.jport.JPorter
@@ -36,6 +37,7 @@ object Expression {
       case n: JdtCharacterLiteral => new CharacterLiteral(n)
       case n: JdtConditionalExpression => new ConditionalExpression(n)
       case n: JdtBooleanLiteral => new BooleanLiteral(n)
+      case n: JdtMethodInvocation => new MethodInvocation(n)
       case _ =>
         JPorter.diagnostic.unhandled(s"Unhandled type ${node.getClass.getName} in ${getClass.getName}")
         null
