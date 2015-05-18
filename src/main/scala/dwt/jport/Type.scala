@@ -4,12 +4,10 @@ import org.eclipse.jdt.core.dom.ITypeBinding
 
 object Type {
   def translate(binding: ITypeBinding): String = {
-    val name = binding.getName
-
     if (binding.isPrimitive())
-      return name
+      return translatePrimitive(binding)
     else
-      return Symbol.translate(name)
+      return Symbol.translate(binding.getName)
   }
 
   def fullyQualfiedName(binding: ITypeBinding): String = {
@@ -22,6 +20,12 @@ object Type {
   }
 
   def canonicalType(binding: ITypeBinding) = if (binding.isArray()) binding.getElementType
+
+  private def translatePrimitive(binding: ITypeBinding) = {
+    assert(binding.isPrimitive)
+    val name = binding.getName
+    if (name == "boolean") "bool" else name
+  }
 }
 
 class ITypeBindingCanonicalType(val binding: ITypeBinding) {
