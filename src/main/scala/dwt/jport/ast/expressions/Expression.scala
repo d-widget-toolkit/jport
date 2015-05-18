@@ -18,6 +18,7 @@ import org.eclipse.jdt.core.dom.{ NullLiteral => JdtNullLiteral }
 import org.eclipse.jdt.core.dom.{ NumberLiteral => JdtNumberLiteral }
 import org.eclipse.jdt.core.dom.{ SimpleName => JdtSimpleName }
 import org.eclipse.jdt.core.dom.{ ThisExpression => JdtThisExpression }
+import org.eclipse.jdt.core.dom.{ InstanceofExpression => JdtInstanceofExpression }
 
 import dwt.jport.ast.AstNode
 import dwt.jport.JPorter
@@ -42,6 +43,7 @@ object Expression {
       case n: JdtMethodInvocation => new MethodInvocation(n)
       case n: JdtThisExpression => new ThisExpression(n)
       case n: JdtFieldAccess => new FieldAccess(n)
+      case n: JdtInstanceofExpression => new InstanceofExpression(n)
       case _ =>
         assert(node != null)
         JPorter.diagnostic.unhandled(s"Unhandled type ${node.getClass.getName} in ${getClass.getName}")
