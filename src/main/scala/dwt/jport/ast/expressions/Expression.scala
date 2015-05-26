@@ -20,6 +20,7 @@ import org.eclipse.jdt.core.dom.{ NumberLiteral => JdtNumberLiteral }
 import org.eclipse.jdt.core.dom.{ ParenthesizedExpression => JdtParenthesizedExpression }
 import org.eclipse.jdt.core.dom.{ SimpleName => JdtSimpleName }
 import org.eclipse.jdt.core.dom.{ StringLiteral => JdtStringLiteral }
+import org.eclipse.jdt.core.dom.{ SuperFieldAccess => JdtSuperFieldAccess }
 import org.eclipse.jdt.core.dom.{ ThisExpression => JdtThisExpression }
 
 import dwt.jport.ast.AstNode
@@ -48,6 +49,7 @@ object Expression {
       case n: JdtInstanceofExpression => new InstanceofExpression(n)
       case n: JdtParenthesizedExpression => new ParenthesizedExpression(n)
       case n: JdtStringLiteral => new StringLiteral(n)
+      case n: JdtSuperFieldAccess => new SuperFieldAccess(n)
       case _ =>
         assert(node != null)
         JPorter.diagnostic.unhandled(s"Unhandled type ${node.getClass.getName} in ${getClass.getName}")
