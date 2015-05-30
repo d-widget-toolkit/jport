@@ -23,6 +23,7 @@ import org.eclipse.jdt.core.dom.{ StringLiteral => JdtStringLiteral }
 import org.eclipse.jdt.core.dom.{ SuperFieldAccess => JdtSuperFieldAccess }
 import org.eclipse.jdt.core.dom.{ SuperMethodInvocation => JdtSuperMethodInvocation }
 import org.eclipse.jdt.core.dom.{ ThisExpression => JdtThisExpression }
+import org.eclipse.jdt.core.dom.{ TypeLiteral => JdtTypeLiteral }
 
 import dwt.jport.ast.AstNode
 import dwt.jport.JPorter
@@ -52,6 +53,7 @@ object Expression {
       case n: JdtStringLiteral => new StringLiteral(n)
       case n: JdtSuperFieldAccess => new SuperFieldAccess(n)
       case n: JdtSuperMethodInvocation => new SuperMethodInvocation(n)
+      case n: JdtTypeLiteral => new TypeLiteral(n)
       case _ =>
         assert(node != null)
         JPorter.diagnostic.unhandled(s"Unhandled type ${node.getClass.getName} in ${getClass.getName}")

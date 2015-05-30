@@ -8,5 +8,6 @@ object ImportTranslator {
   def translate(types: Seq[ITypeBinding], declaringClass: ITypeBinding) =
     types.filterNot(e => e.isPrimitive || e.isTypeVariable || e.isNullType()).
       filterNot(_ == declaringClass).
+      filterNot(Type.isBuiltIn(_, "Class")).
       distinct.map(Type.fullyQualfiedName(_))
 }

@@ -5,9 +5,13 @@ import org.eclipse.jdt.core.dom.ITypeBinding
 object Type {
   def translate(binding: ITypeBinding): String = {
     if (binding.isPrimitive())
-      return translatePrimitive(binding)
-    else
-      return Symbol.translate(binding.getName)
+      translatePrimitive(binding)
+    else {
+      if (isBuiltIn(binding, "Class"))
+        "ClassInfo"
+      else
+        Symbol.translate(binding.getName)
+    }
   }
 
   def fullyQualfiedName(binding: ITypeBinding): String = {
@@ -20,6 +24,9 @@ object Type {
   }
 
   def canonicalType(binding: ITypeBinding) = if (binding.isArray()) binding.getElementType
+
+  def isBuiltIn(binding: ITypeBinding, name: String) =
+    binding.getQualifiedName == "java.lang." + name
 
   private def translatePrimitive(binding: ITypeBinding) = {
     assert(binding.isPrimitive)
