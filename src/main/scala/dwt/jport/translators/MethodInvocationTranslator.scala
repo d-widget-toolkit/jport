@@ -4,20 +4,9 @@ import dwt.jport.ITypeBindigImplicits._
 
 import dwt.jport.ast.expressions.MethodInvocation
 
-object MethodInvocationTranslator extends ExpressionTranslator {
+object MethodInvocationTranslator extends MethodInvocationTranslatorBase {
   def translate(node: MethodInvocation) =
-    expression(node) +
-      node.name.translate +
-      typeArguments(node) +
-      s"(${arguments(node)})"
-
-  private def arguments(node: MethodInvocation) =
-    node.arguments.map(_.translate).mkString(", ")
-
-  private def typeArguments(node: MethodInvocation) = {
-    val args = node.typeArguments.map(_.translate).mkString(", ")
-    if (args.isEmpty) "" else s"!(${args})"
-  }
+    expression(node) + super.translate(node)
 
   private def expression(node: MethodInvocation) =
     node.expression.map(_.translate + ".").getOrElse("")

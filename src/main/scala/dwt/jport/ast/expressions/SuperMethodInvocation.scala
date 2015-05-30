@@ -3,13 +3,15 @@ package dwt.jport.ast.expressions
 import scala.collection.JavaConversions._
 
 import org.eclipse.jdt.core.dom.{ Expression => JdtExpression }
-import org.eclipse.jdt.core.dom.{ MethodInvocation => JdtMethodInvocation }
+import org.eclipse.jdt.core.dom.{ SuperMethodInvocation => JdtSuperMethodInvocation }
 import org.eclipse.jdt.core.dom.Type
 
 import dwt.jport.ast.expressions.ExpressionImplicits._
-import dwt.jport.translators.MethodInvocationTranslator
+import dwt.jport.translators.SuperMethodInvocationTranslator
 
-class MethodInvocation(node: JdtMethodInvocation) extends Expression(node) with MethodInvocationInterface {
+class SuperMethodInvocation(node: JdtSuperMethodInvocation)
+  extends Expression(node) with MethodInvocationInterface {
+
   protected override def typedArguments =
     node.arguments.asInstanceOf[JavaList[JdtExpression]]
 
@@ -17,7 +19,6 @@ class MethodInvocation(node: JdtMethodInvocation) extends Expression(node) with 
     node.typeArguments.asInstanceOf[JavaList[Type]]
 
   override val name = node.getName.toJPort
-  val expression = Option(node.getExpression).map(_.toJPort)
 
-  override def translate = MethodInvocationTranslator.translate(this)
+  override def translate = SuperMethodInvocationTranslator.translate(this)
 }

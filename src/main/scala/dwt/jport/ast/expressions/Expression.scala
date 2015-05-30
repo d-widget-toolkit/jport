@@ -21,6 +21,7 @@ import org.eclipse.jdt.core.dom.{ ParenthesizedExpression => JdtParenthesizedExp
 import org.eclipse.jdt.core.dom.{ SimpleName => JdtSimpleName }
 import org.eclipse.jdt.core.dom.{ StringLiteral => JdtStringLiteral }
 import org.eclipse.jdt.core.dom.{ SuperFieldAccess => JdtSuperFieldAccess }
+import org.eclipse.jdt.core.dom.{ SuperMethodInvocation => JdtSuperMethodInvocation }
 import org.eclipse.jdt.core.dom.{ ThisExpression => JdtThisExpression }
 
 import dwt.jport.ast.AstNode
@@ -50,6 +51,7 @@ object Expression {
       case n: JdtParenthesizedExpression => new ParenthesizedExpression(n)
       case n: JdtStringLiteral => new StringLiteral(n)
       case n: JdtSuperFieldAccess => new SuperFieldAccess(n)
+      case n: JdtSuperMethodInvocation => new SuperMethodInvocation(n)
       case _ =>
         assert(node != null)
         JPorter.diagnostic.unhandled(s"Unhandled type ${node.getClass.getName} in ${getClass.getName}")
@@ -58,12 +60,15 @@ object Expression {
   }
 }
 
-abstract class Expression(node: JdtExpression) extends AstNode(node) {
+abstract class Expression(node: JdtExpression) extends AstNode(node) with Imports {
   def translate: String
 
-  lazy val importTypeBindings: Seq[ITypeBinding] = Array[ITypeBinding]()
   lazy val imports =
     ImportTranslator.translate(importTypeBindings, declaringClass)
+}
+
+trait Imports {
+  lazy val importTypeBindings: Seq[ITypeBinding] = Array[ITypeBinding]()
 }
 
 class ToJPortExpression(val node: JdtExpression) {
