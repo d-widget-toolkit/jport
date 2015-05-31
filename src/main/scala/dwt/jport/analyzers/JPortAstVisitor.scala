@@ -8,6 +8,7 @@ import org.eclipse.jdt.core.dom.BodyDeclaration
 import org.eclipse.jdt.core.dom.{ EmptyStatement => JdtEmptyStatement }
 import org.eclipse.jdt.core.dom.{ ExpressionStatement => JdtExpressionStatement }
 import org.eclipse.jdt.core.dom.{ FieldDeclaration => JdtFieldDeclaration }
+import org.eclipse.jdt.core.dom.{ ForStatement => JdtForStatement }
 import org.eclipse.jdt.core.dom.{ MethodDeclaration => JdtMethodDeclaration }
 import org.eclipse.jdt.core.dom.ReturnStatement
 import org.eclipse.jdt.core.dom.Statement
@@ -21,6 +22,7 @@ import dwt.jport.ast.TypeDeclaration
 import dwt.jport.ast.statements.Block
 import dwt.jport.ast.statements.EmptyStatement
 import dwt.jport.ast.statements.ExpressionStatement
+import dwt.jport.ast.statements.ForStatement
 import dwt.jport.ast.statements.VariableDeclarationStatement
 import dwt.jport.writers.FieldDeclarationWriter
 import dwt.jport.writers.ImportWriter
@@ -29,6 +31,7 @@ import dwt.jport.writers.TypeDeclarationWriter
 import dwt.jport.writers.statements.BlockWriter
 import dwt.jport.writers.statements.EmptyStatementWriter
 import dwt.jport.writers.statements.ExpressionStatementWriter
+import dwt.jport.writers.statements.ForStatementWriter
 import dwt.jport.writers.statements.VariableDeclarationStatementWriter
 
 class VisitData[T](val isFirst: Boolean, val next: Option[T],
@@ -58,16 +61,7 @@ class JPortAstVisitor(private val importWriter: ImportWriter) extends Visitor {
     val jportNode = new MethodDeclaration(node, visitData)
 
     MethodDeclarationWriter.write(importWriter, jportNode)
-
-    accept(jportNode.statements.to[Array]) { (node, visitData) =>
-      node match {
-        case n: JdtVariableDeclarationStatement => visit(n, visitData)
-        case n: ReturnStatement => /* ignore during development */
-        case n: JdtExpressionStatement => visit(n, visitData)
-        case _ => JPorter.diagnostic.unhandled(s"unhandled node ${node.getClass.getName} in ${getClass.getName}")
-      }
-    }
-
+    acceptStatements(jportNode.statements.to[Array])
     MethodDeclarationWriter.postWrite
   }
 
@@ -89,6 +83,14 @@ class JPortAstVisitor(private val importWriter: ImportWriter) extends Visitor {
     ExpressionStatementWriter.postWrite
   }
 
+  def visit(node: JdtForStatement, visitData: VisitData[Statement]): Unit = {
+    val jportNode = new ForStatement(node, visitData)
+
+    ForStatementWriter.write(importWriter, jportNode)
+    visit(jportNode.body, visitData)
+    ForStatementWriter.postWrite
+  }
+
   def visit(node: JdtBlock, visitData: VisitData[Statement]): Unit = {
     val jportNode = new Block(node, visitData)
 
@@ -104,6 +106,7 @@ class JPortAstVisitor(private val importWriter: ImportWriter) extends Visitor {
       case n: JdtExpressionStatement => visit(n, visitData)
       case n: JdtBlock => visit(n, visitData)
       case n: JdtEmptyStatement => visit(n, visitData)
+      case n: JdtForStatement => visit(n, visitData)
       case _ => JPorter.diagnostic.unhandled(s"unhandled node ${node.getClass.getName} in ${getClass.getName}")
     }
   }
