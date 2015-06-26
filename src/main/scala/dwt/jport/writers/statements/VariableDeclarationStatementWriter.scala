@@ -1,12 +1,11 @@
 package dwt.jport.writers.statements
 
+import org.eclipse.jdt.core.dom.ASTNode
+
 import dwt.jport.ast.statements.VariableDeclarationStatement
 import dwt.jport.writers.ImportWriter
 import dwt.jport.writers.Writer
 import dwt.jport.writers.WriterObject
-import org.eclipse.jdt.core.dom.ASTNode
-import dwt.jport.JPorter
-import dwt.jport.ast.expressions.Expression
 
 object VariableDeclarationStatementWriter extends WriterObject[VariableDeclarationStatement, VariableDeclarationStatementWriter]
 

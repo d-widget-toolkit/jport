@@ -16,7 +16,7 @@ trait VariableDeclarationWriter[AstNodeType <: AstNode[_] with VariableDeclarati
     this.importWriter = importWriter
 
     writeType
-    writeNamesAndConstantValues
+    writeNamesAndInitializers
   }
 
   def postWrite(): Unit = {
@@ -29,8 +29,9 @@ trait VariableDeclarationWriter[AstNodeType <: AstNode[_] with VariableDeclarati
   }
 
   protected def writeType = buffer.append(node.typ, ' ')
-  protected def writeNamesAndConstantValues =
-    buffer.join(namesConstantValues)
+
+  protected def writeNamesAndInitializers =
+    buffer.join(namesInitializers)
 
   private def isField(node: Option[AstNodeType#JdtNodeType]) =
     node.isDefined && node.get.getNodeType == ASTNode.FIELD_DECLARATION
@@ -41,10 +42,10 @@ trait VariableDeclarationWriter[AstNodeType <: AstNode[_] with VariableDeclarati
   private def lineNumber(node: AstNodeType#JdtNodeType) =
     JPorter.compilationUnit.getLineNumber(node)
 
-  private def namesConstantValues: scala.collection.mutable.Buffer[String] =
-    node.names.zip(node.constantValues).map {
+  private def namesInitializers: scala.collection.mutable.Buffer[String] =
+    node.names.zip(node.initializers).map {
       case (name, value) =>
-        val constValue = Constant.translate(value)
-        if (constValue.isEmpty) name else s"${name} = ${constValue}"
+        val initializer = value.map(_.translate).getOrElse("")
+        if (initializer.isEmpty) name else s"${name} = ${initializer}"
     }
 }

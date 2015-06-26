@@ -16,7 +16,7 @@ class FieldDeclarationWriter extends BodyDeclarationWriter[FieldDeclaration] wit
 
     writeModifiers
     writeType
-    writeNamesAndConstantValues
+    writeNamesAndInitializers
     buffer += ';'
   }
 }

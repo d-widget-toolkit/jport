@@ -7,7 +7,7 @@ import dwt.jport.analyzers.VisitData
 trait Siblings {
   type JdtNodeType <: ASTNode
 
-  protected val visitData: VisitData[JdtNodeType]
+  protected def visitData: VisitData[JdtNodeType]
 
   val hasNext = visitData.next.isDefined
   val hasPrev = visitData.prev.isDefined

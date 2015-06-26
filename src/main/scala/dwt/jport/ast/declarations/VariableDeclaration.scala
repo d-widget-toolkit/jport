@@ -33,7 +33,7 @@ trait VariableDeclaration extends Siblings {
   private val typeBinding = rawType.resolveBinding
   val typ = Type.translate(typeBinding)
 
-  val imports = {
+  def imports = {
     val types = initializers.
       flatMap(_.map(_.importTypeBindings).getOrElse(Buffer())) :+
       typeBinding.canonicalType
