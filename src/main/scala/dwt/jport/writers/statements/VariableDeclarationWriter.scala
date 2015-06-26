@@ -21,11 +21,14 @@ trait VariableDeclarationWriter[AstNodeType <: AstNode[_] with VariableDeclarati
 
   def postWrite(): Unit = {
     buffer :+ nl
+    if (!node.hasNext) return
 
-    if (node.next.isDefined) {
-      if (!isField(node.next) || !isAdjacentLine(node.next.get))
-        buffer :+ nl
+    if (isAdjacentLine(node.next.get)) {
+      if (!isField(node.next) && !isExpressionStatement(node.next))
+        buffer += nl
     }
+    else
+      buffer += nl
   }
 
   protected def writeType = buffer.append(node.typ, ' ')
