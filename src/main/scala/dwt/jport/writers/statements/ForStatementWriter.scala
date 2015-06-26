@@ -34,6 +34,10 @@ class ForStatementWriter extends Writer[ForStatement] {
     buffer += ';'
     buffer += node.expression.map(" " + _.translate).getOrElse("")
     buffer += ';'
+
+    if (node.updaters.nonEmpty)
+      buffer += ' '
+
     buffer.join(node.updaters.map(_.translate))
     buffer += ')'
   }

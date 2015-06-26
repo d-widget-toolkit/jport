@@ -27,6 +27,7 @@ import org.eclipse.jdt.core.dom.{ SuperMethodInvocation => JdtSuperMethodInvocat
 import org.eclipse.jdt.core.dom.{ ThisExpression => JdtThisExpression }
 import org.eclipse.jdt.core.dom.{ TypeLiteral => JdtTypeLiteral }
 import org.eclipse.jdt.core.dom.{ VariableDeclarationExpression => JdtVariableDeclarationExpression }
+import org.eclipse.jdt.core.dom.{ PostfixExpression => JdtPostfixExpression }
 
 import dwt.jport.ast.AstNode
 import dwt.jport.JPorter
