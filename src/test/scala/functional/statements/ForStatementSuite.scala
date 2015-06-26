@@ -23,4 +23,11 @@ class ForStatementSuite extends Suite {
 
     java should portFromFileTo("Foo", d)
   }
+
+  test("for statement with initializer and expression") {
+    val java = javaCode("for(int a = 0; a < 10;) {}")
+    val d = dCode("for (int a = 0; a < 10;) {}")
+
+    java should portFromFileTo("Foo", d)
+  }
 }

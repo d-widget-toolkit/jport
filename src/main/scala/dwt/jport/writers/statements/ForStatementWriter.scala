@@ -32,7 +32,7 @@ class ForStatementWriter extends Writer[ForStatement] {
     buffer.append("for (");
     buffer.join(node.initializers.map(_.translate))
     buffer += ';'
-    buffer += node.expression.map(_.translate).getOrElse("")
+    buffer += node.expression.map(" " + _.translate).getOrElse("")
     buffer += ';'
     buffer.join(node.updaters.map(_.translate))
     buffer += ')'
