@@ -28,7 +28,7 @@ trait Code {
     {
         void foo()
         {
-            ${source}
+            ${indent(code(source), 3)}
         }
     }
     """

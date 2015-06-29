@@ -26,10 +26,7 @@ class BlockWriter extends Writer[Block] {
 
     buffer.append('}', nl)
 
-    if (!node.isEmpty)
+    if (!node.isEmpty && node.next.isDefined)
       buffer += nl
-    /*if (hasNonEmptyBody(node.next) || node.next.isDefined &&
-      (hasNonEmptyBody(node) || !isMethod(node.next)))
-      buffer :+ nl*/
   }
 }

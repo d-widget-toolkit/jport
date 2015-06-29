@@ -13,20 +13,11 @@ class ForStatementWriter extends Writer[ForStatement] {
     this.importWriter = importWriter
 
     writeHeader
-    writeBody
 
     importWriter += node.imports
   }
 
-  def postWrite(): Unit = {
-    /*if (node.hasBody)
-      buffer += '}'
-
-    buffer += nl
-
-    if (node.next.isDefined)
-      buffer += nl*/
-  }
+  def postWrite(): Unit = {}
 
   private def writeHeader = {
     buffer.append("for (");
@@ -40,12 +31,5 @@ class ForStatementWriter extends Writer[ForStatement] {
 
     buffer.join(node.updaters.map(_.translate))
     buffer += ')'
-  }
-
-  private def writeBody = {
-    /*if (node.hasBody && !node.hasEmptyBody) buffer += nl
-    else buffer += ' ';
-
-    buffer += '{'*/
   }
 }
