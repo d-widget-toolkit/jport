@@ -9,5 +9,6 @@ class PostfixExpression(node: JdtPostfixExpression) extends Expression(node) {
   val operand = node.getOperand.toJPort
   val operator = node.getOperator
 
+  override lazy val importTypeBindings = operand.importTypeBindings
   override def translate = PostfixExpressionTranslator.translate(this)
 }
