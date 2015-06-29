@@ -18,6 +18,8 @@ import org.eclipse.jdt.core.dom.{ MethodInvocation => JdtMethodInvocation }
 import org.eclipse.jdt.core.dom.{ NullLiteral => JdtNullLiteral }
 import org.eclipse.jdt.core.dom.{ NumberLiteral => JdtNumberLiteral }
 import org.eclipse.jdt.core.dom.{ ParenthesizedExpression => JdtParenthesizedExpression }
+import org.eclipse.jdt.core.dom.{ PostfixExpression => JdtPostfixExpression }
+import org.eclipse.jdt.core.dom.{ QualifiedName => JdtQualifiedName }
 import org.eclipse.jdt.core.dom.{ SimpleName => JdtSimpleName }
 import org.eclipse.jdt.core.dom.{ StringLiteral => JdtStringLiteral }
 import org.eclipse.jdt.core.dom.{ SuperFieldAccess => JdtSuperFieldAccess }
@@ -56,6 +58,8 @@ object Expression {
       case n: JdtSuperMethodInvocation => new SuperMethodInvocation(n)
       case n: JdtTypeLiteral => new TypeLiteral(n)
       case n: JdtVariableDeclarationExpression => new VariableDeclarationExpression(n)
+      case n: JdtPostfixExpression => new PostfixExpression(n)
+      case n: JdtQualifiedName => new QualifiedName(n)
       case _ =>
         assert(node != null)
         JPorter.diagnostic.unhandled(s"Unhandled type ${node.getClass.getName} in ${getClass.getName}")
