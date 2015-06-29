@@ -70,4 +70,13 @@ class FieldAccessSuite extends Suite {
 
     java should portFromFileTo("Foo", d)
   }
+
+  test("with external type") {
+    codeToFile("Bar")("public class Bar { int a; }")
+
+    val java = javaCode("int a = new Bar().a;")
+    val d = "import Bar;\n\n" + dCode("int a = new Bar().a;")
+
+    java should portFromFileTo("Foo", d)
+  }
 }

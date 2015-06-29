@@ -8,5 +8,6 @@ class FieldAccess(node: JdtFieldAccess) extends Expression(node) {
   val expression = node.getExpression.toJPort
   val name = node.getName.toJPort
 
+  override lazy val importTypeBindings = expression.importTypeBindings
   override def translate = FieldAccessTranslator.translate(this)
 }
