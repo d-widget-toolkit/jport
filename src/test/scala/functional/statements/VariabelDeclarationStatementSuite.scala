@@ -32,4 +32,32 @@ class VariabelDeclarationStatementSuite extends Suite {
 
     java should portFromFileTo("Foo", d)
   }
+
+  test("multiple declarations") {
+    val java = javaCode {
+      """
+      int a = 0;
+      int b = 0;
+
+      int c = 0;
+      int d = 0;
+
+      int e = 0;
+      """
+    }
+
+    val d = dCode {
+      """
+      int a = 0;
+      int b = 0;
+
+      int c = 0;
+      int d = 0;
+
+      int e = 0;
+      """
+    }
+
+    java should portFromFileTo("Foo", d)
+  }
 }

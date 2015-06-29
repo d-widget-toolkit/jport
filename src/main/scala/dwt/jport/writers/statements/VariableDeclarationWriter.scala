@@ -5,9 +5,7 @@ import org.eclipse.jdt.core.dom.ASTNode
 import dwt.jport.JPorter
 import dwt.jport.ast.AstNode
 import dwt.jport.ast.declarations.VariableDeclaration
-import dwt.jport.translators.Constant
 import dwt.jport.writers.ImportWriter
-import dwt.jport.writers.ModifierWriter
 import dwt.jport.writers.Writer
 
 trait VariableDeclarationWriter[AstNodeType <: AstNode[_] with VariableDeclaration] extends Writer[AstNodeType] {
@@ -24,7 +22,9 @@ trait VariableDeclarationWriter[AstNodeType <: AstNode[_] with VariableDeclarati
     if (!node.hasNext) return
 
     if (isAdjacentLine(node.next.get)) {
-      if (!isField(node.next) && !isExpressionStatement(node.next))
+      if (!isField(node.next) &&
+        !isExpressionStatement(node.next) &&
+        !isVariableDeclarationStatement(node.next))
         buffer += nl
     }
     else
@@ -41,6 +41,10 @@ trait VariableDeclarationWriter[AstNodeType <: AstNode[_] with VariableDeclarati
 
   private def isAdjacentLine(node: AstNodeType#JdtNodeType) =
     lineNumber(node) == this.node.lineNumber + 1
+
+  protected def isVariableDeclarationStatement(node: Option[ASTNode]) =
+    node.isDefined && node.get.getNodeType ==
+      ASTNode.VARIABLE_DECLARATION_STATEMENT
 
   private def lineNumber(node: AstNodeType#JdtNodeType) =
     JPorter.compilationUnit.getLineNumber(node)

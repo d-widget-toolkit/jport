@@ -33,4 +33,13 @@ trait Code {
     }
     """
   }
+
+  private def indent(code: String, level: Int) = {
+    val lines = code.linesWithSeparators.buffered
+    val prefix = " " * level * 4
+    val head = lines.head
+    val tail = lines.drop(1)
+
+    head ++ tail.map(e => if (e == "\n") e else prefix + e).mkString
+  }
 }
