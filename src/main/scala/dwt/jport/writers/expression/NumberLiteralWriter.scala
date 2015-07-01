@@ -8,11 +8,8 @@ import dwt.jport.writers.WriterObject
 object NumberLiteralWriter extends WriterObject[NumberLiteral, NumberLiteralWriter]
 
 class NumberLiteralWriter extends Writer[NumberLiteral] {
-  def write(importWriter: ImportWriter, node: NumberLiteral): Unit = {
+  override def write(importWriter: ImportWriter, node: NumberLiteral): Unit = {
+    super.write(importWriter, node)
     buffer += node.translate
-  }
-
-  def postWrite: Unit = {
-
   }
 }

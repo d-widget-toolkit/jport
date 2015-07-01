@@ -8,14 +8,9 @@ import dwt.jport.writers.ImportWriter
 object EmptyStatementWriter extends WriterObject[EmptyStatement, EmptyStatementWriter]
 
 class EmptyStatementWriter extends Writer[EmptyStatement] {
-  def write(importWriter: ImportWriter, node: EmptyStatement): Unit = {
-    this.node = node
-    this.importWriter = importWriter
+  override def write(importWriter: ImportWriter, node: EmptyStatement): Unit = {
+    super.write(importWriter, node)
 
     buffer.append(" {}", nl)
-  }
-
-  def postWrite(): Unit = {
-
   }
 }

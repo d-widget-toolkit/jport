@@ -8,16 +8,12 @@ import dwt.jport.writers.WriterObject
 object ForStatementWriter extends WriterObject[ForStatement, ForStatementWriter]
 
 class ForStatementWriter extends Writer[ForStatement] {
-  def write(importWriter: ImportWriter, node: ForStatement): Unit = {
-    this.node = node
-    this.importWriter = importWriter
-
+  override def write(importWriter: ImportWriter, node: ForStatement): Unit = {
+    super.write(importWriter, node)
     writeHeader
 
     importWriter += node.imports
   }
-
-  def postWrite(): Unit = {}
 
   private def writeHeader = {
     buffer.append("for (");

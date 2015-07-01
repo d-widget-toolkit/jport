@@ -8,16 +8,15 @@ import dwt.jport.ast.statements.BreakStatement
 object BreakStatementWriter extends WriterObject[BreakStatement, BreakStatementWriter]
 
 class BreakStatementWriter extends Writer[BreakStatement] {
-  def write(importWriter: ImportWriter, node: BreakStatement): Unit = {
-    this.node = node
-    this.importWriter = importWriter
+  override def write(importWriter: ImportWriter, node: BreakStatement): Unit = {
+    super.write(importWriter, node)
 
     buffer += "break"
     buffer += node.label.map(' ' + _.translate).getOrElse("")
     buffer += ';'
   }
 
-  def postWrite(): Unit = {
+  override def postWrite(): Unit = {
     buffer += nl
   }
 }

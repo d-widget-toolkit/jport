@@ -19,8 +19,12 @@ trait Node[T] {
 trait Writer[T <: AstNode[_]] extends Node[T] with Buffer {
   protected var importWriter: ImportWriter = null
 
-  def write(importWriter: ImportWriter, node: T): Unit
-  def postWrite
+  def write(importWriter: ImportWriter, node: T): Unit = {
+    this.node = node
+    this.importWriter = importWriter
+  }
+
+  def postWrite: Unit = {}
 
   protected def isAdjacentLine(node: ASTNode) =
     lineNumber(node) == this.node.lineNumber + 1

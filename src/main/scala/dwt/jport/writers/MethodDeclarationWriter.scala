@@ -11,9 +11,8 @@ import dwt.jport.ast.MethodDeclaration
 object MethodDeclarationWriter extends WriterObject[MethodDeclaration, MethodDeclarationWriter]
 
 class MethodDeclarationWriter extends BodyDeclarationWriter[MethodDeclaration] with TypeParametersWriter[MethodDeclaration] {
-  def write(importWriter: ImportWriter, node: MethodDeclaration): Unit = {
-    this.node = node
-    this.importWriter = importWriter
+  override def write(importWriter: ImportWriter, node: MethodDeclaration): Unit = {
+    super.write(importWriter, node)
 
     writeModifiers
     writeReturnType
@@ -26,7 +25,7 @@ class MethodDeclarationWriter extends BodyDeclarationWriter[MethodDeclaration] w
     buffer.increaseIndentation
   }
 
-  def postWrite(): Unit = {
+  override def postWrite(): Unit = {
     buffer.decreaseIndentation
 
     if (node.hasBody)

@@ -8,9 +8,8 @@ import dwt.jport.writers.WriterObject
 object BlockWriter extends WriterObject[Block, BlockWriter]
 
 class BlockWriter extends Writer[Block] {
-  def write(importWriter: ImportWriter, node: Block): Unit = {
-    this.node = node
-    this.importWriter = importWriter
+  override def write(importWriter: ImportWriter, node: Block): Unit = {
+    super.write(importWriter, node)
 
     if (node.isEmpty)
       buffer += " {"
@@ -21,7 +20,7 @@ class BlockWriter extends Writer[Block] {
     buffer.increaseIndentation
   }
 
-  def postWrite(): Unit = {
+  override def postWrite(): Unit = {
     buffer.decreaseIndentation
 
     buffer.append('}', nl)

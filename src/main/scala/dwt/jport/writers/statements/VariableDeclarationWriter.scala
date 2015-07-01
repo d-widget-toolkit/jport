@@ -9,15 +9,14 @@ import dwt.jport.writers.ImportWriter
 import dwt.jport.writers.Writer
 
 trait VariableDeclarationWriter[AstNodeType <: AstNode[_] with VariableDeclaration] extends Writer[AstNodeType] {
-  def write(importWriter: ImportWriter, node: AstNodeType): Unit = {
-    this.node = node
-    this.importWriter = importWriter
+  override def write(importWriter: ImportWriter, node: AstNodeType): Unit = {
+    super.write(importWriter, node)
 
     writeType
     writeNamesAndInitializers
   }
 
-  def postWrite(): Unit = {
+  override def postWrite(): Unit = {
     buffer :+ nl
     if (!node.hasNext) return
 

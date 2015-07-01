@@ -5,9 +5,8 @@ import dwt.jport.ast.TypeDeclaration
 object TypeDeclarationWriter extends WriterObject[TypeDeclaration, TypeDeclarationWriter]
 
 class TypeDeclarationWriter extends BodyDeclarationWriter[TypeDeclaration] with TypeParametersWriter[TypeDeclaration] {
-  def write(importWriter: ImportWriter, node: TypeDeclaration): Unit = {
-    this.node = node
-    this.importWriter = importWriter
+  override def write(importWriter: ImportWriter, node: TypeDeclaration): Unit = {
+    super.write(importWriter, node)
 
     writeModifiers
     writeDeclaration
@@ -20,7 +19,7 @@ class TypeDeclarationWriter extends BodyDeclarationWriter[TypeDeclaration] with 
     buffer.increaseIndentation
   }
 
-  def postWrite(): Unit = buffer.decreaseIndentation.append('}', nl, nl)
+  override def postWrite(): Unit = buffer.decreaseIndentation.append('}', nl, nl)
 
   private def writeDeclaration = buffer.append(typeName, ' ', node.name)
 

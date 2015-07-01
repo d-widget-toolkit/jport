@@ -10,16 +10,15 @@ import dwt.jport.writers.WriterObject
 object ExpressionStatementWriter extends WriterObject[ExpressionStatement, ExpressionStatementWriter]
 
 class ExpressionStatementWriter extends Writer[ExpressionStatement] {
-  def write(importWriter: ImportWriter, node: ExpressionStatement): Unit = {
-    this.node = node
-    this.importWriter = importWriter
+  override def write(importWriter: ImportWriter, node: ExpressionStatement): Unit = {
+    super.write(importWriter, node)
 
     buffer.append(node.expression.translate, ';')
 
     importWriter += node.imports
   }
 
-  def postWrite(): Unit = {
+  override def postWrite(): Unit = {
     buffer :+ nl
 
     if (node.next.isDefined) {
