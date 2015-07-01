@@ -9,6 +9,7 @@ import org.eclipse.jdt.core.dom.{ EmptyStatement => JdtEmptyStatement }
 import org.eclipse.jdt.core.dom.{ ExpressionStatement => JdtExpressionStatement }
 import org.eclipse.jdt.core.dom.{ FieldDeclaration => JdtFieldDeclaration }
 import org.eclipse.jdt.core.dom.{ ForStatement => JdtForStatement }
+import org.eclipse.jdt.core.dom.{ LabeledStatement => JdtLabeledStatement }
 import org.eclipse.jdt.core.dom.{ MethodDeclaration => JdtMethodDeclaration }
 import org.eclipse.jdt.core.dom.ReturnStatement
 import org.eclipse.jdt.core.dom.Statement
@@ -23,6 +24,7 @@ import dwt.jport.ast.statements.Block
 import dwt.jport.ast.statements.EmptyStatement
 import dwt.jport.ast.statements.ExpressionStatement
 import dwt.jport.ast.statements.ForStatement
+import dwt.jport.ast.statements.LabeledStatement
 import dwt.jport.ast.statements.VariableDeclarationStatement
 import dwt.jport.writers.FieldDeclarationWriter
 import dwt.jport.writers.ImportWriter
@@ -32,6 +34,7 @@ import dwt.jport.writers.statements.BlockWriter
 import dwt.jport.writers.statements.EmptyStatementWriter
 import dwt.jport.writers.statements.ExpressionStatementWriter
 import dwt.jport.writers.statements.ForStatementWriter
+import dwt.jport.writers.statements.LabeledStatementWriter
 import dwt.jport.writers.statements.VariableDeclarationStatementWriter
 
 class VisitData[T](val isFirst: Boolean, val next: Option[T],
@@ -107,6 +110,7 @@ class JPortAstVisitor(private val importWriter: ImportWriter) extends Visitor {
       case n: JdtBlock => visit(n, visitData)
       case n: JdtEmptyStatement => visit(n, visitData)
       case n: JdtForStatement => visit(n, visitData)
+      case n: JdtLabeledStatement => visit(n, visitData)
       case _ => JPorter.diagnostic.unhandled(s"unhandled node ${node.getClass.getName} in ${getClass.getName}")
     }
   }
@@ -116,6 +120,14 @@ class JPortAstVisitor(private val importWriter: ImportWriter) extends Visitor {
 
     EmptyStatementWriter.write(importWriter, jportNode)
     EmptyStatementWriter.postWrite
+  }
+
+  def visit(node: JdtLabeledStatement, visitData: VisitData[Statement]): Unit = {
+    val jportNode = new LabeledStatement(node, visitData)
+
+    LabeledStatementWriter.write(importWriter, jportNode)
+    visit(jportNode.body, visitData)
+    LabeledStatementWriter.postWrite
   }
 
   def acceptStatements(statements: Array[Statement]) =

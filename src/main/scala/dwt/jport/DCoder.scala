@@ -65,6 +65,12 @@ class DCoder {
     level -= 1
   }
 
+  def unindent(block: => Unit) = this.tap {
+    level -= 1
+    block
+    level += 1
+  }
+
   def increaseIndentation = this.tap(level += 1)
   def decreaseIndentation = this.tap(level -= 1)
 
