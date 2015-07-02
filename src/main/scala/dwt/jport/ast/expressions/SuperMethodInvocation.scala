@@ -6,11 +6,12 @@ import org.eclipse.jdt.core.dom.{ Expression => JdtExpression }
 import org.eclipse.jdt.core.dom.{ SuperMethodInvocation => JdtSuperMethodInvocation }
 import org.eclipse.jdt.core.dom.Type
 
+import dwt.jport.ast.Invocation
 import dwt.jport.ast.expressions.ExpressionImplicits._
 import dwt.jport.translators.SuperMethodInvocationTranslator
 
 class SuperMethodInvocation(node: JdtSuperMethodInvocation)
-  extends Expression(node) with MethodInvocationInterface {
+  extends Expression(node) with Invocation {
 
   protected override def typedArguments =
     node.arguments.asInstanceOf[JavaList[JdtExpression]]

@@ -1,13 +1,15 @@
-package dwt.jport.ast.expressions
+package dwt.jport.ast
 
 import scala.collection.JavaConversions._
 
 import org.eclipse.jdt.core.dom.{ Expression => JdtExpression }
 import org.eclipse.jdt.core.dom.Type
 
+import dwt.jport.ast.expressions.Expression
 import dwt.jport.ast.expressions.ExpressionImplicits._
+import dwt.jport.ast.expressions.Imports
 
-trait MethodInvocationInterface extends Imports {
+trait Invocation extends Imports {
   private type JavaList[T] = java.util.List[T]
 
   protected def typedArguments: JavaList[JdtExpression]
