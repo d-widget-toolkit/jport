@@ -4,7 +4,7 @@ import dwt.jport.ITypeBindigImplicits._
 
 import dwt.jport.ast.expressions.MethodInvocation
 
-object MethodInvocationTranslator extends MethodInvocationTranslatorBase {
+object MethodInvocationTranslator extends InvocationTranslator {
   def translate(node: MethodInvocation) =
     expression(node) + super.translate(node)
 

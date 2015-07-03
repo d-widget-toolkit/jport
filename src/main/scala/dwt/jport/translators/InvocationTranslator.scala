@@ -3,7 +3,7 @@ package dwt.jport.translators
 import dwt.jport.ITypeBindigImplicits._
 import dwt.jport.ast.Invocation
 
-trait MethodInvocationTranslatorBase extends ExpressionTranslator {
+trait InvocationTranslator extends ExpressionTranslator {
   def translate(node: Invocation) =
     node.name.translate +
       typeArguments(node) +
