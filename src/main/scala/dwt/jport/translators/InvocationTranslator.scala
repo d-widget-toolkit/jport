@@ -5,9 +5,7 @@ import dwt.jport.ast.Invocation
 
 trait InvocationTranslator extends ExpressionTranslator {
   def translate(node: Invocation) =
-    node.name.translate +
-      typeArguments(node) +
-      s"(${arguments(node)})"
+    node.name + typeArguments(node) + s"(${arguments(node)})"
 
   private def arguments(node: Invocation) =
     node.arguments.map(_.translate).mkString(", ")

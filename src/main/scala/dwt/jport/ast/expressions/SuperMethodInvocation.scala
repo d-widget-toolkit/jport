@@ -13,13 +13,13 @@ import dwt.jport.translators.SuperMethodInvocationTranslator
 class SuperMethodInvocation(node: JdtSuperMethodInvocation)
   extends Expression(node) with Invocation {
 
-  protected override def typedArguments =
+  protected def typedArguments =
     node.arguments.asInstanceOf[JavaList[JdtExpression]]
 
-  protected override def typedTypeArguments =
+  protected def typedTypeArguments =
     node.typeArguments.asInstanceOf[JavaList[Type]]
 
-  override val name = node.getName.toJPort
+  protected def nameExpression = node.getName.toJPort
 
   override def translate = SuperMethodInvocationTranslator.translate(this)
 }

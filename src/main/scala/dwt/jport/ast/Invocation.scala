@@ -14,10 +14,11 @@ trait Invocation extends Imports {
 
   protected def typedArguments: JavaList[JdtExpression]
   protected def typedTypeArguments: JavaList[Type]
+  protected def nameExpression: Expression
 
   val arguments = typedArguments.map(_.toJPort)
   val typeArguments = typedTypeArguments.map(_.resolveBinding)
-  val name: Expression
+  def name = nameExpression.translate
 
   override lazy val importTypeBindings =
     arguments.flatMap(_.importTypeBindings) ++ typeArguments

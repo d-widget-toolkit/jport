@@ -72,12 +72,16 @@ object Expression {
 abstract class Expression(node: JdtExpression) extends AstNode(node) with Imports {
   def translate: String
 
-  def imports =
-    ImportTranslator.translate(importTypeBindings, declaringClass)
+  protected override def declaringClass = super[AstNode].declaringClass
 }
 
 trait Imports {
   lazy val importTypeBindings: Seq[ITypeBinding] = Array[ITypeBinding]()
+
+  protected def declaringClass: ITypeBinding
+
+  def imports =
+    ImportTranslator.translate(importTypeBindings, declaringClass)
 }
 
 class ToJPortExpression(val node: JdtExpression) {
