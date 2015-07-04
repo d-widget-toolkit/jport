@@ -15,6 +15,7 @@ import org.eclipse.jdt.core.dom.{ LabeledStatement => JdtLabeledStatement }
 import org.eclipse.jdt.core.dom.{ MethodDeclaration => JdtMethodDeclaration }
 import org.eclipse.jdt.core.dom.ReturnStatement
 import org.eclipse.jdt.core.dom.Statement
+import org.eclipse.jdt.core.dom.{ SuperConstructorInvocation => JdtSuperConstructorInvocation }
 import org.eclipse.jdt.core.dom.{ TypeDeclaration => JdtTypeDeclaration }
 import org.eclipse.jdt.core.dom.{ VariableDeclarationStatement => JdtVariableDeclarationStatement }
 
@@ -29,6 +30,7 @@ import dwt.jport.ast.statements.EmptyStatement
 import dwt.jport.ast.statements.ExpressionStatement
 import dwt.jport.ast.statements.ForStatement
 import dwt.jport.ast.statements.LabeledStatement
+import dwt.jport.ast.statements.SuperConstructorInvocation
 import dwt.jport.ast.statements.VariableDeclarationStatement
 import dwt.jport.writers.FieldDeclarationWriter
 import dwt.jport.writers.ImportWriter
@@ -41,6 +43,7 @@ import dwt.jport.writers.statements.EmptyStatementWriter
 import dwt.jport.writers.statements.ExpressionStatementWriter
 import dwt.jport.writers.statements.ForStatementWriter
 import dwt.jport.writers.statements.LabeledStatementWriter
+import dwt.jport.writers.statements.SuperConstructorInvocationWriter
 import dwt.jport.writers.statements.VariableDeclarationStatementWriter
 
 class VisitData[T](val isFirst: Boolean, val next: Option[T],
@@ -119,6 +122,7 @@ class JPortAstVisitor(private val importWriter: ImportWriter) extends Visitor {
       case n: JdtLabeledStatement => visit(n, visitData)
       case n: JdtBreakStatement => visit(n, visitData)
       case n: JdtConstructorInvocation => visit(n, visitData)
+      case n: JdtSuperConstructorInvocation => visit(n, visitData)
       case _ => JPorter.diagnostic.unhandled(s"unhandled node ${node.getClass.getName} in ${getClass.getName}")
     }
   }
@@ -150,6 +154,13 @@ class JPortAstVisitor(private val importWriter: ImportWriter) extends Visitor {
 
     ConstructorInvocationWriter.write(importWriter, jportNode)
     ConstructorInvocationWriter.postWrite
+  }
+
+  def visit(node: JdtSuperConstructorInvocation, visitData: VisitData[Statement]): Unit = {
+    val jportNode = new SuperConstructorInvocation(node, visitData)
+
+    SuperConstructorInvocationWriter.write(importWriter, jportNode)
+    SuperConstructorInvocationWriter.postWrite
   }
 
   def acceptStatements(statements: Array[Statement]) =
