@@ -98,6 +98,20 @@ class ImportWriterSpec extends Spec with BeforeAndAfter {
         }
       }
 
+      context("with duplicated imports") {
+        it("writes all unique imports") {
+          writer :+ Array("foo", "bar", "foo")
+          writer.write()
+
+          result shouldBe code {
+            """
+            import bar;
+            import foo;
+            """
+          }
+        }
+      }
+
       context("imports with and without a package qualifier") {
         it("writes grouped sorted list of imports statemens, packageless last") {
           writer :+ Array("asd", "foo.a", "bar.a")

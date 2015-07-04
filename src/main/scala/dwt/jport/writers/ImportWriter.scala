@@ -20,12 +20,13 @@ class ImportWriter extends Buffer {
     str +=: buffer
   }
 
-  lazy val importsWPackage = this.imports.filter(_.contains('.')).
+  lazy val importsWPackage = uniqueImports.filter(_.contains('.')).
     filterNot(_ == "java.lang.Object").sortWith(_ < _)
 
-  lazy val importsWOPackage = this.imports.filter(!_.contains('.')).
+  lazy val importsWOPackage = uniqueImports.filter(!_.contains('.')).
     sortWith(_ < _)
 
+  private lazy val uniqueImports = imports.distinct
   private def toImportString(s: String) = s"import $s;"
   private def sort(a: StringArray, b: StringArray) =
     if (a.nonEmpty && b.nonEmpty) a.head < b.head else false
