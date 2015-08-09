@@ -1,11 +1,9 @@
 package dwt.jport.ast
 
-import org.eclipse.jdt.core.dom.ASTNode
-
 import dwt.jport.analyzers.VisitData
 
 trait Siblings {
-  type JdtNodeType <: ASTNode
+  type JdtNodeType
 
   protected def visitData: VisitData[JdtNodeType]
 

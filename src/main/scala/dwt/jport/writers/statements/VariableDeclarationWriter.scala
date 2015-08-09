@@ -22,8 +22,8 @@ trait VariableDeclarationWriter[AstNodeType <: AstNode[_] with VariableDeclarati
 
     if (isAdjacentLine(node.next.get)) {
       if (!isField(node.next) &&
-        !isExpressionStatement(node.next) &&
-        !isVariableDeclarationStatement(node.next))
+        !isExpressionStatement(node.next.asInstanceOf[Option[ASTNode]]) &&
+        !isVariableDeclarationStatement(node.next.asInstanceOf[Option[ASTNode]]))
         buffer += nl
     }
     else
@@ -36,7 +36,7 @@ trait VariableDeclarationWriter[AstNodeType <: AstNode[_] with VariableDeclarati
     buffer.join(namesInitializers)
 
   private def isField(node: Option[AstNodeType#JdtNodeType]) =
-    node.isDefined && node.get.getNodeType == ASTNode.FIELD_DECLARATION
+    node.isDefined && node.get.asInstanceOf[ASTNode].getNodeType == ASTNode.FIELD_DECLARATION
 
   private def isAdjacentLine(node: AstNodeType#JdtNodeType) =
     lineNumber(node) == this.node.lineNumber + 1
@@ -46,7 +46,7 @@ trait VariableDeclarationWriter[AstNodeType <: AstNode[_] with VariableDeclarati
       ASTNode.VARIABLE_DECLARATION_STATEMENT
 
   private def lineNumber(node: AstNodeType#JdtNodeType) =
-    JPorter.compilationUnit.getLineNumber(node)
+    JPorter.compilationUnit.getLineNumber(node.asInstanceOf[ASTNode])
 
   private def namesInitializers: scala.collection.mutable.Buffer[String] =
     node.names.zip(node.initializers).map {

@@ -17,15 +17,16 @@ import dwt.jport.Symbol
 import dwt.jport.Type
 import dwt.jport.analyzers.VisitData
 
-class TypeDeclaration(node: JdtTypeDeclaration, protected override val visitData: VisitData[JdtAbstractTypeDeclaration])
-  extends BodyDeclaration(node)
+class TypeDeclaration(node: JdtTypeDeclaration, protected override val visitData: VisitData[AbstractTypeDeclaration])
+  extends AbstractTypeDeclaration(node)
   with TypeParameters
   with Siblings {
 
-  type JdtNodeType = JdtAbstractTypeDeclaration
+  type JdtNodeType = AbstractTypeDeclaration
 
   import Type.fullyQualfiedName
 
+  val bodyDeclarations = node.bodyDeclarations.asInstanceOf[JavaList[BodyDeclaration]]
   val isInterface = node.isInterface
   val unescapedName = node.getName.getIdentifier
   val name = Symbol.translate(unescapedName)

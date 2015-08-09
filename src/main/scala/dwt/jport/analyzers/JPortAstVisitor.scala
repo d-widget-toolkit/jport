@@ -52,11 +52,10 @@ class VisitData[T](val isFirst: Boolean, val next: Option[T],
 class JPortAstVisitor(private val importWriter: ImportWriter) extends Visitor {
   private type JavaList[T] = java.util.List[T]
 
-  def visit(node: JdtTypeDeclaration, visistData: VisitData[AbstractTypeDeclaration]): Unit = {
-    val jportNode = new TypeDeclaration(node, visistData)
+  def visit(node: TypeDeclaration): Unit = {
     val nodes = node.bodyDeclarations.asInstanceOf[JavaList[BodyDeclaration]]
 
-    TypeDeclarationWriter.write(importWriter, jportNode)
+    TypeDeclarationWriter.write(importWriter, node)
 
     accept(nodes.to[Array]) { (node, v) =>
       node match {

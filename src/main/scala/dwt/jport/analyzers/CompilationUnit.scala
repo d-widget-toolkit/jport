@@ -1,12 +1,15 @@
 package dwt.jport.analyzers
 
 import scala.collection.JavaConversions._
+
+import org.eclipse.jdt.core.dom.ASTNode
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration
 import org.eclipse.jdt.core.dom.{ CompilationUnit => JdtCompilationUnit }
-import org.eclipse.jdt.core.dom.TypeDeclaration
+
 import dwt.jport.DCoder
+import dwt.jport.JPorter
+import dwt.jport.ast.TypeDeclaration
 import dwt.jport.writers.ImportWriter
-import org.eclipse.jdt.core.dom.ASTNode
 
 class CompilationUnit(val unit: JdtCompilationUnit) extends Visitor {
   private type NodeType = AbstractTypeDeclaration
@@ -21,10 +24,10 @@ class CompilationUnit(val unit: JdtCompilationUnit) extends Visitor {
   def process(): String = {
     dcoder.reset()
 
-    accept(nodes) { (node, visitData) =>
+    for (node <- JPortConverter.convert(nodes)) {
       node match {
-        case n: TypeDeclaration => visitor.visit(n, visitData)
-        case _ => println(s"unhandled node ${node.getClass.getName}")
+        case n: TypeDeclaration => visitor.visit(n)
+        case _ => JPorter.diagnostic.unhandled(s"unhandled node ${node.getClass.getName} in ${getClass.getName}")
       }
     }
 
