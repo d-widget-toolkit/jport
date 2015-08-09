@@ -2,24 +2,11 @@ package dwt.jport.analyzers
 
 import scala.collection.JavaConversions._
 
-import org.eclipse.jdt.core.dom.AbstractTypeDeclaration
-import org.eclipse.jdt.core.dom.{ Block => JdtBlock }
-import org.eclipse.jdt.core.dom.BodyDeclaration
-import org.eclipse.jdt.core.dom.{ BreakStatement => JdtBreakStatement }
-import org.eclipse.jdt.core.dom.{ ConstructorInvocation => JdtConstructorInvocation }
-import org.eclipse.jdt.core.dom.{ EmptyStatement => JdtEmptyStatement }
-import org.eclipse.jdt.core.dom.{ ExpressionStatement => JdtExpressionStatement }
-import org.eclipse.jdt.core.dom.{ FieldDeclaration => JdtFieldDeclaration }
-import org.eclipse.jdt.core.dom.{ ForStatement => JdtForStatement }
-import org.eclipse.jdt.core.dom.{ LabeledStatement => JdtLabeledStatement }
-import org.eclipse.jdt.core.dom.{ MethodDeclaration => JdtMethodDeclaration }
-import org.eclipse.jdt.core.dom.ReturnStatement
-import org.eclipse.jdt.core.dom.Statement
-import org.eclipse.jdt.core.dom.{ SuperConstructorInvocation => JdtSuperConstructorInvocation }
-import org.eclipse.jdt.core.dom.{ TypeDeclaration => JdtTypeDeclaration }
-import org.eclipse.jdt.core.dom.{ VariableDeclarationStatement => JdtVariableDeclarationStatement }
+import org.eclipse.jdt.core.dom.{ BodyDeclaration => JdtBodyDeclaration }
+import org.eclipse.jdt.core.dom.{ Statement => JdtStatement }
 
 import dwt.jport.JPorter
+import dwt.jport.ast.BodyDeclaration
 import dwt.jport.ast.FieldDeclaration
 import dwt.jport.ast.MethodDeclaration
 import dwt.jport.ast.TypeDeclaration
@@ -30,6 +17,8 @@ import dwt.jport.ast.statements.EmptyStatement
 import dwt.jport.ast.statements.ExpressionStatement
 import dwt.jport.ast.statements.ForStatement
 import dwt.jport.ast.statements.LabeledStatement
+import dwt.jport.ast.statements.ReturnStatement
+import dwt.jport.ast.statements.Statement
 import dwt.jport.ast.statements.SuperConstructorInvocation
 import dwt.jport.ast.statements.VariableDeclarationStatement
 import dwt.jport.writers.FieldDeclarationWriter
@@ -52,117 +41,95 @@ class VisitData[T](val isFirst: Boolean, val next: Option[T],
 class JPortAstVisitor(private val importWriter: ImportWriter) extends Visitor {
   private type JavaList[T] = java.util.List[T]
 
-  def visit(node: JdtTypeDeclaration, visistData: VisitData[AbstractTypeDeclaration]): Unit = {
-    val jportNode = new TypeDeclaration(node, visistData)
-    val nodes = node.bodyDeclarations.asInstanceOf[JavaList[BodyDeclaration]]
+  def visit(node: TypeDeclaration): Unit = {
+    val nodes = node.bodyDeclarations
 
-    TypeDeclarationWriter.write(importWriter, jportNode)
+    TypeDeclarationWriter.write(importWriter, node)
+    val jportNodes = JPortConverter.convert[JdtBodyDeclaration, BodyDeclaration](nodes)
 
-    accept(nodes.to[Array]) { (node, v) =>
+    for (node <- jportNodes) {
       node match {
-        case n: JdtMethodDeclaration => visit(n, v)
-        case n: JdtFieldDeclaration => visit(n, v)
-        case _ => println(s"unhandled node ${node.getClass.getName} in ${getClass.getName}")
+        case n: MethodDeclaration => visit(n)
+        case n: FieldDeclaration => visit(n)
+        case _ => JPorter.diagnostic.unhandled(s"unhandled node ${node.getClass.getName} in ${getClass.getName}")
       }
     }
 
     TypeDeclarationWriter.postWrite
   }
 
-  def visit(node: JdtMethodDeclaration, visitData: VisitData[BodyDeclaration]): Unit = {
-    val jportNode = new MethodDeclaration(node, visitData)
-
-    MethodDeclarationWriter.write(importWriter, jportNode)
-    acceptStatements(jportNode.statements.to[Array])
+  def visit(node: MethodDeclaration): Unit = {
+    MethodDeclarationWriter.write(importWriter, node)
+    JPortConverter.convert[JdtStatement, Statement](node.statements).foreach(visit)
     MethodDeclarationWriter.postWrite
   }
 
-  def visit(node: JdtFieldDeclaration, visitData: VisitData[BodyDeclaration]): Unit = {
-    val jportNode = new FieldDeclaration(node, visitData)
-    FieldDeclarationWriter.write(importWriter, jportNode)
+  def visit(node: FieldDeclaration): Unit = {
+    FieldDeclarationWriter.write(importWriter, node)
     FieldDeclarationWriter.postWrite
   }
 
-  def visit(node: JdtVariableDeclarationStatement, visitData: VisitData[Statement]): Unit = {
-    val jportNode = new VariableDeclarationStatement(node, visitData)
-    VariableDeclarationStatementWriter.write(importWriter, jportNode)
+  def visit(node: VariableDeclarationStatement): Unit = {
+    VariableDeclarationStatementWriter.write(importWriter, node)
     VariableDeclarationStatementWriter.postWrite
   }
 
-  def visit(node: JdtExpressionStatement, visitData: VisitData[Statement]): Unit = {
-    val jportNode = new ExpressionStatement(node, visitData)
-    ExpressionStatementWriter.write(importWriter, jportNode)
+  def visit(node: ExpressionStatement): Unit = {
+    ExpressionStatementWriter.write(importWriter, node)
     ExpressionStatementWriter.postWrite
   }
 
-  def visit(node: JdtForStatement, visitData: VisitData[Statement]): Unit = {
-    val jportNode = new ForStatement(node, visitData)
-
-    ForStatementWriter.write(importWriter, jportNode)
-    visit(jportNode.body, visitData)
+  def visit(node: ForStatement): Unit = {
+    ForStatementWriter.write(importWriter, node)
+    visit(JPortConverter.convert[JdtStatement, Statement](node.body))
     ForStatementWriter.postWrite
   }
 
-  def visit(node: JdtBlock, visitData: VisitData[Statement]): Unit = {
-    val jportNode = new Block(node, visitData)
-
-    BlockWriter.write(importWriter, jportNode)
-    acceptStatements(jportNode.statements)
+  def visit(node: Block): Unit = {
+    BlockWriter.write(importWriter, node)
+    JPortConverter.convert[JdtStatement, Statement](node.statements).foreach(visit)
     BlockWriter.postWrite
   }
 
-  def visit(node: Statement, visitData: VisitData[Statement]): Unit = {
+  def visit(node: Statement): Unit = {
     node match {
-      case n: JdtVariableDeclarationStatement => visit(n, visitData)
+      case n: VariableDeclarationStatement => visit(n)
       case n: ReturnStatement => /* ignore during development */
-      case n: JdtExpressionStatement => visit(n, visitData)
-      case n: JdtBlock => visit(n, visitData)
-      case n: JdtEmptyStatement => visit(n, visitData)
-      case n: JdtForStatement => visit(n, visitData)
-      case n: JdtLabeledStatement => visit(n, visitData)
-      case n: JdtBreakStatement => visit(n, visitData)
-      case n: JdtConstructorInvocation => visit(n, visitData)
-      case n: JdtSuperConstructorInvocation => visit(n, visitData)
+      case n: ExpressionStatement => visit(n)
+      case n: Block => visit(n)
+      case n: EmptyStatement => visit(n)
+      case n: ForStatement => visit(n)
+      case n: LabeledStatement => visit(n)
+      case n: BreakStatement => visit(n)
+      case n: ConstructorInvocation => visit(n)
+      case n: SuperConstructorInvocation => visit(n)
       case _ => JPorter.diagnostic.unhandled(s"unhandled node ${node.getClass.getName} in ${getClass.getName}")
     }
   }
 
-  def visit(node: JdtEmptyStatement, visitData: VisitData[Statement]): Unit = {
-    val jportNode = new EmptyStatement(node, visitData)
-
-    EmptyStatementWriter.write(importWriter, jportNode)
+  def visit(node: EmptyStatement): Unit = {
+    EmptyStatementWriter.write(importWriter, node)
     EmptyStatementWriter.postWrite
   }
 
-  def visit(node: JdtLabeledStatement, visitData: VisitData[Statement]): Unit = {
-    val jportNode = new LabeledStatement(node, visitData)
-
-    LabeledStatementWriter.write(importWriter, jportNode)
-    visit(jportNode.body, visitData)
+  def visit(node: LabeledStatement): Unit = {
+    LabeledStatementWriter.write(importWriter, node)
+    visit(JPortConverter.convert[JdtStatement, Statement](node.body))
     LabeledStatementWriter.postWrite
   }
 
-  def visit(node: JdtBreakStatement, visitData: VisitData[Statement]): Unit = {
-    val jportNode = new BreakStatement(node, visitData)
-
-    BreakStatementWriter.write(importWriter, jportNode)
+  def visit(node: BreakStatement): Unit = {
+    BreakStatementWriter.write(importWriter, node)
     BreakStatementWriter.postWrite
   }
 
-  def visit(node: JdtConstructorInvocation, visitData: VisitData[Statement]): Unit = {
-    val jportNode = new ConstructorInvocation(node, visitData)
-
-    ConstructorInvocationWriter.write(importWriter, jportNode)
+  def visit(node: ConstructorInvocation): Unit = {
+    ConstructorInvocationWriter.write(importWriter, node)
     ConstructorInvocationWriter.postWrite
   }
 
-  def visit(node: JdtSuperConstructorInvocation, visitData: VisitData[Statement]): Unit = {
-    val jportNode = new SuperConstructorInvocation(node, visitData)
-
-    SuperConstructorInvocationWriter.write(importWriter, jportNode)
+  def visit(node: SuperConstructorInvocation): Unit = {
+    SuperConstructorInvocationWriter.write(importWriter, node)
     SuperConstructorInvocationWriter.postWrite
   }
-
-  def acceptStatements(statements: Array[Statement]) =
-    accept(statements) { (node, visitData) => visit(node, visitData) }
 }

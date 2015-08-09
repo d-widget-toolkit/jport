@@ -1,16 +1,10 @@
 package dwt.jport.ast
 
 import scala.collection.JavaConversions._
-import scala.collection.mutable.Buffer
+
 import org.eclipse.jdt.core.dom.ITypeBinding
-import org.eclipse.jdt.core.dom.QualifiedName
-import org.eclipse.jdt.core.dom.SimpleName
-import org.eclipse.jdt.core.dom.SimpleType
-import org.eclipse.jdt.core.dom.{ Type => JdtType }
-import org.eclipse.jdt.core.dom.TypeParameter
-import dwt.jport.Symbol
+
 import dwt.jport.Type
-import org.eclipse.jdt.core.dom.ASTNode
 
 trait TypeParameters {
   protected def typeParametersBinding: Array[ITypeBinding]

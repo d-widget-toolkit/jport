@@ -22,8 +22,8 @@ trait VariableDeclarationWriter[AstNodeType <: AstNode[_] with VariableDeclarati
 
     if (isAdjacentLine(node.next.get)) {
       if (!isField(node.next) &&
-        !isExpressionStatement(node.next) &&
-        !isVariableDeclarationStatement(node.next))
+        !isExpressionStatement(node.next.map(toAstNode(_))) &&
+        !isVariableDeclarationStatement(node.next.map(toAstNode(_))))
         buffer += nl
     }
     else
@@ -35,18 +35,17 @@ trait VariableDeclarationWriter[AstNodeType <: AstNode[_] with VariableDeclarati
   protected def writeNamesAndInitializers =
     buffer.join(namesInitializers)
 
-  private def isField(node: Option[AstNodeType#JdtNodeType]) =
-    node.isDefined && node.get.getNodeType == ASTNode.FIELD_DECLARATION
+  private def isField(node: Option[AstNodeType#NodeType]) =
+    node.filter(toAstNode(_).nodeType == ASTNode.FIELD_DECLARATION).isDefined
 
-  private def isAdjacentLine(node: AstNodeType#JdtNodeType) =
+  private def isAdjacentLine(node: AstNodeType#NodeType) =
     lineNumber(node) == this.node.lineNumber + 1
 
-  protected def isVariableDeclarationStatement(node: Option[ASTNode]) =
-    node.isDefined && node.get.getNodeType ==
-      ASTNode.VARIABLE_DECLARATION_STATEMENT
+  protected def isVariableDeclarationStatement(node: Option[AstNode[_]]) =
+    node.filter(_.nodeType == ASTNode.VARIABLE_DECLARATION_STATEMENT).isDefined
 
-  private def lineNumber(node: AstNodeType#JdtNodeType) =
-    JPorter.compilationUnit.getLineNumber(node)
+  private def lineNumber(node: AstNodeType#NodeType) =
+    JPorter.compilationUnit.getLineNumber(toAstNode(node))
 
   private def namesInitializers: scala.collection.mutable.Buffer[String] =
     node.names.zip(node.initializers).map {
@@ -54,4 +53,6 @@ trait VariableDeclarationWriter[AstNodeType <: AstNode[_] with VariableDeclarati
         val initializer = value.map(_.translate).getOrElse("")
         if (initializer.isEmpty) name else s"${name} = ${initializer}"
     }
+
+  def toAstNode[T](node: T) = node.asInstanceOf[AstNode[_]]
 }
