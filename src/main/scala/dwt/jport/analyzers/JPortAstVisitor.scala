@@ -2,21 +2,16 @@ package dwt.jport.analyzers
 
 import scala.collection.JavaConversions._
 
-import org.eclipse.jdt.core.dom.AbstractTypeDeclaration
 import org.eclipse.jdt.core.dom.{ Block => JdtBlock }
-import org.eclipse.jdt.core.dom.BodyDeclaration
 import org.eclipse.jdt.core.dom.{ BreakStatement => JdtBreakStatement }
 import org.eclipse.jdt.core.dom.{ ConstructorInvocation => JdtConstructorInvocation }
 import org.eclipse.jdt.core.dom.{ EmptyStatement => JdtEmptyStatement }
 import org.eclipse.jdt.core.dom.{ ExpressionStatement => JdtExpressionStatement }
-import org.eclipse.jdt.core.dom.{ FieldDeclaration => JdtFieldDeclaration }
 import org.eclipse.jdt.core.dom.{ ForStatement => JdtForStatement }
 import org.eclipse.jdt.core.dom.{ LabeledStatement => JdtLabeledStatement }
-import org.eclipse.jdt.core.dom.{ MethodDeclaration => JdtMethodDeclaration }
 import org.eclipse.jdt.core.dom.ReturnStatement
 import org.eclipse.jdt.core.dom.Statement
 import org.eclipse.jdt.core.dom.{ SuperConstructorInvocation => JdtSuperConstructorInvocation }
-import org.eclipse.jdt.core.dom.{ TypeDeclaration => JdtTypeDeclaration }
 import org.eclipse.jdt.core.dom.{ VariableDeclarationStatement => JdtVariableDeclarationStatement }
 
 import dwt.jport.JPorter
@@ -53,32 +48,29 @@ class JPortAstVisitor(private val importWriter: ImportWriter) extends Visitor {
   private type JavaList[T] = java.util.List[T]
 
   def visit(node: TypeDeclaration): Unit = {
-    val nodes = node.bodyDeclarations.asInstanceOf[JavaList[BodyDeclaration]]
+    val nodes = node.bodyDeclarations
 
     TypeDeclarationWriter.write(importWriter, node)
 
-    accept(nodes.to[Array]) { (node, v) =>
+    for (node <- JPortConverter.convert(nodes)) {
       node match {
-        case n: JdtMethodDeclaration => visit(n, v)
-        case n: JdtFieldDeclaration => visit(n, v)
-        case _ => println(s"unhandled node ${node.getClass.getName} in ${getClass.getName}")
+        case n: MethodDeclaration => visit(n)
+        case n: FieldDeclaration => visit(n)
+        case _ => JPorter.diagnostic.unhandled(s"unhandled node ${node.getClass.getName} in ${getClass.getName}")
       }
     }
 
     TypeDeclarationWriter.postWrite
   }
 
-  def visit(node: JdtMethodDeclaration, visitData: VisitData[BodyDeclaration]): Unit = {
-    val jportNode = new MethodDeclaration(node, visitData)
-
-    MethodDeclarationWriter.write(importWriter, jportNode)
-    acceptStatements(jportNode.statements.to[Array])
+  def visit(node: MethodDeclaration): Unit = {
+    MethodDeclarationWriter.write(importWriter, node)
+    acceptStatements(node.statements.to[Array])
     MethodDeclarationWriter.postWrite
   }
 
-  def visit(node: JdtFieldDeclaration, visitData: VisitData[BodyDeclaration]): Unit = {
-    val jportNode = new FieldDeclaration(node, visitData)
-    FieldDeclarationWriter.write(importWriter, jportNode)
+  def visit(node: FieldDeclaration): Unit = {
+    FieldDeclarationWriter.write(importWriter, node)
     FieldDeclarationWriter.postWrite
   }
 

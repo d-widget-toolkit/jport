@@ -16,12 +16,12 @@ import dwt.jport.analyzers.Modifiers
 import dwt.jport.analyzers.VisitData
 import dwt.jport.translators.ImportTranslator
 
-class MethodDeclaration(node: JdtMethodDeclaration, protected override val visitData: VisitData[JdtBodyDeclaration])
+class MethodDeclaration(node: JdtMethodDeclaration, protected override val visitData: VisitData[BodyDeclaration])
   extends BodyDeclaration(node)
   with TypeParameters
   with Siblings {
 
-  type JdtNodeType = JdtBodyDeclaration
+  type JdtNodeType = BodyDeclaration
 
   import Type.fullyQualfiedName
 

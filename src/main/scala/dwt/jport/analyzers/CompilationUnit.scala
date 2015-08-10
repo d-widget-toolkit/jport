@@ -32,7 +32,9 @@ class CompilationUnit(val unit: JdtCompilationUnit) extends Visitor {
     }
 
     importWriter.write()
-    dcoder.result
+    val r = dcoder.result
+    println(r)
+    r
   }
 
   def getLineNumber(node: ASTNode) = unit.getLineNumber(node.getStartPosition)

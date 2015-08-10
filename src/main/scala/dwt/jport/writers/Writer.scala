@@ -13,7 +13,7 @@ trait Buffer {
 }
 
 trait Node[T] {
-  protected var node: T = _
+  var node: T = _
 }
 
 trait Writer[T <: AstNode[_]] extends Node[T] with Buffer {

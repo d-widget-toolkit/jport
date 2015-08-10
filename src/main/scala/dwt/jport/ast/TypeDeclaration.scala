@@ -2,16 +2,11 @@ package dwt.jport.ast
 
 import scala.collection.JavaConversions._
 import scala.collection.JavaConverters._
-import scala.collection.mutable.Buffer
 
-import org.eclipse.jdt.core.dom.{ AbstractTypeDeclaration => JdtAbstractTypeDeclaration }
-import org.eclipse.jdt.core.dom.ITypeBinding
-import org.eclipse.jdt.core.dom.QualifiedName
-import org.eclipse.jdt.core.dom.SimpleName
+import org.eclipse.jdt.core.dom.{ BodyDeclaration => JdtBodyDeclaration }
 import org.eclipse.jdt.core.dom.SimpleType
 import org.eclipse.jdt.core.dom.{ Type => JdtType }
 import org.eclipse.jdt.core.dom.{ TypeDeclaration => JdtTypeDeclaration }
-import org.eclipse.jdt.core.dom.TypeParameter
 
 import dwt.jport.Symbol
 import dwt.jport.Type
@@ -26,7 +21,7 @@ class TypeDeclaration(node: JdtTypeDeclaration, protected override val visitData
 
   import Type.fullyQualfiedName
 
-  val bodyDeclarations = node.bodyDeclarations.asInstanceOf[JavaList[BodyDeclaration]]
+  val bodyDeclarations = node.bodyDeclarations.asInstanceOf[JavaList[JdtBodyDeclaration]]
   val isInterface = node.isInterface
   val unescapedName = node.getName.getIdentifier
   val name = Symbol.translate(unescapedName)
