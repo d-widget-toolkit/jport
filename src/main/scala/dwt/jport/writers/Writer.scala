@@ -34,6 +34,12 @@ trait Writer[T <: AstNode[_]] extends Node[T] with Buffer {
 
   protected def isExpressionStatement(node: Option[ASTNode]) =
     node.isDefined && node.get.getNodeType == ASTNode.EXPRESSION_STATEMENT
+
+  protected def toASTNode[T](node: T) =
+    if (node.isInstanceOf[AstNode[_]])
+      node.asInstanceOf[AstNode[ASTNode]].node
+    else
+      node.asInstanceOf[ASTNode]
 }
 
 abstract class WriterObject[Node <: AstNode[_], Subclass <: Writer[Node]](implicit manifest: Manifest[Subclass]) {

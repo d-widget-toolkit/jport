@@ -2,10 +2,21 @@ package dwt.jport.analyzers
 
 import org.eclipse.jdt.core.dom.ASTNode
 import org.eclipse.jdt.core.dom.{ AbstractTypeDeclaration => JdtAbstractTypeDeclaration }
+import org.eclipse.jdt.core.dom.{ Block => JdtBlock }
 import org.eclipse.jdt.core.dom.{ BodyDeclaration => JdtBodyDeclaration }
+import org.eclipse.jdt.core.dom.{ BreakStatement => JdtBreakStatement }
+import org.eclipse.jdt.core.dom.{ ConstructorInvocation => JdtConstructorInvocation }
+import org.eclipse.jdt.core.dom.{ EmptyStatement => JdtEmptyStatement }
+import org.eclipse.jdt.core.dom.{ ExpressionStatement => JdtExpressionStatement }
 import org.eclipse.jdt.core.dom.{ FieldDeclaration => JdtFieldDeclaration }
+import org.eclipse.jdt.core.dom.{ ForStatement => JdtForStatement }
+import org.eclipse.jdt.core.dom.{ LabeledStatement => JdtLabeledStatement }
 import org.eclipse.jdt.core.dom.{ MethodDeclaration => JdtMethodDeclaration }
+import org.eclipse.jdt.core.dom.{ ReturnStatement => JdtReturnStatement }
+import org.eclipse.jdt.core.dom.{ Statement => JdtStatement }
+import org.eclipse.jdt.core.dom.{ SuperConstructorInvocation => JdtSuperConstructorInvocation }
 import org.eclipse.jdt.core.dom.{ TypeDeclaration => JdtTypeDeclaration }
+import org.eclipse.jdt.core.dom.{ VariableDeclarationStatement => JdtVariableDeclarationStatement }
 
 import dwt.jport.JPorter
 import dwt.jport.ast.AbstractTypeDeclaration
@@ -14,18 +25,29 @@ import dwt.jport.ast.BodyDeclaration
 import dwt.jport.ast.FieldDeclaration
 import dwt.jport.ast.MethodDeclaration
 import dwt.jport.ast.TypeDeclaration
+import dwt.jport.ast.statements.Block
+import dwt.jport.ast.statements.BreakStatement
+import dwt.jport.ast.statements.ConstructorInvocation
+import dwt.jport.ast.statements.EmptyStatement
+import dwt.jport.ast.statements.ExpressionStatement
+import dwt.jport.ast.statements.ForStatement
+import dwt.jport.ast.statements.LabeledStatement
+import dwt.jport.ast.statements.ReturnStatement
+import dwt.jport.ast.statements.Statement
+import dwt.jport.ast.statements.SuperConstructorInvocation
+import dwt.jport.ast.statements.VariableDeclarationStatement
 
 object JPortConverter {
-  def convert[T <: ASTNode](nodes: Iterable[T]): Iterator[AstNode[_]] = {
+  def convert[T <: ASTNode, U <: AstNode[_]](nodes: Iterable[T]): Iterator[U] = {
     window(nodes).zipWithIndex map {
       case ((prev, node, next), index) =>
         convert(node.get, index == 0, next, prev)
     }
   }
 
-  def convert[T <: ASTNode](node: T, isFirst: Boolean = false,
+  def convert[T <: ASTNode, U <: AstNode[T]](node: T, isFirst: Boolean = false,
     next: Option[T] = None,
-    prev: Option[T] = None): AstNode[_] = {
+    prev: Option[T] = None): U = {
 
     def option[U](o: Option[T]) = o.asInstanceOf[Option[U]]
 
@@ -33,18 +55,24 @@ object JPortConverter {
       case n: JdtAbstractTypeDeclaration => {
         val p = option[JdtAbstractTypeDeclaration](prev)
         val ne = option[JdtAbstractTypeDeclaration](next)
-        convert(n, isFirst, ne, p)
+        convert(n, isFirst, ne, p).asInstanceOf[U]
       }
 
       case n: JdtBodyDeclaration => {
         val ne = option[JdtBodyDeclaration](next)
         val p = option[JdtBodyDeclaration](prev)
-        convert(n, isFirst, ne, p)
+        convert(n, isFirst, ne, p).asInstanceOf[U]
+      }
+
+      case n: JdtStatement => {
+        val ne = option[JdtStatement](next)
+        val p = option[JdtStatement](prev)
+        convert(n, isFirst, ne, p).asInstanceOf[U]
       }
 
       case _ => {
         JPorter.diagnostic.unhandled(s"unhandled node ${node.getClass.getName} in ${getClass.getName}")
-        null
+        null.asInstanceOf[U]
       }
     }
   }
@@ -77,6 +105,32 @@ object JPortConverter {
     node match {
       case n: JdtMethodDeclaration => new MethodDeclaration(n, visitData)
       case n: JdtFieldDeclaration => new FieldDeclaration(n, visitData)
+      case _ => {
+        JPorter.diagnostic.unhandled(s"unhandled node ${node.getClass.getName} in ${getClass.getName}")
+        null
+      }
+    }
+  }
+
+  private def convert(node: JdtStatement, isFirst: Boolean,
+    next: Option[JdtStatement],
+    prev: Option[JdtStatement]): Statement = {
+
+    val ne = next.map(convert(_).asInstanceOf[Statement])
+    val p = prev.map(convert(_).asInstanceOf[Statement])
+    val visitData = new VisitData(isFirst, ne, p)
+
+    node match {
+      case n: JdtVariableDeclarationStatement => new VariableDeclarationStatement(n, visitData)
+      case n: JdtReturnStatement => new ReturnStatement(n, visitData)
+      case n: JdtExpressionStatement => new ExpressionStatement(n, visitData)
+      case n: JdtBlock => new Block(n, visitData)
+      case n: JdtEmptyStatement => new EmptyStatement(n, visitData)
+      case n: JdtForStatement => new ForStatement(n, visitData)
+      case n: JdtLabeledStatement => new LabeledStatement(n, visitData)
+      case n: JdtBreakStatement => new BreakStatement(n, visitData)
+      case n: JdtConstructorInvocation => new ConstructorInvocation(n, visitData)
+      case n: JdtSuperConstructorInvocation => new SuperConstructorInvocation(n, visitData)
       case _ => {
         JPorter.diagnostic.unhandled(s"unhandled node ${node.getClass.getName} in ${getClass.getName}")
         null

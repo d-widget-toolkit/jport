@@ -55,10 +55,4 @@ trait VariableDeclarationWriter[AstNodeType <: AstNode[_] with VariableDeclarati
         val initializer = value.map(_.translate).getOrElse("")
         if (initializer.isEmpty) name else s"${name} = ${initializer}"
     }
-
-  private def toASTNode(node: AstNodeType#JdtNodeType) =
-    if (node.isInstanceOf[AstNode[_]])
-      node.asInstanceOf[AstNode[ASTNode]].node
-    else
-      node.asInstanceOf[ASTNode]
 }

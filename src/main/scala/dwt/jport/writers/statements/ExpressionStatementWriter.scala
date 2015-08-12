@@ -1,7 +1,5 @@
 package dwt.jport.writers.statements
 
-import org.eclipse.jdt.core.dom.ASTNode
-
 import dwt.jport.ast.statements.ExpressionStatement
 import dwt.jport.writers.ImportWriter
 import dwt.jport.writers.Writer
@@ -22,7 +20,7 @@ class ExpressionStatementWriter extends Writer[ExpressionStatement] {
     buffer :+ nl
 
     if (node.next.isDefined) {
-      if (!isExpressionStatement(node.next) && !isAdjacentLine(node.next.get))
+      if (!isExpressionStatement(node.next.map(toASTNode(_))) && !isAdjacentLine(toASTNode(node.next.get)))
         buffer :+ nl
     }
   }
