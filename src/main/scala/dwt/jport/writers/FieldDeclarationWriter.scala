@@ -1,10 +1,6 @@
 package dwt.jport.writers
 
-import org.eclipse.jdt.core.dom.ASTNode
-import org.eclipse.jdt.core.dom.BodyDeclaration
-import dwt.jport.JPorter
 import dwt.jport.ast.FieldDeclaration
-import dwt.jport.translators.Constant
 import dwt.jport.writers.statements.VariableDeclarationWriter
 
 object FieldDeclarationWriter extends WriterObject[FieldDeclaration, FieldDeclarationWriter]

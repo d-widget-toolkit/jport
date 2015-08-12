@@ -26,20 +26,14 @@ trait Writer[T <: AstNode[_]] extends Node[T] with Buffer {
 
   def postWrite: Unit = {}
 
-  protected def isAdjacentLine(node: ASTNode) =
+  protected def isAdjacentLine(node: AstNode[_]) =
     lineNumber(node) == this.node.lineNumber + 1
 
-  protected def lineNumber(node: ASTNode) =
+  protected def lineNumber(node: AstNode[_]) =
     JPorter.compilationUnit.getLineNumber(node)
 
-  protected def isExpressionStatement(node: Option[ASTNode]) =
-    node.isDefined && node.get.getNodeType == ASTNode.EXPRESSION_STATEMENT
-
-  protected def toASTNode[T](node: T) =
-    if (node.isInstanceOf[AstNode[_]])
-      node.asInstanceOf[AstNode[ASTNode]].node
-    else
-      node.asInstanceOf[ASTNode]
+  protected def isExpressionStatement(node: Option[AstNode[_]]) =
+    node.isDefined && node.get.nodeType == ASTNode.EXPRESSION_STATEMENT
 }
 
 abstract class WriterObject[Node <: AstNode[_], Subclass <: Writer[Node]](implicit manifest: Manifest[Subclass]) {

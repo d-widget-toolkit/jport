@@ -20,7 +20,7 @@ class ExpressionStatementWriter extends Writer[ExpressionStatement] {
     buffer :+ nl
 
     if (node.next.isDefined) {
-      if (!isExpressionStatement(node.next.map(toASTNode(_))) && !isAdjacentLine(toASTNode(node.next.get)))
+      if (!isExpressionStatement(node.next) && !isAdjacentLine(node.next.get))
         buffer :+ nl
     }
   }

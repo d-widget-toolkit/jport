@@ -9,6 +9,7 @@ import dwt.jport.JPorter
 import dwt.jport.ast.TypeDeclaration
 import dwt.jport.writers.ImportWriter
 import dwt.jport.ast.AbstractTypeDeclaration
+import dwt.jport.ast.AstNode
 
 class CompilationUnit(val unit: JdtCompilationUnit) extends Visitor {
   private type NodeType = JdtAbstractTypeDeclaration
@@ -37,5 +38,5 @@ class CompilationUnit(val unit: JdtCompilationUnit) extends Visitor {
     r
   }
 
-  def getLineNumber(node: ASTNode) = unit.getLineNumber(node.getStartPosition)
+  def getLineNumber(node: AstNode[_]) = unit.getLineNumber(node.startPosition)
 }

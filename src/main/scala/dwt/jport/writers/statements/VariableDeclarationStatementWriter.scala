@@ -1,7 +1,5 @@
 package dwt.jport.writers.statements
 
-import org.eclipse.jdt.core.dom.ASTNode
-
 import dwt.jport.ast.statements.VariableDeclarationStatement
 import dwt.jport.writers.ImportWriter
 import dwt.jport.writers.Writer

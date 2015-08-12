@@ -11,10 +11,11 @@ abstract class AstNode[T <: ASTNode](val node: T) {
   protected type JavaList[T] = java.util.List[T]
 
   val nodeType = node.getNodeType
+  val startPosition = node.getStartPosition
 
   private def unit = JPorter.compilationUnit
 
-  def lineNumber = unit.getLineNumber(node)
+  def lineNumber = unit.getLineNumber(this)
 
   protected def declaringClass = {
     var parent = node.getParent
