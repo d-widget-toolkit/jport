@@ -5,12 +5,14 @@ import dwt.jport.translators.InvocationTranslator
 import dwt.jport.writers.ImportWriter
 import dwt.jport.writers.Writer
 import dwt.jport.writers.WriterObject
+import dwt.jport.writers.NewlineWriter
 
 object ConstructorInvocationWriter extends WriterObject[ConstructorInvocation, ConstructorInvocationWriter]
 
 class ConstructorInvocationWriter
   extends Writer[ConstructorInvocation]
-  with InvocationTranslator {
+  with InvocationTranslator
+  with NewlineWriter[ConstructorInvocation] {
 
   override def write(importWriter: ImportWriter, node: ConstructorInvocation): Unit = {
     super.write(importWriter, node)
@@ -20,6 +22,7 @@ class ConstructorInvocationWriter
   }
 
   override def postWrite: Unit = {
-    buffer.append(';', nl)
+    buffer.append(';')
+    super[NewlineWriter].postWrite()
   }
 }

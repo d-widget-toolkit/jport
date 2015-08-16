@@ -15,4 +15,6 @@ class ExpressionStatement(node: JDtExpressionStatement, protected override val v
 
   val expression = node.getExpression.toJPort
   val imports = expression.imports
+
+  override def isMultiline = false
 }

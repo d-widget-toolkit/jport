@@ -67,6 +67,8 @@ class MethodDeclaration(node: JdtMethodDeclaration, protected override val visit
   val hasEmptyBody = hasBody && statements.isEmpty
   val hasNonEmptyBody = hasBody && statements.nonEmpty
 
+  override def isMultiline = hasNonEmptyBody
+
   protected override def typeParametersBinding = binding.getTypeParameters
 
   private def buildParameter(param: SingleVariableDeclaration) = {

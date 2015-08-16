@@ -44,6 +44,8 @@ class TypeDeclaration(node: JdtTypeDeclaration, protected override val visitData
 
   val hasMembers = !node.bodyDeclarations.isEmpty
 
+  override def isMultiline = true
+
   protected override def typeParametersBinding = binding.getTypeParameters
 
   private def nameOfType(typ: JdtType): String = {

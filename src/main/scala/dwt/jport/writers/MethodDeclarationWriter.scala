@@ -9,7 +9,10 @@ import dwt.jport.ast.MethodDeclaration
 
 object MethodDeclarationWriter extends WriterObject[MethodDeclaration, MethodDeclarationWriter]
 
-class MethodDeclarationWriter extends BodyDeclarationWriter[MethodDeclaration] with TypeParametersWriter[MethodDeclaration] {
+class MethodDeclarationWriter extends BodyDeclarationWriter[MethodDeclaration]
+  with TypeParametersWriter[MethodDeclaration]
+  with NewlineWriter[MethodDeclaration] {
+
   override def write(importWriter: ImportWriter, node: MethodDeclaration): Unit = {
     super.write(importWriter, node)
 
@@ -30,11 +33,7 @@ class MethodDeclarationWriter extends BodyDeclarationWriter[MethodDeclaration] w
     if (node.hasBody)
       buffer :+ '}'
 
-    buffer :+ nl
-
-    if (hasNonEmptyBody(node.next) || node.next.isDefined &&
-      (hasNonEmptyBody(node) || !isMethod(node.next)))
-      buffer :+ nl
+    super[NewlineWriter].postWrite()
   }
 
   private def writeReturnType =

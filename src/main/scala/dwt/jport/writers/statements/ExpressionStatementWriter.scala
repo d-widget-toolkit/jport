@@ -4,10 +4,13 @@ import dwt.jport.ast.statements.ExpressionStatement
 import dwt.jport.writers.ImportWriter
 import dwt.jport.writers.Writer
 import dwt.jport.writers.WriterObject
+import dwt.jport.writers.NewlineWriter
 
 object ExpressionStatementWriter extends WriterObject[ExpressionStatement, ExpressionStatementWriter]
 
-class ExpressionStatementWriter extends Writer[ExpressionStatement] {
+class ExpressionStatementWriter extends Writer[ExpressionStatement]
+  with NewlineWriter[ExpressionStatement] {
+
   override def write(importWriter: ImportWriter, node: ExpressionStatement): Unit = {
     super.write(importWriter, node)
 
@@ -16,12 +19,5 @@ class ExpressionStatementWriter extends Writer[ExpressionStatement] {
     importWriter += node.imports
   }
 
-  override def postWrite(): Unit = {
-    buffer :+ nl
-
-    if (node.next.isDefined) {
-      if (!isExpressionStatement(node.next) && !isAdjacentLine(node.next.get))
-        buffer :+ nl
-    }
-  }
+  override def postWrite(): Unit = super[NewlineWriter].postWrite()
 }
