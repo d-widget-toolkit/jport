@@ -17,7 +17,7 @@ class TypeDeclaration(node: JdtTypeDeclaration, protected override val visitData
   with TypeParameters
   with Siblings {
 
-  type JdtNodeType = AbstractTypeDeclaration
+  type NodeType = AbstractTypeDeclaration
 
   import Type.fullyQualfiedName
 

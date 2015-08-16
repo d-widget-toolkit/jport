@@ -13,7 +13,7 @@ class Block(node: JdtBlock, protected override val visitData: VisitData[Statemen
   extends Statement(node)
   with Siblings {
 
-  type JdtNodeType = Statement
+  type NodeType = Statement
 
   val statements =
     node.statements.asInstanceOf[JavaList[JdtStatement]].to[Array]

@@ -14,7 +14,7 @@ class ConstructorInvocation(node: JdtConstructorInvocation, protected override v
   with Siblings
   with Invocation {
 
-  type JdtNodeType = Statement
+  type NodeType = Statement
 
   protected override def declaringClass = super[Statement].declaringClass
 

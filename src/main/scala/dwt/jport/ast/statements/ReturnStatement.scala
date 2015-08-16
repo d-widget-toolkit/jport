@@ -9,5 +9,5 @@ class ReturnStatement(node: JdtReturnStatement, protected override val visitData
   extends Statement(node)
   with Siblings {
 
-  type JdtNodeType = Statement
+  type NodeType = Statement
 }

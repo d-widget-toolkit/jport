@@ -14,7 +14,7 @@ import dwt.jport.ast.expressions.ExpressionImplicits._
 class ForStatement(node: JdtForStatement, protected override val visitData: VisitData[Statement])
   extends Statement(node) with Siblings {
 
-  type JdtNodeType = Statement
+  type NodeType = Statement
 
   val body = node.getBody
   val expression = Option(node.getExpression).map(_.toJPort)

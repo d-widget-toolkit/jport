@@ -21,7 +21,7 @@ class MethodDeclaration(node: JdtMethodDeclaration, protected override val visit
   with TypeParameters
   with Siblings {
 
-  type JdtNodeType = BodyDeclaration
+  type NodeType = BodyDeclaration
 
   import Type.fullyQualfiedName
 

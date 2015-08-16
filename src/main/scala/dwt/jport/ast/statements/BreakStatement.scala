@@ -11,7 +11,7 @@ class BreakStatement(node: JdtBreakStatement, protected override val visitData: 
   extends Statement(node)
   with Siblings {
 
-  type JdtNodeType = Statement
+  type NodeType = Statement
 
   val label = Option(node.getLabel).map(_.toJPort)
 }

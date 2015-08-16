@@ -15,7 +15,7 @@ class SuperConstructorInvocation(node: JdtSuperConstructorInvocation, protected 
   with Siblings
   with Invocation {
 
-  type JdtNodeType = Statement
+  type NodeType = Statement
 
   protected override def declaringClass = super[Statement].declaringClass
 

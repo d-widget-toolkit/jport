@@ -11,7 +11,7 @@ class LabeledStatement(node: JdtLabeledStatement, protected override val visitDa
   extends Statement(node)
   with Siblings {
 
-  type JdtNodeType = Statement
+  type NodeType = Statement
 
   val body = node.getBody
   val label = node.getLabel.toJPort

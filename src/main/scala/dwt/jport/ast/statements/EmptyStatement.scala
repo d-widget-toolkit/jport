@@ -10,5 +10,5 @@ class EmptyStatement(node: JdtEmptyStatement, protected override val visitData: 
   extends Statement(node)
   with Siblings {
 
-  type JdtNodeType = Statement
+  type NodeType = Statement
 }

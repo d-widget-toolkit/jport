@@ -13,7 +13,7 @@ class FieldDeclaration(node: JdtFieldDeclaration, protected override val visitDa
   extends BodyDeclaration(node)
   with VariableDeclaration {
 
-  type JdtNodeType = BodyDeclaration
+  type NodeType = BodyDeclaration
 
   override def translatedModifiers = super[VariableDeclaration].translatedModifiers
 

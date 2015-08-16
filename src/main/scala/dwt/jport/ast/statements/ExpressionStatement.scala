@@ -11,7 +11,7 @@ class ExpressionStatement(node: JDtExpressionStatement, protected override val v
   extends Statement(node)
   with Siblings {
 
-  type JdtNodeType = Statement
+  type NodeType = Statement
 
   val expression = node.getExpression.toJPort
   val imports = expression.imports

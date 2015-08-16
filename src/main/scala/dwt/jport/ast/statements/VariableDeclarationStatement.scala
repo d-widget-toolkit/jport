@@ -15,7 +15,7 @@ class VariableDeclarationStatement(node: JdtVariableDeclarationStatement, protec
   extends Statement(node)
   with VariableDeclaration {
 
-  type JdtNodeType = Statement
+  type NodeType = Statement
 
   override def modifiers = new java.util.ArrayList[IExtendedModifier]
 
