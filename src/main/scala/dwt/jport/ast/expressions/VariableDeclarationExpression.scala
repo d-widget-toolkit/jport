@@ -12,10 +12,10 @@ class VariableDeclarationExpression(node: JdtVariableDeclarationExpression)
   extends Expression(node)
   with VariableDeclaration {
 
-  type JdtNodeType = JdtExpression
+  type JdtNodeType = Expression
 
   protected override def visitData =
-    new VisitData[JdtExpression](false, None, None)
+    new VisitData[Expression](false, None, None)
 
   override def modifiers = new java.util.ArrayList[IExtendedModifier]
 

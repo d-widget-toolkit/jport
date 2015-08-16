@@ -3,7 +3,7 @@ package dwt.jport.ast
 import dwt.jport.analyzers.VisitData
 
 trait Siblings {
-  type JdtNodeType
+  type JdtNodeType <: AstNode[_]
 
   protected def visitData: VisitData[JdtNodeType]
 
