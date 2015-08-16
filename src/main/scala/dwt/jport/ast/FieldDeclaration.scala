@@ -15,6 +15,7 @@ class FieldDeclaration(node: JdtFieldDeclaration, protected override val visitDa
 
   type NodeType = BodyDeclaration
 
+  override def isMultiline = true
   override def translatedModifiers = super[VariableDeclaration].translatedModifiers
 
   protected override def fragments = node.fragments.asInstanceOf[JavaList[VariableDeclarationFragment]]

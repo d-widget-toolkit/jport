@@ -71,6 +71,7 @@ object Expression {
 
 abstract class Expression(node: JdtExpression) extends AstNode(node) with Imports {
   def translate: String
+  def isMultiline = false
 
   protected override def declaringClass = super[AstNode].declaringClass
 }

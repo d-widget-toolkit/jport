@@ -13,9 +13,12 @@ abstract class AstNode[T <: ASTNode](val node: T) {
   val nodeType = node.getNodeType
   val startPosition = node.getStartPosition
 
-  private def unit = JPorter.compilationUnit
-
   def lineNumber = unit.getLineNumber(this)
+  def isMultiline: Boolean
+
+  def isAdjacentLine(node: AstNode[_]) = node.lineNumber == lineNumber + 1
+
+  private def unit = JPorter.compilationUnit
 
   protected def declaringClass = {
     var parent = node.getParent
@@ -26,5 +29,4 @@ abstract class AstNode[T <: ASTNode](val node: T) {
     parent.asInstanceOf[JdtTypeDeclaration].resolveBinding()
   }
 
-  def isMultiline = true
 }
