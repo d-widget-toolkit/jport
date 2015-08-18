@@ -1,14 +1,17 @@
 package dwt.jport.writers.statements
 
 import org.eclipse.jdt.core.dom.ASTNode
-
 import dwt.jport.JPorter
 import dwt.jport.ast.AstNode
 import dwt.jport.ast.declarations.VariableDeclaration
 import dwt.jport.writers.ImportWriter
 import dwt.jport.writers.Writer
+import dwt.jport.writers.NewlineWriter
 
-trait VariableDeclarationWriter[AstNodeType <: AstNode[_] with VariableDeclaration] extends Writer[AstNodeType] {
+trait VariableDeclarationWriter[AstNodeType <: AstNode[_] with VariableDeclaration]
+  extends Writer[AstNodeType]
+  with NewlineWriter[AstNodeType] {
+
   override def write(importWriter: ImportWriter, node: AstNodeType): Unit = {
     super.write(importWriter, node)
 
@@ -16,20 +19,7 @@ trait VariableDeclarationWriter[AstNodeType <: AstNode[_] with VariableDeclarati
     writeNamesAndInitializers
   }
 
-  override def postWrite(): Unit = {
-    buffer :+ nl
-    if (!node.hasNext) return
-
-    if (isAdjacentLine(node.next.get)) {
-      if (!isField(node.next) &&
-        !isExpressionStatement(node.next.map(toAstNode(_))) &&
-        !isVariableDeclarationStatement(node.next.map(toAstNode(_))))
-        buffer += nl
-    }
-    else
-      buffer += nl
-  }
-
+  override def postWrite(): Unit = super[NewlineWriter].postWrite()
   protected def writeType = buffer.append(node.typ, ' ')
 
   protected def writeNamesAndInitializers =

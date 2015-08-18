@@ -14,7 +14,7 @@ trait NewlineWriter[T <: Siblings with AstNode[_]] extends Node[T] with Buffer {
       buffer += nl
 
     else if (bothIsSingleline) {
-      if (nextIsDifferentType || !nextIsAdjecent)
+      if (!nextIsAdjecent)
         buffer += nl
     }
   }

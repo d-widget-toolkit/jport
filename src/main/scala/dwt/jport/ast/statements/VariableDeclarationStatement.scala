@@ -17,6 +17,7 @@ class VariableDeclarationStatement(node: JdtVariableDeclarationStatement, protec
 
   type NodeType = Statement
 
+  override def isMultiline = false
   override def modifiers = new java.util.ArrayList[IExtendedModifier]
 
   protected override def fragments = node.fragments.asInstanceOf[JavaList[VariableDeclarationFragment]]
