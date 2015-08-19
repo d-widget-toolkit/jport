@@ -13,6 +13,8 @@ import dwt.jport.ast.TypeDeclaration
 import dwt.jport.ast.statements.Block
 import dwt.jport.ast.statements.BreakStatement
 import dwt.jport.ast.statements.ConstructorInvocation
+import dwt.jport.ast.statements.ContinueStatement
+import dwt.jport.ast.statements.ControlFlowStatement
 import dwt.jport.ast.statements.EmptyStatement
 import dwt.jport.ast.statements.ExpressionStatement
 import dwt.jport.ast.statements.ForStatement
@@ -26,8 +28,8 @@ import dwt.jport.writers.ImportWriter
 import dwt.jport.writers.MethodDeclarationWriter
 import dwt.jport.writers.TypeDeclarationWriter
 import dwt.jport.writers.statements.BlockWriter
-import dwt.jport.writers.statements.BreakStatementWriter
 import dwt.jport.writers.statements.ConstructorInvocationWriter
+import dwt.jport.writers.statements.ControlFlowStatementWriter
 import dwt.jport.writers.statements.EmptyStatementWriter
 import dwt.jport.writers.statements.ExpressionStatementWriter
 import dwt.jport.writers.statements.ForStatementWriter
@@ -103,6 +105,7 @@ class JPortAstVisitor(private val importWriter: ImportWriter) extends Visitor {
       case n: BreakStatement => visit(n)
       case n: ConstructorInvocation => visit(n)
       case n: SuperConstructorInvocation => visit(n)
+      case n: ContinueStatement => visit(n)
       case _ => JPorter.diagnostic.unhandled(s"unhandled node ${node.getClass.getName} in ${getClass.getName}")
     }
   }
@@ -118,9 +121,9 @@ class JPortAstVisitor(private val importWriter: ImportWriter) extends Visitor {
     LabeledStatementWriter.postWrite
   }
 
-  def visit(node: BreakStatement): Unit = {
-    BreakStatementWriter.write(importWriter, node)
-    BreakStatementWriter.postWrite
+  def visit(node: ControlFlowStatement): Unit = {
+    ControlFlowStatementWriter.write(importWriter, node)
+    ControlFlowStatementWriter.postWrite
   }
 
   def visit(node: ConstructorInvocation): Unit = {
