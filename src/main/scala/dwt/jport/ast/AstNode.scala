@@ -12,6 +12,7 @@ abstract class AstNode[T <: ASTNode](val node: T) {
 
   val nodeType = node.getNodeType
   val startPosition = node.getStartPosition
+  val parent: Option[AstNode[_]] = None
 
   def lineNumber = unit.getLineNumber(this)
   def isMultiline: Boolean

@@ -15,6 +15,7 @@ import dwt.jport.ast.statements.BreakStatement
 import dwt.jport.ast.statements.ConstructorInvocation
 import dwt.jport.ast.statements.ContinueStatement
 import dwt.jport.ast.statements.ControlFlowStatement
+import dwt.jport.ast.statements.DoStatement
 import dwt.jport.ast.statements.EmptyStatement
 import dwt.jport.ast.statements.ExpressionStatement
 import dwt.jport.ast.statements.ForStatement
@@ -30,6 +31,7 @@ import dwt.jport.writers.TypeDeclarationWriter
 import dwt.jport.writers.statements.BlockWriter
 import dwt.jport.writers.statements.ConstructorInvocationWriter
 import dwt.jport.writers.statements.ControlFlowStatementWriter
+import dwt.jport.writers.statements.DoStatementWriter
 import dwt.jport.writers.statements.EmptyStatementWriter
 import dwt.jport.writers.statements.ExpressionStatementWriter
 import dwt.jport.writers.statements.ForStatementWriter
@@ -106,6 +108,7 @@ class JPortAstVisitor(private val importWriter: ImportWriter) extends Visitor {
       case n: ConstructorInvocation => visit(n)
       case n: SuperConstructorInvocation => visit(n)
       case n: ContinueStatement => visit(n)
+      case n: DoStatement => visit(n)
       case _ => JPorter.diagnostic.unhandled(s"unhandled node ${node.getClass.getName} in ${getClass.getName}")
     }
   }
@@ -134,5 +137,11 @@ class JPortAstVisitor(private val importWriter: ImportWriter) extends Visitor {
   def visit(node: SuperConstructorInvocation): Unit = {
     SuperConstructorInvocationWriter.write(importWriter, node)
     SuperConstructorInvocationWriter.postWrite
+  }
+
+  def visit(node: DoStatement): Unit = {
+    DoStatementWriter.write(importWriter, node)
+    visit(JPortConverter.convert[JdtStatement, Statement](node.body))
+    DoStatementWriter.postWrite
   }
 }
