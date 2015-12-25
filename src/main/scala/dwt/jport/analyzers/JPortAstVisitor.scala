@@ -40,6 +40,7 @@ import dwt.jport.writers.statements.LabeledStatementWriter
 import dwt.jport.writers.statements.SuperConstructorInvocationWriter
 import dwt.jport.writers.statements.VariableDeclarationStatementWriter
 import dwt.jport.writers.statements.IfStatementWriter
+import dwt.jport.writers.statements.ReturnStatementWriter
 
 class VisitData[T](val isFirst: Boolean, val next: Option[T],
   val prev: Option[T])
@@ -100,7 +101,7 @@ class JPortAstVisitor(private val importWriter: ImportWriter) extends Visitor {
   def visit(node: Statement): Unit = {
     node match {
       case n: VariableDeclarationStatement => visit(n)
-      case n: ReturnStatement => /* ignore during development */
+      case n: ReturnStatement => visit(n)
       case n: ExpressionStatement => visit(n)
       case n: Block => visit(n)
       case n: EmptyStatement => visit(n)
@@ -154,5 +155,10 @@ class JPortAstVisitor(private val importWriter: ImportWriter) extends Visitor {
     IfStatementWriter.writeElse
     node.elseStatement.map(e => visit(JPortConverter.convert[JdtStatement, Statement](e)))
     IfStatementWriter.postWrite
+  }
+
+  def visit(node: ReturnStatement): Unit = {
+    ReturnStatementWriter.write(importWriter, node)
+    ReturnStatementWriter.postWrite
   }
 }

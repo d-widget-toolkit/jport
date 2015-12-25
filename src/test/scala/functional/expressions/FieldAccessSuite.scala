@@ -58,6 +58,7 @@ class FieldAccessSuite extends Suite {
 
           Foo foo()
           {
+              return new Foo();
           }
 
           void bar()

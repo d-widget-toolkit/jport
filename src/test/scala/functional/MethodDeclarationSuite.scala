@@ -292,6 +292,7 @@ class MethodDeclarationSuite extends Suite {
       {
           Bar bar()
           {
+              return null;
           }
       }
       """
@@ -383,6 +384,7 @@ class MethodDeclarationSuite extends Suite {
       {
           T bar(T)()
           {
+              return null;
           }
       }
       """
