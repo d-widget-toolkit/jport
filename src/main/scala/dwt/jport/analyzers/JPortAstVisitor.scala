@@ -19,6 +19,7 @@ import dwt.jport.ast.statements.DoStatement
 import dwt.jport.ast.statements.EmptyStatement
 import dwt.jport.ast.statements.ExpressionStatement
 import dwt.jport.ast.statements.ForStatement
+import dwt.jport.ast.statements.IfStatement
 import dwt.jport.ast.statements.LabeledStatement
 import dwt.jport.ast.statements.ReturnStatement
 import dwt.jport.ast.statements.Statement
@@ -38,6 +39,7 @@ import dwt.jport.writers.statements.ForStatementWriter
 import dwt.jport.writers.statements.LabeledStatementWriter
 import dwt.jport.writers.statements.SuperConstructorInvocationWriter
 import dwt.jport.writers.statements.VariableDeclarationStatementWriter
+import dwt.jport.writers.statements.IfStatementWriter
 
 class VisitData[T](val isFirst: Boolean, val next: Option[T],
   val prev: Option[T])
@@ -109,6 +111,7 @@ class JPortAstVisitor(private val importWriter: ImportWriter) extends Visitor {
       case n: SuperConstructorInvocation => visit(n)
       case n: ContinueStatement => visit(n)
       case n: DoStatement => visit(n)
+      case n: IfStatement => visit(n)
       case _ => JPorter.diagnostic.unhandled(s"unhandled node ${node.getClass.getName} in ${getClass.getName}")
     }
   }
@@ -143,5 +146,13 @@ class JPortAstVisitor(private val importWriter: ImportWriter) extends Visitor {
     DoStatementWriter.write(importWriter, node)
     visit(JPortConverter.convert[JdtStatement, Statement](node.body))
     DoStatementWriter.postWrite
+  }
+
+  def visit(node: IfStatement): Unit = {
+    IfStatementWriter.write(importWriter, node)
+    visit(JPortConverter.convert[JdtStatement, Statement](node.thenStatement))
+    IfStatementWriter.writeElse
+    node.elseStatement.map(e => visit(JPortConverter.convert[JdtStatement, Statement](e)))
+    IfStatementWriter.postWrite
   }
 }

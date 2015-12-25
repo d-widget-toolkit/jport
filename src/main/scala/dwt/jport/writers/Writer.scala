@@ -39,7 +39,7 @@ trait Writer[T <: AstNode[_]] extends Node[T] with Buffer {
 abstract class WriterObject[Node <: AstNode[_], Subclass <: Writer[Node]](implicit manifest: Manifest[Subclass]) {
   private def newInstance = manifest.runtimeClass.newInstance.asInstanceOf[Subclass]
   private val _writer = new ThreadLocalVariable(newInstance)
-  private def writer = _writer.get
+  protected def writer = _writer.get
 
   def write(importWriter: ImportWriter, node: Node) = writer.write(importWriter, node)
   def postWrite: Unit = writer.postWrite

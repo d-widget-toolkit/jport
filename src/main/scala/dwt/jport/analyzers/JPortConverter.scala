@@ -12,6 +12,7 @@ import org.eclipse.jdt.core.dom.{ EmptyStatement => JdtEmptyStatement }
 import org.eclipse.jdt.core.dom.{ ExpressionStatement => JdtExpressionStatement }
 import org.eclipse.jdt.core.dom.{ FieldDeclaration => JdtFieldDeclaration }
 import org.eclipse.jdt.core.dom.{ ForStatement => JdtForStatement }
+import org.eclipse.jdt.core.dom.{ IfStatement => JdtIfStatement }
 import org.eclipse.jdt.core.dom.{ LabeledStatement => JdtLabeledStatement }
 import org.eclipse.jdt.core.dom.{ MethodDeclaration => JdtMethodDeclaration }
 import org.eclipse.jdt.core.dom.{ ReturnStatement => JdtReturnStatement }
@@ -35,6 +36,7 @@ import dwt.jport.ast.statements.DoStatement
 import dwt.jport.ast.statements.EmptyStatement
 import dwt.jport.ast.statements.ExpressionStatement
 import dwt.jport.ast.statements.ForStatement
+import dwt.jport.ast.statements.IfStatement
 import dwt.jport.ast.statements.LabeledStatement
 import dwt.jport.ast.statements.ReturnStatement
 import dwt.jport.ast.statements.Statement
@@ -137,6 +139,7 @@ object JPortConverter {
       case n: JdtSuperConstructorInvocation => new SuperConstructorInvocation(n, visitData)
       case n: JdtContinueStatement => new ContinueStatement(n, visitData)
       case n: JdtDoStatement => new DoStatement(n, visitData)
+      case n: JdtIfStatement => new IfStatement(n, visitData)
       case _ => {
         JPorter.diagnostic.unhandled(s"unhandled node ${node.getClass.getName} in ${getClass.getName}")
         null
