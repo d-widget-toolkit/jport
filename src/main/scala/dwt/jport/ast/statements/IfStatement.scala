@@ -8,7 +8,7 @@ import dwt.jport.analyzers.VisitData
 import dwt.jport.ast.Siblings
 import dwt.jport.ast.expressions.ExpressionImplicits._
 
-class IfStatement(node: JdtIfStatement, protected override val visitData: VisitData[Statement])
+class IfStatement(node: JdtIfStatement, private[jport] override val visitData: VisitData[Statement])
   extends Statement(node)
   with Siblings {
 

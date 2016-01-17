@@ -9,7 +9,7 @@ import org.eclipse.jdt.core.dom.VariableDeclarationFragment
 import dwt.jport.analyzers.VisitData
 import dwt.jport.ast.declarations.VariableDeclaration
 
-class FieldDeclaration(node: JdtFieldDeclaration, protected override val visitData: VisitData[BodyDeclaration])
+class FieldDeclaration(node: JdtFieldDeclaration, private[jport] override val visitData: VisitData[BodyDeclaration])
   extends BodyDeclaration(node)
   with VariableDeclaration {
 

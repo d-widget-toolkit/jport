@@ -17,5 +17,5 @@ class IfStatementWriter extends Writer[IfStatement] {
     importWriter += node.imports
   }
 
-  def writeElse = if (node.elseStatement.isDefined) buffer.append(nl, "else")
+  def writeElse = if (node.elseStatement.isDefined) buffer.append("else")
 }

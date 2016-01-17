@@ -11,7 +11,7 @@ import dwt.jport.analyzers.VisitData
 import dwt.jport.ast.AstNode
 import dwt.jport.ast.Siblings
 
-class Block(node: JdtBlock, protected override val visitData: VisitData[Statement])
+class Block(node: JdtBlock, private[jport] override val visitData: VisitData[Statement])
   extends Statement(node)
   with Siblings {
 
@@ -24,4 +24,15 @@ class Block(node: JdtBlock, protected override val visitData: VisitData[Statemen
     node.statements.asInstanceOf[JavaList[JdtStatement]].to[Array]
 
   val isEmpty = statements.isEmpty
+
+  override val hasNext = {
+    if (parent.isDefined && parent.get.nodeType == ASTNode.IF_STATEMENT) {
+      val ifSatement = parent.get.asInstanceOf[IfStatement]
+      (ifSatement.thenStatement == node &&
+        ifSatement.elseStatement.isDefined) ||
+        visitData.next.isDefined
+    }
+    else
+      visitData.next.isDefined
+  }
 }

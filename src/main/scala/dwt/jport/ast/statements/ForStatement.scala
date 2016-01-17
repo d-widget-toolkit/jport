@@ -11,7 +11,7 @@ import dwt.jport.ast.AstNode
 import dwt.jport.ast.Siblings
 import dwt.jport.ast.expressions.ExpressionImplicits._
 
-class ForStatement(node: JdtForStatement, protected override val visitData: VisitData[Statement])
+class ForStatement(node: JdtForStatement, override val visitData: VisitData[Statement])
   extends Statement(node) with Siblings {
 
   type NodeType = Statement

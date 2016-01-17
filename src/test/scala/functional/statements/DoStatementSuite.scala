@@ -79,4 +79,30 @@ class DoStatementSuite extends Suite {
     val d = "import Bar;\n\n" + doStatement
     java should portFromFileTo("Foo", d)
   }
+
+  test("with next node") {
+    val java = javaCode {
+      """
+      do
+      {
+        int a = 0;
+      } while(false);
+
+      int b = 0;
+      """
+    }
+
+    val d = dCode {
+      """
+      do
+      {
+          int a = 0;
+      } while(false);
+
+      int b = 0;
+      """
+    }
+
+    java should portFromFileTo("Foo", d)
+  }
 }

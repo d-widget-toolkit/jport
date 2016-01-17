@@ -126,6 +126,10 @@ object JPortConverter {
     val p = prev.map(convert(_).asInstanceOf[Statement])
     val visitData = new VisitData(isFirst, ne, p)
 
+    convert(node, visitData)
+  }
+
+  def convert(node: JdtStatement, visitData: VisitData[Statement]): Statement = {
     node match {
       case n: JdtVariableDeclarationStatement => new VariableDeclarationStatement(n, visitData)
       case n: JdtReturnStatement => new ReturnStatement(n, visitData)

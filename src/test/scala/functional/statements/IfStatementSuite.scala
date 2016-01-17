@@ -86,6 +86,32 @@ class IfStatementSuite extends Suite {
     java should portFromFileTo("Foo", d)
   }
 
+  test("with body and next node") {
+    val java = javaCode {
+      """
+      if (true)
+      {
+        int a = 3;
+      }
+
+      int b = 0;
+      """
+    }
+
+    val d = dCode {
+      """
+      if (true)
+      {
+          int a = 3;
+      }
+
+      int b = 0;
+      """
+    }
+
+    java should portFromFileTo("Foo", d)
+  }
+
   test("with else statement with body") {
     val java = javaCode {
       """
@@ -105,6 +131,35 @@ class IfStatementSuite extends Suite {
       {
           int a = 3;
       }
+      """
+    }
+
+    java should portFromFileTo("Foo", d)
+  }
+
+  test("with else statement with body and next node") {
+    val java = javaCode {
+      """
+      if (true) {}
+      else
+      {
+        int a = 3;
+      }
+
+      int b = 0;
+      """
+    }
+
+    val d = dCode {
+      """
+      if (true) {}
+
+      else
+      {
+          int a = 3;
+      }
+
+      int b = 0;
       """
     }
 

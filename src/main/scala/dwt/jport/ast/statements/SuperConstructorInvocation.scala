@@ -10,7 +10,7 @@ import dwt.jport.ast.AstNode
 import dwt.jport.ast.Invocation
 import dwt.jport.ast.Siblings
 
-class SuperConstructorInvocation(node: JdtSuperConstructorInvocation, protected override val visitData: VisitData[Statement])
+class SuperConstructorInvocation(node: JdtSuperConstructorInvocation, private[jport] override val visitData: VisitData[Statement])
   extends Statement(node)
   with Siblings
   with Invocation {

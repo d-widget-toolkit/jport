@@ -7,7 +7,7 @@ import dwt.jport.ast.AstNode
 import dwt.jport.ast.Siblings
 import dwt.jport.ast.expressions.ExpressionImplicits._
 
-class ExpressionStatement(node: JDtExpressionStatement, protected override val visitData: VisitData[Statement])
+class ExpressionStatement(node: JDtExpressionStatement, private[jport] override val visitData: VisitData[Statement])
   extends Statement(node)
   with Siblings {
 

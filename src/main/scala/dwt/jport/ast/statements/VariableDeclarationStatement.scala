@@ -11,7 +11,7 @@ import dwt.jport.ast.AstNode
 import dwt.jport.ast.declarations.VariableDeclaration
 import dwt.jport.ast.expressions.Expression
 
-class VariableDeclarationStatement(node: JdtVariableDeclarationStatement, protected override val visitData: VisitData[Statement])
+class VariableDeclarationStatement(node: JdtVariableDeclarationStatement, private[jport] override val visitData: VisitData[Statement])
   extends Statement(node)
   with VariableDeclaration {
 

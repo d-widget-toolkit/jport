@@ -12,7 +12,7 @@ import dwt.jport.Symbol
 import dwt.jport.Type
 import dwt.jport.analyzers.VisitData
 
-class TypeDeclaration(node: JdtTypeDeclaration, protected override val visitData: VisitData[AbstractTypeDeclaration])
+class TypeDeclaration(node: JdtTypeDeclaration, private[jport] override val visitData: VisitData[AbstractTypeDeclaration])
   extends AbstractTypeDeclaration(node)
   with TypeParameters
   with Siblings {

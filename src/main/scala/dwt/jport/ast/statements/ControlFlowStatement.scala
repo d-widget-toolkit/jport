@@ -8,7 +8,7 @@ import dwt.jport.ast.Siblings
 import dwt.jport.ast.expressions.ExpressionImplicits._
 import dwt.jport.ast.expressions.Expression
 
-abstract class ControlFlowStatement(node: JdtStatement, protected override val visitData: VisitData[Statement])
+abstract class ControlFlowStatement(node: JdtStatement, private[jport] override val visitData: VisitData[Statement])
   extends Statement(node)
   with Siblings {
 

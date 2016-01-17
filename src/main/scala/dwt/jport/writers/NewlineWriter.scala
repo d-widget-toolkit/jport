@@ -4,6 +4,7 @@ import dwt.jport.ast.AstNode
 import dwt.jport.ast.Siblings
 import dwt.jport.ast.MethodDeclaration
 import org.eclipse.jdt.core.dom.ASTNode
+import dwt.jport.ast.statements.Block
 
 trait NewlineWriter[T <: Siblings with AstNode[_]] extends Node[T] with Buffer {
   def postWrite(): Unit = {

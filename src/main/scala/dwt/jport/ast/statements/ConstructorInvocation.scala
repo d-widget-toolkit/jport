@@ -9,7 +9,7 @@ import dwt.jport.ast.AstNode
 import dwt.jport.ast.Invocation
 import dwt.jport.ast.Siblings
 
-class ConstructorInvocation(node: JdtConstructorInvocation, protected override val visitData: VisitData[Statement])
+class ConstructorInvocation(node: JdtConstructorInvocation, private[jport] override val visitData: VisitData[Statement])
   extends Statement(node)
   with Siblings
   with Invocation {

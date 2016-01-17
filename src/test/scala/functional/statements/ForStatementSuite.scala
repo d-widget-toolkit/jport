@@ -1,3 +1,4 @@
+
 package functional.statements
 
 import functional.support.Suite
@@ -111,6 +112,32 @@ class ForStatementSuite extends Suite {
     }
 
     val d = "import Bar;\n\n" + forStatement
+    java should portFromFileTo("Foo", d)
+  }
+
+  test("with next node") {
+    val java = javaCode {
+      """
+      for(int a = 0; a < 10; a++)
+      {
+        int b = 0;
+      }
+
+      int c = 0;
+      """
+    }
+
+    val d = dCode {
+      """
+      for (int a = 0; a < 10; a++)
+      {
+          int b = 0;
+      }
+
+      int c = 0;
+      """
+    }
+
     java should portFromFileTo("Foo", d)
   }
 }

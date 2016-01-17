@@ -88,7 +88,7 @@ class JPortAstVisitor(private val importWriter: ImportWriter) extends Visitor {
 
   def visit(node: ForStatement): Unit = {
     ForStatementWriter.write(importWriter, node)
-    visit(JPortConverter.convert[JdtStatement, Statement](node.body))
+    visit(JPortConverter.convert(node.body, node.visitData))
     ForStatementWriter.postWrite
   }
 
@@ -124,7 +124,7 @@ class JPortAstVisitor(private val importWriter: ImportWriter) extends Visitor {
 
   def visit(node: LabeledStatement): Unit = {
     LabeledStatementWriter.write(importWriter, node)
-    visit(JPortConverter.convert[JdtStatement, Statement](node.body))
+    visit(JPortConverter.convert(node.body, node.visitData))
     LabeledStatementWriter.postWrite
   }
 
@@ -145,15 +145,15 @@ class JPortAstVisitor(private val importWriter: ImportWriter) extends Visitor {
 
   def visit(node: DoStatement): Unit = {
     DoStatementWriter.write(importWriter, node)
-    visit(JPortConverter.convert[JdtStatement, Statement](node.body))
+    visit(JPortConverter.convert(node.body, node.visitData))
     DoStatementWriter.postWrite
   }
 
   def visit(node: IfStatement): Unit = {
     IfStatementWriter.write(importWriter, node)
-    visit(JPortConverter.convert[JdtStatement, Statement](node.thenStatement))
+    visit(JPortConverter.convert(node.thenStatement, node.visitData))
     IfStatementWriter.writeElse
-    node.elseStatement.map(e => visit(JPortConverter.convert[JdtStatement, Statement](e)))
+    node.elseStatement.map(e => visit(JPortConverter.convert(e, node.visitData)))
     IfStatementWriter.postWrite
   }
 
