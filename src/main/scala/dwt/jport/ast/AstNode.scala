@@ -6,13 +6,17 @@ import org.eclipse.jdt.core.dom.ASTNode
 import org.eclipse.jdt.core.dom.{ TypeDeclaration => JdtTypeDeclaration }
 
 import dwt.jport.JPorter
+import dwt.jport.analyzers.JPortConverter
 
 abstract class AstNode[T <: ASTNode](val node: T) {
   protected type JavaList[T] = java.util.List[T]
 
   val nodeType = node.getNodeType
   val startPosition = node.getStartPosition
-  val parent: Option[AstNode[_]] = None
+
+  def parent = Option(node.getParent).
+    filterNot(_.getNodeType == ASTNode.COMPILATION_UNIT).
+    map(JPortConverter.convert[ASTNode, AstNode[ASTNode]](_))
 
   def lineNumber = unit.getLineNumber(this)
   def isMultiline: Boolean
@@ -29,5 +33,4 @@ abstract class AstNode[T <: ASTNode](val node: T) {
 
     parent.asInstanceOf[JdtTypeDeclaration].resolveBinding()
   }
-
 }

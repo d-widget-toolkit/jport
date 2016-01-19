@@ -71,8 +71,18 @@ class DCoder {
     level += 1
   }
 
-  def increaseIndentation = this.tap(level += 1)
-  def decreaseIndentation = this.tap(level -= 1)
+  def increaseIndentation: DCoder = {
+    increaseIndentation(1)
+    this
+  }
+
+  def decreaseIndentation: DCoder = {
+    decreaseIndentation(1)
+    this
+  }
+
+  def increaseIndentation(level: Int): DCoder = this.tap(this.level += level)
+  def decreaseIndentation(level: Int): DCoder = this.tap(this.level -= level)
 
   def join(iterable: Iterable[_ <: String], separator: String = ", ") = this.tap {
     var first = true

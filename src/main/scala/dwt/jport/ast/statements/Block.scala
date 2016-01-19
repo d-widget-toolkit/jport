@@ -17,9 +17,6 @@ class Block(node: JdtBlock, private[jport] override val visitData: VisitData[Sta
 
   type NodeType = Statement
 
-  override val parent = Option(node.getParent).
-    map(JPortConverter.convert[ASTNode, AstNode[ASTNode]](_))
-
   val statements =
     node.statements.asInstanceOf[JavaList[JdtStatement]].to[Array]
 

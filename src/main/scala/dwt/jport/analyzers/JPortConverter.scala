@@ -5,6 +5,7 @@ import org.eclipse.jdt.core.dom.{ AbstractTypeDeclaration => JdtAbstractTypeDecl
 import org.eclipse.jdt.core.dom.{ Block => JdtBlock }
 import org.eclipse.jdt.core.dom.{ BodyDeclaration => JdtBodyDeclaration }
 import org.eclipse.jdt.core.dom.{ BreakStatement => JdtBreakStatement }
+import org.eclipse.jdt.core.dom.{ CompilationUnit => JdtCompilationUnit }
 import org.eclipse.jdt.core.dom.{ ConstructorInvocation => JdtConstructorInvocation }
 import org.eclipse.jdt.core.dom.{ ContinueStatement => JdtContinueStatement }
 import org.eclipse.jdt.core.dom.{ DoStatement => JdtDoStatement }
@@ -17,6 +18,8 @@ import org.eclipse.jdt.core.dom.{ LabeledStatement => JdtLabeledStatement }
 import org.eclipse.jdt.core.dom.{ MethodDeclaration => JdtMethodDeclaration }
 import org.eclipse.jdt.core.dom.{ ReturnStatement => JdtReturnStatement }
 import org.eclipse.jdt.core.dom.{ Statement => JdtStatement }
+import org.eclipse.jdt.core.dom.{ SwitchCase => JdtSwitchCase }
+import org.eclipse.jdt.core.dom.{ SwitchStatement => JdtSwitchStatement }
 import org.eclipse.jdt.core.dom.{ SuperConstructorInvocation => JdtSuperConstructorInvocation }
 import org.eclipse.jdt.core.dom.{ TypeDeclaration => JdtTypeDeclaration }
 import org.eclipse.jdt.core.dom.{ VariableDeclarationStatement => JdtVariableDeclarationStatement }
@@ -42,6 +45,8 @@ import dwt.jport.ast.statements.ReturnStatement
 import dwt.jport.ast.statements.Statement
 import dwt.jport.ast.statements.SuperConstructorInvocation
 import dwt.jport.ast.statements.VariableDeclarationStatement
+import dwt.jport.ast.statements.SwitchStatement
+import dwt.jport.ast.statements.SwitchCase
 
 object JPortConverter {
   def convert[T <: ASTNode, U <: AstNode[_]](nodes: Iterable[T]): Iterator[U] = {
@@ -144,6 +149,8 @@ object JPortConverter {
       case n: JdtContinueStatement => new ContinueStatement(n, visitData)
       case n: JdtDoStatement => new DoStatement(n, visitData)
       case n: JdtIfStatement => new IfStatement(n, visitData)
+      case n: JdtSwitchStatement => new SwitchStatement(n, visitData)
+      case n: JdtSwitchCase => new SwitchCase(n, visitData)
       case _ => {
         JPorter.diagnostic.unhandled(s"unhandled node ${node.getClass.getName} in ${getClass.getName}")
         null

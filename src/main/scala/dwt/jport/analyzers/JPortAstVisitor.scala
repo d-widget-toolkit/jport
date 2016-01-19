@@ -41,6 +41,10 @@ import dwt.jport.writers.statements.SuperConstructorInvocationWriter
 import dwt.jport.writers.statements.VariableDeclarationStatementWriter
 import dwt.jport.writers.statements.IfStatementWriter
 import dwt.jport.writers.statements.ReturnStatementWriter
+import dwt.jport.ast.statements.SwitchStatement
+import dwt.jport.writers.statements.SwitchStatementWriter
+import dwt.jport.ast.statements.SwitchCase
+import dwt.jport.writers.statements.SwitchCaseWriter
 
 class VisitData[T](val isFirst: Boolean, val next: Option[T],
   val prev: Option[T])
@@ -113,6 +117,8 @@ class JPortAstVisitor(private val importWriter: ImportWriter) extends Visitor {
       case n: ContinueStatement => visit(n)
       case n: DoStatement => visit(n)
       case n: IfStatement => visit(n)
+      case n: SwitchStatement => visit(n)
+      case n: SwitchCase => visit(n)
       case _ => JPorter.diagnostic.unhandled(s"unhandled node ${node.getClass.getName} in ${getClass.getName}")
     }
   }
@@ -150,15 +156,33 @@ class JPortAstVisitor(private val importWriter: ImportWriter) extends Visitor {
   }
 
   def visit(node: IfStatement): Unit = {
+    val elseStatement = node.elseStatement.map(
+      JPortConverter.convert(_, node.visitData))
+
     IfStatementWriter.write(importWriter, node)
-    visit(JPortConverter.convert(node.thenStatement, node.visitData))
+    val next = if (elseStatement.isDefined) elseStatement else node.next
+    val thenVisit = new VisitData[Statement](node.visitData.isFirst,
+      next, node.visitData.prev)
+    visit(JPortConverter.convert(node.thenStatement, thenVisit))
+
     IfStatementWriter.writeElse
-    node.elseStatement.map(e => visit(JPortConverter.convert(e, node.visitData)))
+    elseStatement.map(visit)
     IfStatementWriter.postWrite
   }
 
   def visit(node: ReturnStatement): Unit = {
     ReturnStatementWriter.write(importWriter, node)
     ReturnStatementWriter.postWrite
+  }
+
+  def visit(node: SwitchStatement): Unit = {
+    SwitchStatementWriter.write(importWriter, node)
+    JPortConverter.convert[JdtStatement, Statement](node.statements).foreach(visit)
+    SwitchStatementWriter.postWrite
+  }
+
+  def visit(node: SwitchCase): Unit = {
+    SwitchCaseWriter.write(importWriter, node)
+    SwitchCaseWriter.postWrite
   }
 }

@@ -12,7 +12,7 @@ trait NewlineWriter[T <: Siblings with AstNode[_]] extends Node[T] with Buffer {
 
     buffer += nl
 
-    if (!node.hasNext) return
+    if (!hasNext) return
 
     if (node.isMultiline || next.isMultiline)
       buffer += nl
@@ -22,6 +22,9 @@ trait NewlineWriter[T <: Siblings with AstNode[_]] extends Node[T] with Buffer {
         buffer += nl
     }
   }
+
+  protected def hasNext: Boolean = node.next.
+    filterNot(_.nodeType == ASTNode.BREAK_STATEMENT).isDefined
 
   private def next: AstNode[_] = {
     assert(node.hasNext, "Should only be called when node has a next node")
