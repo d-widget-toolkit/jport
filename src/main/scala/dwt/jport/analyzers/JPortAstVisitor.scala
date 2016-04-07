@@ -24,6 +24,7 @@ import dwt.jport.ast.statements.LabeledStatement
 import dwt.jport.ast.statements.ReturnStatement
 import dwt.jport.ast.statements.Statement
 import dwt.jport.ast.statements.SuperConstructorInvocation
+import dwt.jport.ast.statements.SynchronizedStatement
 import dwt.jport.ast.statements.VariableDeclarationStatement
 import dwt.jport.writers.FieldDeclarationWriter
 import dwt.jport.writers.ImportWriter
@@ -45,6 +46,7 @@ import dwt.jport.ast.statements.SwitchStatement
 import dwt.jport.writers.statements.SwitchStatementWriter
 import dwt.jport.ast.statements.SwitchCase
 import dwt.jport.writers.statements.SwitchCaseWriter
+import dwt.jport.writers.statements.SynchronizedStatementWriter
 
 class VisitData[T](val isFirst: Boolean, val next: Option[T],
   val prev: Option[T])
@@ -119,6 +121,7 @@ class JPortAstVisitor(private val importWriter: ImportWriter) extends Visitor {
       case n: IfStatement => visit(n)
       case n: SwitchStatement => visit(n)
       case n: SwitchCase => visit(n)
+      case n: SynchronizedStatement => visit(n)
       case _ => JPorter.diagnostic.unhandled(s"unhandled node ${node.getClass.getName} in ${getClass.getName}")
     }
   }
@@ -184,5 +187,11 @@ class JPortAstVisitor(private val importWriter: ImportWriter) extends Visitor {
   def visit(node: SwitchCase): Unit = {
     SwitchCaseWriter.write(importWriter, node)
     SwitchCaseWriter.postWrite
+  }
+
+  def visit(node: SynchronizedStatement): Unit = {
+    SynchronizedStatementWriter.write(importWriter, node)
+    visit(JPortConverter.convert(node.body, node.visitData))
+    SynchronizedStatementWriter.postWrite
   }
 }
