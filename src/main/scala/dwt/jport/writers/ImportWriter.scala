@@ -13,11 +13,7 @@ class ImportWriter extends Buffer {
   def write(): Unit = {
     if (importsWPackage.isEmpty && importsWOPackage.isEmpty) return
 
-    val groups = importsWPackage.groupBy(e => e.split('.').head).values.toArray
-    val sortedGroups = groups.sortWith(sort) ++ Array(importsWOPackage)
-    val imports = sortedGroups.map(e => e.map(toImportString).mkString("\n"))
-    val str = imports.mkString("\n\n") + "\n\n"
-    str +=: buffer
+    toString +=: buffer
   }
 
   lazy val importsWPackage = uniqueImports.filter(_.contains('.')).
@@ -25,6 +21,15 @@ class ImportWriter extends Buffer {
 
   lazy val importsWOPackage = uniqueImports.filter(!_.contains('.')).
     sortWith(_ < _)
+
+  override def toString() = {
+    val groups = importsWPackage.groupBy(e => e.split('.').head).values.toArray
+    val sortedGroups = groups.sortWith(sort) ++ Array(importsWOPackage)
+    val imports = sortedGroups.filter(_.nonEmpty).
+      map(e => e.map(toImportString).mkString("\n"))
+
+    imports.mkString("\n\n") + "\n\n"
+  }
 
   private lazy val uniqueImports = imports.distinct
   private def toImportString(s: String) = s"import $s;"

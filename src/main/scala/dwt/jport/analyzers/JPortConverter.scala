@@ -22,6 +22,7 @@ import org.eclipse.jdt.core.dom.{ SwitchCase => JdtSwitchCase }
 import org.eclipse.jdt.core.dom.{ SwitchStatement => JdtSwitchStatement }
 import org.eclipse.jdt.core.dom.{ SuperConstructorInvocation => JdtSuperConstructorInvocation }
 import org.eclipse.jdt.core.dom.{ SynchronizedStatement => JdtSynchronizedStatement }
+import org.eclipse.jdt.core.dom.{ ThrowStatement => JdtThrowStatement }
 import org.eclipse.jdt.core.dom.{ TypeDeclaration => JdtTypeDeclaration }
 import org.eclipse.jdt.core.dom.{ VariableDeclarationStatement => JdtVariableDeclarationStatement }
 
@@ -49,6 +50,7 @@ import dwt.jport.ast.statements.VariableDeclarationStatement
 import dwt.jport.ast.statements.SwitchStatement
 import dwt.jport.ast.statements.SwitchCase
 import dwt.jport.ast.statements.SynchronizedStatement
+import dwt.jport.ast.statements.ThrowStatement
 
 object JPortConverter {
   def convert[T <: ASTNode, U <: AstNode[_]](nodes: Iterable[T]): Iterator[U] = {
@@ -154,6 +156,7 @@ object JPortConverter {
       case n: JdtSwitchStatement => new SwitchStatement(n, visitData)
       case n: JdtSwitchCase => new SwitchCase(n, visitData)
       case n: JdtSynchronizedStatement => new SynchronizedStatement(n, visitData)
+      case n: JdtThrowStatement => new ThrowStatement(n, visitData)
       case _ => {
         JPorter.diagnostic.unhandled(s"unhandled node ${node.getClass.getName} in ${getClass.getName}")
         null

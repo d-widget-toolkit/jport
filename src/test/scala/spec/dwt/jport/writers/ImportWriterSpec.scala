@@ -1,19 +1,21 @@
 package spec.dwt.jport.writers
 
-import spec.support.Spec
+import org.scalatest.BeforeAndAfterEach
+
 import dwt.jport.writers.ImportWriter
 import dwt.jport.DCoder
-import support.Code
-import org.scalatest.BeforeAndAfter
 
-class ImportWriterSpec extends Spec with BeforeAndAfter {
+import spec.support.Spec
+import support.Code
+
+class ImportWriterSpec extends Spec with BeforeAndAfterEach {
   var writer: ImportWriter = null
 
   def result = DCoder.dcoder.result
   def wpackage = writer.importsWPackage
   def wopackage = writer.importsWOPackage
 
-  before {
+  override def beforeEach = {
     writer = new ImportWriter
     DCoder.dcoder.reset()
   }
@@ -177,6 +179,15 @@ class ImportWriterSpec extends Spec with BeforeAndAfter {
             """
           }
         }
+      }
+    }
+
+    describe("toString") {
+      it("writes foobar baz") {
+        writer :+ Array("java.lang.Exception")
+        writer.write()
+
+        writer.toString shouldBe "import java.lang.Exception;\n\n"
       }
     }
   }

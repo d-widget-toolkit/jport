@@ -12,15 +12,15 @@ import support.Code
 import org.scalatest.BeforeAndAfterEach
 import dwt.jport.DCoder
 
-class Suite extends FunSuite with Matchers with BeforeAndAfter with Code {
+class Suite extends FunSuite with Matchers with BeforeAndAfterEach with Code {
   private val createdFiles = new HashSet[Path]
   var basePath: Path = null
 
-  before {
+  override def beforeEach = {
     basePath = Path.createTempDirectory()
   }
 
-  after {
+  override def afterEach = {
     createdFiles.foreach(_.deleteIfExists())
     createdFiles.clear()
     DCoder.dcoder.reset()
