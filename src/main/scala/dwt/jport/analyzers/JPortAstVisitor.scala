@@ -12,6 +12,7 @@ import dwt.jport.ast.MethodDeclaration
 import dwt.jport.ast.TypeDeclaration
 import dwt.jport.ast.statements.Block
 import dwt.jport.ast.statements.BreakStatement
+import dwt.jport.ast.statements.CatchClause
 import dwt.jport.ast.statements.ConstructorInvocation
 import dwt.jport.ast.statements.ContinueStatement
 import dwt.jport.ast.statements.ControlFlowStatement
@@ -26,6 +27,7 @@ import dwt.jport.ast.statements.Statement
 import dwt.jport.ast.statements.SuperConstructorInvocation
 import dwt.jport.ast.statements.SynchronizedStatement
 import dwt.jport.ast.statements.ThrowStatement
+import dwt.jport.ast.statements.TryStatement
 import dwt.jport.ast.statements.VariableDeclarationStatement
 
 import dwt.jport.writers.FieldDeclarationWriter
@@ -50,6 +52,8 @@ import dwt.jport.ast.statements.SwitchCase
 import dwt.jport.writers.statements.SwitchCaseWriter
 import dwt.jport.writers.statements.SynchronizedStatementWriter
 import dwt.jport.writers.statements.ThrowStatementWriter
+import dwt.jport.writers.statements.TryStatementWriter
+import dwt.jport.writers.statements.CatchClauseWriter
 
 class VisitData[T](val isFirst: Boolean, val next: Option[T],
   val prev: Option[T])
@@ -126,6 +130,7 @@ class JPortAstVisitor(private val importWriter: ImportWriter) extends Visitor {
       case n: SwitchCase => visit(n)
       case n: SynchronizedStatement => visit(n)
       case n: ThrowStatement => visit(n)
+      case n: TryStatement => visit(n)
       case _ => JPorter.diagnostic.unhandled(s"unhandled node ${node.getClass.getName} in ${getClass.getName}")
     }
   }
@@ -202,5 +207,21 @@ class JPortAstVisitor(private val importWriter: ImportWriter) extends Visitor {
   def visit(node: ThrowStatement): Unit = {
     ThrowStatementWriter.write(importWriter, node)
     ThrowStatementWriter.postWrite
+  }
+
+  def visit(node: TryStatement): Unit = {
+    TryStatementWriter.write(importWriter, node)
+    visit(node.body)
+    node.catchClauses.foreach(visit)
+
+    TryStatementWriter.writeFinally
+    node.`finally`.map(visit)
+    TryStatementWriter.postWrite
+  }
+
+  def visit(node: CatchClause): Unit = {
+    CatchClauseWriter.write(importWriter, node)
+    visit(node.body)
+    CatchClauseWriter.postWrite
   }
 }

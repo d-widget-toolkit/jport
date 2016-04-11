@@ -17,7 +17,7 @@ class ImportWriter extends Buffer {
   }
 
   lazy val importsWPackage = uniqueImports.filter(_.contains('.')).
-    filterNot(_ == "java.lang.Object").sortWith(_ < _)
+    filterNot(objectClasses.contains(_)).sortWith(_ < _)
 
   lazy val importsWOPackage = uniqueImports.filter(!_.contains('.')).
     sortWith(_ < _)
@@ -35,4 +35,9 @@ class ImportWriter extends Buffer {
   private def toImportString(s: String) = s"import $s;"
   private def sort(a: StringArray, b: StringArray) =
     if (a.nonEmpty && b.nonEmpty) a.head < b.head else false
+
+  private val objectClasses = Set(
+    "java.lang.Exception",
+    "java.lang.Object",
+    "java.lang.Throwable")
 }

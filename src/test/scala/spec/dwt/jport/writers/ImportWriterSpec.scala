@@ -47,6 +47,20 @@ class ImportWriterSpec extends Spec with BeforeAndAfterEach {
           wpackage shouldBe Array("a.b", "foo.bar", "x.y")
         }
       }
+
+      context("when import list contains 'java.lang.Exception'") {
+        it("does not include 'java.lang.Exception'") {
+          writer :+ Array("x.y", "foo.bar", "java.lang.Exception", "a.b")
+          wpackage shouldBe Array("a.b", "foo.bar", "x.y")
+        }
+      }
+
+      context("when import list contains 'java.lang.Throwable'") {
+        it("does not include 'java.lang.Exception'") {
+          writer :+ Array("x.y", "foo.bar", "java.lang.Throwable", "a.b")
+          wpackage shouldBe Array("a.b", "foo.bar", "x.y")
+        }
+      }
     }
 
     describe("importsWOPackage") {
@@ -184,10 +198,10 @@ class ImportWriterSpec extends Spec with BeforeAndAfterEach {
 
     describe("toString") {
       it("writes foobar baz") {
-        writer :+ Array("java.lang.Exception")
+        writer :+ Array("foo.bar.Baz")
         writer.write()
 
-        writer.toString shouldBe "import java.lang.Exception;\n\n"
+        writer.toString shouldBe "import foo.bar.Baz;\n\n"
       }
     }
   }

@@ -16,8 +16,6 @@ class ConstructorInvocation(node: JdtConstructorInvocation, private[jport] overr
 
   type NodeType = Statement
 
-  protected override def declaringClass = super[Statement].declaringClass
-
   protected def typedArguments =
     node.arguments.asInstanceOf[JavaList[Expression]]
 

@@ -2,6 +2,7 @@ package dwt.jport.ast.statements
 
 import org.eclipse.jdt.core.dom.Expression
 
+import org.eclipse.jdt.core.dom.{ Statement => JdtStatement }
 import org.eclipse.jdt.core.dom.{ SuperConstructorInvocation => JdtSuperConstructorInvocation }
 import org.eclipse.jdt.core.dom.Type
 
@@ -16,8 +17,6 @@ class SuperConstructorInvocation(node: JdtSuperConstructorInvocation, private[jp
   with Invocation {
 
   type NodeType = Statement
-
-  protected override def declaringClass = super[Statement].declaringClass
 
   protected def typedArguments =
     node.arguments.asInstanceOf[JavaList[Expression]]

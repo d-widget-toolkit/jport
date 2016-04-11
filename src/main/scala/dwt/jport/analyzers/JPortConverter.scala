@@ -5,6 +5,7 @@ import org.eclipse.jdt.core.dom.{ AbstractTypeDeclaration => JdtAbstractTypeDecl
 import org.eclipse.jdt.core.dom.{ Block => JdtBlock }
 import org.eclipse.jdt.core.dom.{ BodyDeclaration => JdtBodyDeclaration }
 import org.eclipse.jdt.core.dom.{ BreakStatement => JdtBreakStatement }
+import org.eclipse.jdt.core.dom.{ CatchClause => JdtCatchClause }
 import org.eclipse.jdt.core.dom.{ CompilationUnit => JdtCompilationUnit }
 import org.eclipse.jdt.core.dom.{ ConstructorInvocation => JdtConstructorInvocation }
 import org.eclipse.jdt.core.dom.{ ContinueStatement => JdtContinueStatement }
@@ -23,6 +24,7 @@ import org.eclipse.jdt.core.dom.{ SwitchStatement => JdtSwitchStatement }
 import org.eclipse.jdt.core.dom.{ SuperConstructorInvocation => JdtSuperConstructorInvocation }
 import org.eclipse.jdt.core.dom.{ SynchronizedStatement => JdtSynchronizedStatement }
 import org.eclipse.jdt.core.dom.{ ThrowStatement => JdtThrowStatement }
+import org.eclipse.jdt.core.dom.{ TryStatement => JdtTryStatement }
 import org.eclipse.jdt.core.dom.{ TypeDeclaration => JdtTypeDeclaration }
 import org.eclipse.jdt.core.dom.{ VariableDeclarationStatement => JdtVariableDeclarationStatement }
 
@@ -44,13 +46,16 @@ import dwt.jport.ast.statements.ForStatement
 import dwt.jport.ast.statements.IfStatement
 import dwt.jport.ast.statements.LabeledStatement
 import dwt.jport.ast.statements.ReturnStatement
-import dwt.jport.ast.statements.Statement
+import dwt.jport.ast.statements.TypedStatement
 import dwt.jport.ast.statements.SuperConstructorInvocation
 import dwt.jport.ast.statements.VariableDeclarationStatement
 import dwt.jport.ast.statements.SwitchStatement
 import dwt.jport.ast.statements.SwitchCase
 import dwt.jport.ast.statements.SynchronizedStatement
 import dwt.jport.ast.statements.ThrowStatement
+import dwt.jport.ast.statements.TryStatement
+import dwt.jport.ast.statements.CatchClause
+import dwt.jport.ast.statements.Statement
 
 object JPortConverter {
   def convert[T <: ASTNode, U <: AstNode[_]](nodes: Iterable[T]): Iterator[U] = {
@@ -76,6 +81,12 @@ object JPortConverter {
       case n: JdtBodyDeclaration => {
         val ne = option[JdtBodyDeclaration](next)
         val p = option[JdtBodyDeclaration](prev)
+        convert(n, isFirst, ne, p).asInstanceOf[U]
+      }
+
+      case n: JdtCatchClause => {
+        val ne = option[JdtCatchClause](next)
+        val p = option[JdtCatchClause](prev)
         convert(n, isFirst, ne, p).asInstanceOf[U]
       }
 
@@ -127,6 +138,17 @@ object JPortConverter {
     }
   }
 
+  private def convert(node: JdtCatchClause, isFirst: Boolean,
+    next: Option[JdtCatchClause],
+    prev: Option[JdtCatchClause]): CatchClause = {
+
+    val ne = next.map(convert(_).asInstanceOf[Statement])
+    val p = prev.map(convert(_).asInstanceOf[Statement])
+    val visitData = new VisitData(isFirst, ne, p)
+
+    new CatchClause(node, visitData)
+  }
+
   private def convert(node: JdtStatement, isFirst: Boolean,
     next: Option[JdtStatement],
     prev: Option[JdtStatement]): Statement = {
@@ -157,6 +179,7 @@ object JPortConverter {
       case n: JdtSwitchCase => new SwitchCase(n, visitData)
       case n: JdtSynchronizedStatement => new SynchronizedStatement(n, visitData)
       case n: JdtThrowStatement => new ThrowStatement(n, visitData)
+      case n: JdtTryStatement => new TryStatement(n, visitData)
       case _ => {
         JPorter.diagnostic.unhandled(s"unhandled node ${node.getClass.getName} in ${getClass.getName}")
         null
