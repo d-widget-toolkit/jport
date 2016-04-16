@@ -8,7 +8,7 @@ import dwt.jport.ast.AstNode
 import dwt.jport.ast.Siblings
 import dwt.jport.ast.expressions.ExpressionImplicits._
 
-class ContinueStatement(node: JdtContinueStatement, private[jport] override val visitData: VisitData[AstNode[ASTNode]])
+class ContinueStatement(node: JdtContinueStatement, private[jport] override val visitData: VisitData)
   extends ControlFlowStatement(node, visitData) {
 
   override val label = Option(node.getLabel).map(_.toJPort)

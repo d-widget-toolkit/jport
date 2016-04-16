@@ -12,7 +12,7 @@ import dwt.jport.ast.AstNode
 import dwt.jport.ast.Siblings
 import dwt.jport.ast.expressions.ExpressionImplicits._
 
-class TryStatement(node: JdtTryStatement, private[jport] override val visitData: VisitData[AstNode[ASTNode]])
+class TryStatement(node: JdtTryStatement, private[jport] override val visitData: VisitData)
   extends Statement(node)
   with Siblings {
 

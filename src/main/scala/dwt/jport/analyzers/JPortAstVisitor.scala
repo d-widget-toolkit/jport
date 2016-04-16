@@ -57,7 +57,7 @@ import dwt.jport.writers.statements.ThrowStatementWriter
 import dwt.jport.writers.statements.TryStatementWriter
 import dwt.jport.writers.statements.CatchClauseWriter
 
-class VisitData[+T](val isFirst: Boolean, val next: Option[AstNode[ASTNode]],
+class VisitData(val isFirst: Boolean, val next: Option[AstNode[ASTNode]],
   val prev: Option[AstNode[ASTNode]])
 
 class JPortAstVisitor(private val importWriter: ImportWriter) {
@@ -182,7 +182,7 @@ class JPortAstVisitor(private val importWriter: ImportWriter) {
     else
       node.next
 
-    val thenVisit = new VisitData[AstNode[ASTNode]](node.visitData.isFirst,
+    val thenVisit = new VisitData(node.visitData.isFirst,
       next, node.visitData.prev)
     visit(JPortConverter.convert(node.thenStatement, thenVisit))
 

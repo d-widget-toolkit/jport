@@ -8,7 +8,7 @@ import dwt.jport.analyzers.VisitData
 import dwt.jport.ast.AstNode
 import dwt.jport.ast.Siblings
 
-class EmptyStatement(node: JdtEmptyStatement, private[jport] override val visitData: VisitData[AstNode[ASTNode]])
+class EmptyStatement(node: JdtEmptyStatement, private[jport] override val visitData: VisitData)
   extends Statement(node)
   with Siblings {
 

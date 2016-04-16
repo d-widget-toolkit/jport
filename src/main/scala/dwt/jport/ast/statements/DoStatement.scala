@@ -10,7 +10,7 @@ import dwt.jport.analyzers.VisitData
 import dwt.jport.ast.Siblings
 import dwt.jport.ast.expressions.ExpressionImplicits._
 
-class DoStatement(node: JdtDoStatement, private[jport] override val visitData: VisitData[AstNode[ASTNode]])
+class DoStatement(node: JdtDoStatement, private[jport] override val visitData: VisitData)
   extends Statement(node)
   with Siblings {
 

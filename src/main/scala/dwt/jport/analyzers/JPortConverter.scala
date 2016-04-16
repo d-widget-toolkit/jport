@@ -71,10 +71,10 @@ object JPortConverter {
     convert[T, U](node, convert(isFirst, next, prev))
 
   private def convert[T <: ASTNode](isFirst: Boolean,
-    next: Option[T], prev: Option[T]): VisitData[AstNode[ASTNode]] =
+    next: Option[T], prev: Option[T]): VisitData =
     new VisitData(isFirst, next.map(convert(_)), prev.map(convert(_)))
 
-  def convert[T <: ASTNode, U <: AstNode[T]](node: T, visitData: VisitData[AstNode[ASTNode]]): AstNode[ASTNode] = {
+  def convert[T <: ASTNode, U <: AstNode[T]](node: T, visitData: VisitData): AstNode[ASTNode] = {
     node match {
       case n: JdtAbstractTypeDeclaration => convert(n, visitData)
       case n: JdtBodyDeclaration => convert(n, visitData)
@@ -89,7 +89,7 @@ object JPortConverter {
   }
 
   private def convert(node: JdtAbstractTypeDeclaration,
-    visitData: VisitData[AstNode[ASTNode]]): AbstractTypeDeclaration = {
+    visitData: VisitData): AbstractTypeDeclaration = {
 
     node match {
       case n: JdtTypeDeclaration => new TypeDeclaration(n, visitData)
@@ -101,7 +101,7 @@ object JPortConverter {
   }
 
   private def convert(node: JdtBodyDeclaration,
-    visitData: VisitData[AstNode[ASTNode]]): BodyDeclaration = {
+    visitData: VisitData): BodyDeclaration = {
 
     node match {
       case n: JdtMethodDeclaration => new MethodDeclaration(n, visitData)
@@ -114,10 +114,10 @@ object JPortConverter {
   }
 
   private def convert(node: JdtCatchClause,
-    visitData: VisitData[AstNode[ASTNode]]): CatchClause =
+    visitData: VisitData): CatchClause =
     new CatchClause(node, visitData)
 
-  def convert(node: JdtStatement, visitData: VisitData[AstNode[ASTNode]]): Statement = {
+  def convert(node: JdtStatement, visitData: VisitData): Statement = {
     node match {
       case n: JdtVariableDeclarationStatement => new VariableDeclarationStatement(n, visitData)
       case n: JdtReturnStatement => new ReturnStatement(n, visitData)

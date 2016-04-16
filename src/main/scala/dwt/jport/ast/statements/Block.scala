@@ -11,7 +11,7 @@ import dwt.jport.analyzers.VisitData
 import dwt.jport.ast.AstNode
 import dwt.jport.ast.Siblings
 
-class Block(node: JdtBlock, private[jport] override val visitData: VisitData[AstNode[ASTNode]])
+class Block(node: JdtBlock, private[jport] override val visitData: VisitData)
   extends Statement(node)
   with Siblings {
 

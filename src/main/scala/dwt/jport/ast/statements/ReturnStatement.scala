@@ -8,7 +8,7 @@ import dwt.jport.ast.AstNode
 import dwt.jport.ast.Siblings
 import dwt.jport.ast.expressions.ExpressionImplicits._
 
-class ReturnStatement(node: JdtReturnStatement, private[jport] override val visitData: VisitData[AstNode[ASTNode]])
+class ReturnStatement(node: JdtReturnStatement, private[jport] override val visitData: VisitData)
   extends Statement(node)
   with Siblings {
 

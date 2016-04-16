@@ -10,7 +10,7 @@ import dwt.jport.ast.expressions.ExpressionImplicits._
 import dwt.jport.ast.AstNode
 import dwt.jport.translators.ImportTranslator
 
-class CatchClause(node: JdtCatchClause, private[jport] override val visitData: VisitData[AstNode[ASTNode]])
+class CatchClause(node: JdtCatchClause, private[jport] override val visitData: VisitData)
   extends TypedStatement(node)
   with Siblings {
 

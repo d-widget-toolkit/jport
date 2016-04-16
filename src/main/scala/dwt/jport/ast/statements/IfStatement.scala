@@ -10,7 +10,7 @@ import dwt.jport.ast.AstNode
 import dwt.jport.ast.Siblings
 import dwt.jport.ast.expressions.ExpressionImplicits._
 
-class IfStatement(node: JdtIfStatement, private[jport] override val visitData: VisitData[AstNode[ASTNode]])
+class IfStatement(node: JdtIfStatement, private[jport] override val visitData: VisitData)
   extends Statement(node)
   with Siblings {
 
