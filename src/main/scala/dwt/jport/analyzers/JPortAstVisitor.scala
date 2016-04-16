@@ -57,10 +57,10 @@ import dwt.jport.writers.statements.ThrowStatementWriter
 import dwt.jport.writers.statements.TryStatementWriter
 import dwt.jport.writers.statements.CatchClauseWriter
 
-class VisitData[+T](val isFirst: Boolean, val next: Option[T],
-  val prev: Option[T])
+class VisitData[+T](val isFirst: Boolean, val next: Option[AstNode[ASTNode]],
+  val prev: Option[AstNode[ASTNode]])
 
-class JPortAstVisitor(private val importWriter: ImportWriter) extends Visitor {
+class JPortAstVisitor(private val importWriter: ImportWriter) {
   private type JavaList[T] = java.util.List[T]
 
   def visit(node: TypeDeclaration): Unit = {

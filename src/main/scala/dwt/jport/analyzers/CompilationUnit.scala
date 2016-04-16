@@ -11,7 +11,7 @@ import dwt.jport.writers.ImportWriter
 import dwt.jport.ast.AbstractTypeDeclaration
 import dwt.jport.ast.AstNode
 
-class CompilationUnit(val unit: JdtCompilationUnit) extends Visitor {
+class CompilationUnit(val unit: JdtCompilationUnit) {
   private type NodeType = JdtAbstractTypeDeclaration
   private type JavaList[T] = java.util.List[T]
 
