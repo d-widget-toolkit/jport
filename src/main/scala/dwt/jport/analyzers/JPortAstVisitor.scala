@@ -2,10 +2,12 @@ package dwt.jport.analyzers
 
 import scala.collection.JavaConversions._
 
+import org.eclipse.jdt.core.dom.ASTNode
 import org.eclipse.jdt.core.dom.{ BodyDeclaration => JdtBodyDeclaration }
 import org.eclipse.jdt.core.dom.{ Statement => JdtStatement }
 
 import dwt.jport.JPorter
+import dwt.jport.ast.AstNode
 import dwt.jport.ast.BodyDeclaration
 import dwt.jport.ast.FieldDeclaration
 import dwt.jport.ast.MethodDeclaration
@@ -25,6 +27,8 @@ import dwt.jport.ast.statements.LabeledStatement
 import dwt.jport.ast.statements.ReturnStatement
 import dwt.jport.ast.statements.Statement
 import dwt.jport.ast.statements.SuperConstructorInvocation
+import dwt.jport.ast.statements.SwitchCase
+import dwt.jport.ast.statements.SwitchStatement
 import dwt.jport.ast.statements.SynchronizedStatement
 import dwt.jport.ast.statements.ThrowStatement
 import dwt.jport.ast.statements.TryStatement
@@ -46,16 +50,14 @@ import dwt.jport.writers.statements.SuperConstructorInvocationWriter
 import dwt.jport.writers.statements.VariableDeclarationStatementWriter
 import dwt.jport.writers.statements.IfStatementWriter
 import dwt.jport.writers.statements.ReturnStatementWriter
-import dwt.jport.ast.statements.SwitchStatement
 import dwt.jport.writers.statements.SwitchStatementWriter
-import dwt.jport.ast.statements.SwitchCase
 import dwt.jport.writers.statements.SwitchCaseWriter
 import dwt.jport.writers.statements.SynchronizedStatementWriter
 import dwt.jport.writers.statements.ThrowStatementWriter
 import dwt.jport.writers.statements.TryStatementWriter
 import dwt.jport.writers.statements.CatchClauseWriter
 
-class VisitData[T](val isFirst: Boolean, val next: Option[T],
+class VisitData[+T](val isFirst: Boolean, val next: Option[T],
   val prev: Option[T])
 
 class JPortAstVisitor(private val importWriter: ImportWriter) extends Visitor {
@@ -80,7 +82,8 @@ class JPortAstVisitor(private val importWriter: ImportWriter) extends Visitor {
 
   def visit(node: MethodDeclaration): Unit = {
     MethodDeclarationWriter.write(importWriter, node)
-    JPortConverter.convert[JdtStatement, Statement](node.statements).foreach(visit)
+    JPortConverter.convert[JdtStatement, Statement](node.statements).
+      map(_.asInstanceOf[Statement]) foreach (visit)
     MethodDeclarationWriter.postWrite
   }
 
@@ -107,7 +110,8 @@ class JPortAstVisitor(private val importWriter: ImportWriter) extends Visitor {
 
   def visit(node: Block): Unit = {
     BlockWriter.write(importWriter, node)
-    JPortConverter.convert[JdtStatement, Statement](node.statements).foreach(visit)
+    JPortConverter.convert[JdtStatement, Statement](node.statements).
+      map(_.asInstanceOf[Statement]) foreach (visit)
     BlockWriter.postWrite
   }
 
@@ -172,8 +176,13 @@ class JPortAstVisitor(private val importWriter: ImportWriter) extends Visitor {
       JPortConverter.convert(_, node.visitData))
 
     IfStatementWriter.write(importWriter, node)
-    val next = if (elseStatement.isDefined) elseStatement else node.next
-    val thenVisit = new VisitData[Statement](node.visitData.isFirst,
+
+    val next = if (elseStatement.isDefined)
+      elseStatement.asInstanceOf[Option[AstNode[ASTNode]]]
+    else
+      node.next
+
+    val thenVisit = new VisitData[AstNode[ASTNode]](node.visitData.isFirst,
       next, node.visitData.prev)
     visit(JPortConverter.convert(node.thenStatement, thenVisit))
 
@@ -189,7 +198,8 @@ class JPortAstVisitor(private val importWriter: ImportWriter) extends Visitor {
 
   def visit(node: SwitchStatement): Unit = {
     SwitchStatementWriter.write(importWriter, node)
-    JPortConverter.convert[JdtStatement, Statement](node.statements).foreach(visit)
+    JPortConverter.convert[JdtStatement, Statement](node.statements).
+      map(_.asInstanceOf[Statement]) foreach (visit)
     SwitchStatementWriter.postWrite
   }
 
@@ -212,7 +222,7 @@ class JPortAstVisitor(private val importWriter: ImportWriter) extends Visitor {
   def visit(node: TryStatement): Unit = {
     TryStatementWriter.write(importWriter, node)
     visit(node.body)
-    node.catchClauses.foreach(visit)
+    node.catchClauses.map(_.asInstanceOf[CatchClause]).foreach(visit)
 
     TryStatementWriter.writeFinally
     node.`finally`.map(visit)

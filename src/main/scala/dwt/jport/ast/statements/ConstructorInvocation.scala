@@ -1,5 +1,6 @@
 package dwt.jport.ast.statements
 
+import org.eclipse.jdt.core.dom.ASTNode
 import org.eclipse.jdt.core.dom.{ ConstructorInvocation => JdtConstructorInvocation }
 import org.eclipse.jdt.core.dom.Expression
 import org.eclipse.jdt.core.dom.Type
@@ -9,12 +10,12 @@ import dwt.jport.ast.AstNode
 import dwt.jport.ast.Invocation
 import dwt.jport.ast.Siblings
 
-class ConstructorInvocation(node: JdtConstructorInvocation, private[jport] override val visitData: VisitData[Statement])
+class ConstructorInvocation(node: JdtConstructorInvocation, private[jport] override val visitData: VisitData[AstNode[ASTNode]])
   extends Statement(node)
   with Siblings
   with Invocation {
 
-  type NodeType = Statement
+  type NodeType = AstNode[ASTNode]
 
   protected def typedArguments =
     node.arguments.asInstanceOf[JavaList[Expression]]

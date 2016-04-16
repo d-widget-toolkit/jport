@@ -3,6 +3,7 @@ package dwt.jport.ast
 import scala.collection.JavaConversions._
 import scala.collection.JavaConverters._
 
+import org.eclipse.jdt.core.dom.ASTNode
 import org.eclipse.jdt.core.dom.{ BodyDeclaration => JdtBodyDeclaration }
 import org.eclipse.jdt.core.dom.SimpleType
 import org.eclipse.jdt.core.dom.{ Type => JdtType }
@@ -12,12 +13,12 @@ import dwt.jport.Symbol
 import dwt.jport.Type
 import dwt.jport.analyzers.VisitData
 
-class TypeDeclaration(node: JdtTypeDeclaration, private[jport] override val visitData: VisitData[AbstractTypeDeclaration])
+class TypeDeclaration(node: JdtTypeDeclaration, private[jport] override val visitData: VisitData[AstNode[ASTNode]])
   extends AbstractTypeDeclaration(node)
   with TypeParameters
   with Siblings {
 
-  type NodeType = AbstractTypeDeclaration
+  type NodeType = AstNode[ASTNode]
 
   import Type.fullyQualfiedName
 

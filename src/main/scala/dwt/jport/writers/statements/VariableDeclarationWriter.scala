@@ -44,5 +44,5 @@ trait VariableDeclarationWriter[AstNodeType <: AstNode[_] with VariableDeclarati
         if (initializer.isEmpty) name else s"${name} = ${initializer}"
     }
 
-  def toAstNode[T](node: T) = node.asInstanceOf[AstNode[_]]
+  def toAstNode[T](node: T) = node.asInstanceOf[AstNode[ASTNode]]
 }

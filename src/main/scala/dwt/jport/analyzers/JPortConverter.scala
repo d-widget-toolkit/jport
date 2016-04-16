@@ -58,7 +58,7 @@ import dwt.jport.ast.statements.CatchClause
 import dwt.jport.ast.statements.Statement
 
 object JPortConverter {
-  def convert[T <: ASTNode, U <: AstNode[_]](nodes: Iterable[T]): Iterator[U] = {
+  def convert[T <: ASTNode, U <: AstNode[_]](nodes: Iterable[T]): Iterator[AstNode[ASTNode]] = {
     window(nodes).zipWithIndex map {
       case ((prev, node, next), index) =>
         convert(node.get, index == 0, next, prev)
@@ -67,49 +67,29 @@ object JPortConverter {
 
   def convert[T <: ASTNode, U <: AstNode[T]](node: T, isFirst: Boolean = false,
     next: Option[T] = None,
-    prev: Option[T] = None): U = {
+    prev: Option[T] = None): AstNode[ASTNode] =
+    convert[T, U](node, convert(isFirst, next, prev))
 
-    def option[U](o: Option[T]) = o.asInstanceOf[Option[U]]
+  private def convert[T <: ASTNode](isFirst: Boolean,
+    next: Option[T], prev: Option[T]): VisitData[AstNode[ASTNode]] =
+    new VisitData(isFirst, next.map(convert(_)), prev.map(convert(_)))
 
+  def convert[T <: ASTNode, U <: AstNode[T]](node: T, visitData: VisitData[AstNode[ASTNode]]): AstNode[ASTNode] = {
     node match {
-      case n: JdtAbstractTypeDeclaration => {
-        val p = option[JdtAbstractTypeDeclaration](prev)
-        val ne = option[JdtAbstractTypeDeclaration](next)
-        convert(n, isFirst, ne, p).asInstanceOf[U]
-      }
-
-      case n: JdtBodyDeclaration => {
-        val ne = option[JdtBodyDeclaration](next)
-        val p = option[JdtBodyDeclaration](prev)
-        convert(n, isFirst, ne, p).asInstanceOf[U]
-      }
-
-      case n: JdtCatchClause => {
-        val ne = option[JdtCatchClause](next)
-        val p = option[JdtCatchClause](prev)
-        convert(n, isFirst, ne, p).asInstanceOf[U]
-      }
-
-      case n: JdtStatement => {
-        val ne = option[JdtStatement](next)
-        val p = option[JdtStatement](prev)
-        convert(n, isFirst, ne, p).asInstanceOf[U]
-      }
+      case n: JdtAbstractTypeDeclaration => convert(n, visitData)
+      case n: JdtBodyDeclaration => convert(n, visitData)
+      case n: JdtCatchClause => convert(n, visitData)
+      case n: JdtStatement => convert(n, visitData)
 
       case _ => {
         JPorter.diagnostic.unhandled(s"unhandled node ${node.getClass.getName} in ${getClass.getName}")
-        null.asInstanceOf[U]
+        null
       }
     }
   }
 
-  private def convert(node: JdtAbstractTypeDeclaration, isFirst: Boolean,
-    next: Option[JdtAbstractTypeDeclaration],
-    prev: Option[JdtAbstractTypeDeclaration]): AbstractTypeDeclaration = {
-
-    val ne = next.map(convert(_).asInstanceOf[AbstractTypeDeclaration])
-    val p = prev.map(convert(_).asInstanceOf[AbstractTypeDeclaration])
-    val visitData = new VisitData(isFirst, ne, p)
+  private def convert(node: JdtAbstractTypeDeclaration,
+    visitData: VisitData[AstNode[ASTNode]]): AbstractTypeDeclaration = {
 
     node match {
       case n: JdtTypeDeclaration => new TypeDeclaration(n, visitData)
@@ -120,13 +100,8 @@ object JPortConverter {
     }
   }
 
-  private def convert(node: JdtBodyDeclaration, isFirst: Boolean,
-    next: Option[JdtBodyDeclaration],
-    prev: Option[JdtBodyDeclaration]): BodyDeclaration = {
-
-    val ne = next.map(convert(_).asInstanceOf[BodyDeclaration])
-    val p = prev.map(convert(_).asInstanceOf[BodyDeclaration])
-    val visitData = new VisitData(isFirst, ne, p)
+  private def convert(node: JdtBodyDeclaration,
+    visitData: VisitData[AstNode[ASTNode]]): BodyDeclaration = {
 
     node match {
       case n: JdtMethodDeclaration => new MethodDeclaration(n, visitData)
@@ -138,29 +113,11 @@ object JPortConverter {
     }
   }
 
-  private def convert(node: JdtCatchClause, isFirst: Boolean,
-    next: Option[JdtCatchClause],
-    prev: Option[JdtCatchClause]): CatchClause = {
-
-    val ne = next.map(convert(_).asInstanceOf[Statement])
-    val p = prev.map(convert(_).asInstanceOf[Statement])
-    val visitData = new VisitData(isFirst, ne, p)
-
+  private def convert(node: JdtCatchClause,
+    visitData: VisitData[AstNode[ASTNode]]): CatchClause =
     new CatchClause(node, visitData)
-  }
 
-  private def convert(node: JdtStatement, isFirst: Boolean,
-    next: Option[JdtStatement],
-    prev: Option[JdtStatement]): Statement = {
-
-    val ne = next.map(convert(_).asInstanceOf[Statement])
-    val p = prev.map(convert(_).asInstanceOf[Statement])
-    val visitData = new VisitData(isFirst, ne, p)
-
-    convert(node, visitData)
-  }
-
-  def convert(node: JdtStatement, visitData: VisitData[Statement]): Statement = {
+  def convert(node: JdtStatement, visitData: VisitData[AstNode[ASTNode]]): Statement = {
     node match {
       case n: JdtVariableDeclarationStatement => new VariableDeclarationStatement(n, visitData)
       case n: JdtReturnStatement => new ReturnStatement(n, visitData)

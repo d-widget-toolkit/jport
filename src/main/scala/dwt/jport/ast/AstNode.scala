@@ -8,7 +8,7 @@ import org.eclipse.jdt.core.dom.{ TypeDeclaration => JdtTypeDeclaration }
 import dwt.jport.JPorter
 import dwt.jport.analyzers.JPortConverter
 
-abstract class AstNode[T <: ASTNode](val node: T) {
+abstract class AstNode[+T <: ASTNode](val node: T) {
   protected type JavaList[T] = java.util.List[T]
 
   val nodeType = node.getNodeType

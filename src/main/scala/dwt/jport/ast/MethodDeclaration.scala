@@ -1,10 +1,11 @@
 package dwt.jport.ast
 
-import java.util.ArrayList
-
 import scala.collection.JavaConversions._
 import scala.collection.JavaConverters._
 
+import java.util.ArrayList
+
+import org.eclipse.jdt.core.dom.ASTNode
 import org.eclipse.jdt.core.dom.{ BodyDeclaration => JdtBodyDeclaration }
 import org.eclipse.jdt.core.dom.{ MethodDeclaration => JdtMethodDeclaration }
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration
@@ -16,12 +17,12 @@ import dwt.jport.analyzers.Modifiers
 import dwt.jport.analyzers.VisitData
 import dwt.jport.translators.ImportTranslator
 
-class MethodDeclaration(node: JdtMethodDeclaration, private[jport] override val visitData: VisitData[BodyDeclaration])
+class MethodDeclaration(node: JdtMethodDeclaration, private[jport] override val visitData: VisitData[AstNode[ASTNode]])
   extends BodyDeclaration(node)
   with TypeParameters
   with Siblings {
 
-  type NodeType = BodyDeclaration
+  type NodeType = AstNode[ASTNode]
 
   import Type.fullyQualfiedName
 
