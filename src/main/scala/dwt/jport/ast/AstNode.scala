@@ -16,7 +16,7 @@ abstract class AstNode[+T <: ASTNode](val node: T) {
 
   def parent = Option(node.getParent).
     filterNot(_.getNodeType == ASTNode.COMPILATION_UNIT).
-    map(JPortConverter.convert[ASTNode, AstNode[ASTNode]](_))
+    map(JPortConverter.convert(_))
 
   def lineNumber = unit.getLineNumber(this)
   def isMultiline: Boolean

@@ -58,23 +58,23 @@ import dwt.jport.ast.statements.CatchClause
 import dwt.jport.ast.statements.Statement
 
 object JPortConverter {
-  def convert[T <: ASTNode, U <: AstNode[_]](nodes: Iterable[T]): Iterator[AstNode[ASTNode]] = {
+  def convert[T <: ASTNode](nodes: Iterable[T]): Iterator[AstNode[ASTNode]] = {
     window(nodes).zipWithIndex map {
       case ((prev, node, next), index) =>
         convert(node.get, index == 0, next, prev)
     }
   }
 
-  def convert[T <: ASTNode, U <: AstNode[T]](node: T, isFirst: Boolean = false,
+  def convert[T <: ASTNode](node: T, isFirst: Boolean = false,
     next: Option[T] = None,
     prev: Option[T] = None): AstNode[ASTNode] =
-    convert[T, U](node, convert(isFirst, next, prev))
+    convert(node, convert(isFirst, next, prev))
 
   private def convert[T <: ASTNode](isFirst: Boolean,
     next: Option[T], prev: Option[T]): VisitData =
     new VisitData(isFirst, next.map(convert(_)), prev.map(convert(_)))
 
-  def convert[T <: ASTNode, U <: AstNode[T]](node: T, visitData: VisitData): AstNode[ASTNode] = {
+  def convert[T <: ASTNode](node: T, visitData: VisitData): AstNode[ASTNode] = {
     node match {
       case n: JdtAbstractTypeDeclaration => convert(n, visitData)
       case n: JdtBodyDeclaration => convert(n, visitData)

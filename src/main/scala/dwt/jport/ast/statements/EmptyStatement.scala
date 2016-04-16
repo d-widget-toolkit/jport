@@ -14,6 +14,5 @@ class EmptyStatement(node: JdtEmptyStatement, private[jport] override val visitD
 
   type NodeType = AstNode[ASTNode]
 
-  override val parent = Option(node.getParent).
-    map(JPortConverter.convert[ASTNode, AstNode[ASTNode]](_))
+  override val parent = Option(node.getParent).map(JPortConverter.convert(_))
 }

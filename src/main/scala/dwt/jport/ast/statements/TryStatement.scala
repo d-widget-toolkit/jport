@@ -21,8 +21,8 @@ class TryStatement(node: JdtTryStatement, private[jport] override val visitData:
   private def typedCatchClauses =
     node.catchClauses.asInstanceOf[JavaList[JdtCatchClause]].to[Array]
 
-  val catchClauses =
-    JPortConverter.convert[JdtCatchClause, CatchClause](typedCatchClauses)
+  val catchClauses = JPortConverter.convert(typedCatchClauses).
+    map(_.asInstanceOf[CatchClause])
 
   def body = JPortConverter.convert(node.getBody, visitData)
 

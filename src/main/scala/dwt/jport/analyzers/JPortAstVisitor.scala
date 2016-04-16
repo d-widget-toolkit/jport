@@ -67,7 +67,7 @@ class JPortAstVisitor(private val importWriter: ImportWriter) {
     val nodes = node.bodyDeclarations
 
     TypeDeclarationWriter.write(importWriter, node)
-    val jportNodes = JPortConverter.convert[JdtBodyDeclaration, BodyDeclaration](nodes)
+    val jportNodes = JPortConverter.convert(nodes)
 
     for (node <- jportNodes) {
       node match {
@@ -82,8 +82,8 @@ class JPortAstVisitor(private val importWriter: ImportWriter) {
 
   def visit(node: MethodDeclaration): Unit = {
     MethodDeclarationWriter.write(importWriter, node)
-    JPortConverter.convert[JdtStatement, Statement](node.statements).
-      map(_.asInstanceOf[Statement]) foreach (visit)
+    JPortConverter.convert(node.statements).map(_.asInstanceOf[Statement])
+      .foreach(visit)
     MethodDeclarationWriter.postWrite
   }
 
@@ -110,8 +110,8 @@ class JPortAstVisitor(private val importWriter: ImportWriter) {
 
   def visit(node: Block): Unit = {
     BlockWriter.write(importWriter, node)
-    JPortConverter.convert[JdtStatement, Statement](node.statements).
-      map(_.asInstanceOf[Statement]) foreach (visit)
+    JPortConverter.convert(node.statements).map(_.asInstanceOf[Statement]).
+      foreach(visit)
     BlockWriter.postWrite
   }
 
@@ -198,8 +198,8 @@ class JPortAstVisitor(private val importWriter: ImportWriter) {
 
   def visit(node: SwitchStatement): Unit = {
     SwitchStatementWriter.write(importWriter, node)
-    JPortConverter.convert[JdtStatement, Statement](node.statements).
-      map(_.asInstanceOf[Statement]) foreach (visit)
+    JPortConverter.convert(node.statements).map(_.asInstanceOf[Statement])
+      .foreach(visit)
     SwitchStatementWriter.postWrite
   }
 
@@ -222,7 +222,7 @@ class JPortAstVisitor(private val importWriter: ImportWriter) {
   def visit(node: TryStatement): Unit = {
     TryStatementWriter.write(importWriter, node)
     visit(node.body)
-    node.catchClauses.map(_.asInstanceOf[CatchClause]).foreach(visit)
+    node.catchClauses.foreach(visit)
 
     TryStatementWriter.writeFinally
     node.`finally`.map(visit)

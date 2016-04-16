@@ -23,7 +23,7 @@ class CompilationUnit(val unit: JdtCompilationUnit) {
 
   def process(): String = {
     dcoder.reset()
-    val jportNodes = JPortConverter.convert[JdtAbstractTypeDeclaration, AbstractTypeDeclaration](nodes)
+    val jportNodes = JPortConverter.convert(nodes)
 
     for (node <- jportNodes) {
       node match {
