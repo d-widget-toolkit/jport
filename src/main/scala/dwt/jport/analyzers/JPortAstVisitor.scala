@@ -34,6 +34,7 @@ import dwt.jport.ast.statements.ThrowStatement
 import dwt.jport.ast.statements.TryStatement
 import dwt.jport.ast.statements.TypeDeclarationStatement
 import dwt.jport.ast.statements.VariableDeclarationStatement
+import dwt.jport.ast.statements.WhileStatement
 
 import dwt.jport.writers.FieldDeclarationWriter
 import dwt.jport.writers.ImportWriter
@@ -57,6 +58,7 @@ import dwt.jport.writers.statements.SynchronizedStatementWriter
 import dwt.jport.writers.statements.ThrowStatementWriter
 import dwt.jport.writers.statements.TryStatementWriter
 import dwt.jport.writers.statements.CatchClauseWriter
+import dwt.jport.writers.statements.WhileStatementWriter
 
 class VisitData(val isFirst: Boolean, val next: Option[AstNode[ASTNode]],
   val prev: Option[AstNode[ASTNode]])
@@ -144,6 +146,7 @@ class JPortAstVisitor(private val importWriter: ImportWriter) {
       case n: ThrowStatement => visit(n)
       case n: TryStatement => visit(n)
       case n: TypeDeclarationStatement => visit(n)
+      case n: WhileStatement => visit(n)
       case _ => JPorter.diagnostic.unhandled(s"unhandled node ${node.getClass.getName} in ${getClass.getName}")
     }
   }
@@ -246,5 +249,11 @@ class JPortAstVisitor(private val importWriter: ImportWriter) {
 
   def visit(node: TypeDeclarationStatement): Unit = {
     visit(node.declaration)
+  }
+
+  def visit(node: WhileStatement): Unit = {
+    WhileStatementWriter.write(importWriter, node)
+    visit(JPortConverter.convert(node.body, node.visitData))
+    WhileStatementWriter.postWrite
   }
 }

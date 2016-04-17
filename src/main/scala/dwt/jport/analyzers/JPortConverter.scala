@@ -28,6 +28,7 @@ import org.eclipse.jdt.core.dom.{ TryStatement => JdtTryStatement }
 import org.eclipse.jdt.core.dom.{ TypeDeclaration => JdtTypeDeclaration }
 import org.eclipse.jdt.core.dom.{ TypeDeclarationStatement => JdtTypeDeclarationStatement }
 import org.eclipse.jdt.core.dom.{ VariableDeclarationStatement => JdtVariableDeclarationStatement }
+import org.eclipse.jdt.core.dom.{ WhileStatement => JdtWhileStatement }
 
 import dwt.jport.JPorter
 import dwt.jport.ast.AbstractTypeDeclaration
@@ -58,6 +59,7 @@ import dwt.jport.ast.statements.SynchronizedStatement
 import dwt.jport.ast.statements.ThrowStatement
 import dwt.jport.ast.statements.TryStatement
 import dwt.jport.ast.statements.TypeDeclarationStatement
+import dwt.jport.ast.statements.WhileStatement
 
 object JPortConverter {
   def convert[T <: ASTNode](nodes: Iterable[T]): Iterator[AstNode[ASTNode]] = {
@@ -140,6 +142,7 @@ object JPortConverter {
       case n: JdtThrowStatement => new ThrowStatement(n, visitData)
       case n: JdtTryStatement => new TryStatement(n, visitData)
       case n: JdtTypeDeclarationStatement => new TypeDeclarationStatement(n, visitData)
+      case n: JdtWhileStatement => new WhileStatement(n, visitData)
       case _ => {
         JPorter.diagnostic.unhandled(s"unhandled node ${node.getClass.getName} in ${getClass.getName}")
         null
