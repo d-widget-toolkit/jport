@@ -28,6 +28,7 @@ import org.eclipse.jdt.core.dom.{ ThisExpression => JdtThisExpression }
 import org.eclipse.jdt.core.dom.{ TypeLiteral => JdtTypeLiteral }
 import org.eclipse.jdt.core.dom.{ VariableDeclarationExpression => JdtVariableDeclarationExpression }
 import org.eclipse.jdt.core.dom.{ PostfixExpression => JdtPostfixExpression }
+import org.eclipse.jdt.core.dom.{ PrefixExpression => JdtPrefixExpression }
 
 import dwt.jport.ast.AstNode
 import dwt.jport.JPorter
@@ -59,6 +60,7 @@ object Expression {
       case n: JdtSuperMethodInvocation => new SuperMethodInvocation(n)
       case n: JdtTypeLiteral => new TypeLiteral(n)
       case n: JdtVariableDeclarationExpression => new VariableDeclarationExpression(n)
+      case n: JdtPrefixExpression => new PrefixExpression(n)
       case n: JdtPostfixExpression => new PostfixExpression(n)
       case n: JdtQualifiedName => new QualifiedName(n)
       case _ =>

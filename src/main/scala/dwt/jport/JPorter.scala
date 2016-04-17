@@ -14,8 +14,8 @@ import dwt.jport.util.ThreadLocalVariable
 
 object JPorter {
   private val filename: String = null
-  private val classpathEntries = Array(".")
-  private val sourcepathEntries = Array(".")
+  private val classpathEntries = Array(".", "/Users/doob/Downloads/swt-4.5-cocoa-macosx-x86_64/src")
+  private val sourcepathEntries = Array(".", "/Users/doob/Downloads/swt-4.5-cocoa-macosx-x86_64/src")
   private val includeRunningVMBootclasspath = true
 
   private var jporter: ThreadLocalVariable[JPorter] = null
