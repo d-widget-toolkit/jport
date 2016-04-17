@@ -13,8 +13,6 @@ abstract class ControlFlowStatement(node: JdtStatement, private[jport] override 
   extends Statement(node)
   with Siblings {
 
-  type NodeType = AstNode[ASTNode]
-
   val label: Option[Expression]
 
   val keyword =

@@ -15,8 +15,6 @@ class SwitchCase(node: JdtSwitchCase, private[jport] override val visitData: Vis
   extends Statement(node)
   with Siblings {
 
-  type NodeType = AstNode[ASTNode]
-
   val expression = Option(node.getExpression).map(_.toJPort)
   val isDefault = node.isDefault
   val imports = expression.map(_.imports).getOrElse(Seq())

@@ -16,8 +16,6 @@ class SuperConstructorInvocation(node: JdtSuperConstructorInvocation, private[jp
   with Siblings
   with Invocation {
 
-  type NodeType = AstNode[ASTNode]
-
   protected def typedArguments =
     node.arguments.asInstanceOf[JavaList[Expression]]
 

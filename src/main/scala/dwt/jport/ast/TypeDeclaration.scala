@@ -18,8 +18,6 @@ class TypeDeclaration(node: JdtTypeDeclaration, private[jport] override val visi
   with TypeParameters
   with Siblings {
 
-  type NodeType = AstNode[ASTNode]
-
   import Type.fullyQualfiedName
 
   val bodyDeclarations = node.bodyDeclarations.asInstanceOf[JavaList[JdtBodyDeclaration]]

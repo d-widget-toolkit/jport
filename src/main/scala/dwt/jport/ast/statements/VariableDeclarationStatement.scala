@@ -16,8 +16,6 @@ class VariableDeclarationStatement(node: JdtVariableDeclarationStatement, privat
   extends Statement(node)
   with VariableDeclaration {
 
-  type NodeType = AstNode[ASTNode]
-
   override def isMultiline = false
   override def modifiers = new java.util.ArrayList[IExtendedModifier]
 

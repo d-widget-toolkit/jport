@@ -15,8 +15,6 @@ class SwitchStatement(node: JdtSwitchStatement, private[jport] override val visi
   extends Statement(node)
   with Siblings {
 
-  type NodeType = AstNode[ASTNode]
-
   val expression = node.getExpression.toJPort
   val statements = node.statements.asInstanceOf[JavaList[JdtStatement]]
   val imports = expression.imports

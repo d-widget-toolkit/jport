@@ -14,8 +14,6 @@ class DoStatement(node: JdtDoStatement, private[jport] override val visitData: V
   extends Statement(node)
   with Siblings {
 
-  type NodeType = AstNode[ASTNode]
-
   val body = node.getBody
   val expression = node.getExpression.toJPort
   val imports = expression.imports

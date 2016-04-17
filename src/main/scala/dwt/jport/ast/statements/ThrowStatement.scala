@@ -12,8 +12,6 @@ class ThrowStatement(node: JdtThrowStatement, private[jport] override val visitD
   extends Statement(node)
   with Siblings {
 
-  type NodeType = AstNode[ASTNode]
-
   val expression = node.getExpression.toJPort
   val imports = expression.imports
 }

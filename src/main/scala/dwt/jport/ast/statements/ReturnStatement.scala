@@ -12,8 +12,6 @@ class ReturnStatement(node: JdtReturnStatement, private[jport] override val visi
   extends Statement(node)
   with Siblings {
 
-  type NodeType = AstNode[ASTNode]
-
   val expression = Option(node.getExpression).map(_.toJPort)
   val imports = expression.map(_.imports).getOrElse(Seq())
 }

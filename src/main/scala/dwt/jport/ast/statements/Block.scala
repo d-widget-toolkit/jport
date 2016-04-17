@@ -15,8 +15,6 @@ class Block(node: JdtBlock, private[jport] override val visitData: VisitData)
   extends Statement(node)
   with Siblings {
 
-  type NodeType = AstNode[ASTNode]
-
   val statements =
     node.statements.asInstanceOf[JavaList[JdtStatement]].to[Array]
 

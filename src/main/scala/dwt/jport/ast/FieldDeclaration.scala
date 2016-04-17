@@ -14,8 +14,6 @@ class FieldDeclaration(node: JdtFieldDeclaration, private[jport] override val vi
   extends BodyDeclaration(node)
   with VariableDeclaration {
 
-  type NodeType = AstNode[ASTNode]
-
   override def isMultiline = false
   override def translatedModifiers = super[VariableDeclaration].translatedModifiers
 

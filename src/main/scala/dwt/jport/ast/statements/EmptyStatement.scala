@@ -12,7 +12,5 @@ class EmptyStatement(node: JdtEmptyStatement, private[jport] override val visitD
   extends Statement(node)
   with Siblings {
 
-  type NodeType = AstNode[ASTNode]
-
   override val parent = Option(node.getParent).map(JPortConverter.convert(_))
 }

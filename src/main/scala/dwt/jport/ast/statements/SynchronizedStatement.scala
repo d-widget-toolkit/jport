@@ -12,8 +12,6 @@ class SynchronizedStatement(node: JdtSynchronizedStatement, private[jport] overr
   extends Statement(node)
   with Siblings {
 
-  type NodeType = AstNode[ASTNode]
-
   val body = node.getBody
   val expression = node.getExpression.toJPort
   val imports = expression.imports

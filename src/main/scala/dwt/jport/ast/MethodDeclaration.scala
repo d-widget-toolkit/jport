@@ -22,8 +22,6 @@ class MethodDeclaration(node: JdtMethodDeclaration, private[jport] override val 
   with TypeParameters
   with Siblings {
 
-  type NodeType = AstNode[ASTNode]
-
   import Type.fullyQualfiedName
 
   val jdtNode = node

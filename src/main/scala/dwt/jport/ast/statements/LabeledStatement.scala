@@ -12,8 +12,6 @@ class LabeledStatement(node: JdtLabeledStatement, private[jport] override val vi
   extends Statement(node)
   with Siblings {
 
-  type NodeType = AstNode[ASTNode]
-
   val body = node.getBody
   val label = node.getLabel.toJPort
 }

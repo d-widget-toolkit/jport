@@ -14,8 +14,6 @@ class IfStatement(node: JdtIfStatement, private[jport] override val visitData: V
   extends Statement(node)
   with Siblings {
 
-  type NodeType = AstNode[ASTNode]
-
   val expression = node.getExpression.toJPort
   val thenStatement = node.getThenStatement
   val elseStatement = Option(node.getElseStatement)

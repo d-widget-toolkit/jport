@@ -12,8 +12,6 @@ class VariableDeclarationExpression(node: JdtVariableDeclarationExpression)
   extends Expression(node)
   with VariableDeclaration {
 
-  type NodeType = Expression
-
   private[jport] override def visitData = new VisitData(false, None, None)
 
   override def modifiers = new java.util.ArrayList[IExtendedModifier]

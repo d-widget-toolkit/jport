@@ -14,8 +14,6 @@ class CatchClause(node: JdtCatchClause, private[jport] override val visitData: V
   extends TypedStatement(node)
   with Siblings {
 
-  type NodeType = AstNode[ASTNode]
-
   def body = JPortConverter.convert(node.getBody, visitData)
   private val exception = node.getException
   val exceptionType = exception.getType.resolveBinding

@@ -16,8 +16,6 @@ class TryStatement(node: JdtTryStatement, private[jport] override val visitData:
   extends Statement(node)
   with Siblings {
 
-  type NodeType = AstNode[ASTNode]
-
   private def typedCatchClauses =
     node.catchClauses.asInstanceOf[JavaList[JdtCatchClause]].to[Array]
 
