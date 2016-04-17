@@ -26,6 +26,7 @@ import org.eclipse.jdt.core.dom.{ SynchronizedStatement => JdtSynchronizedStatem
 import org.eclipse.jdt.core.dom.{ ThrowStatement => JdtThrowStatement }
 import org.eclipse.jdt.core.dom.{ TryStatement => JdtTryStatement }
 import org.eclipse.jdt.core.dom.{ TypeDeclaration => JdtTypeDeclaration }
+import org.eclipse.jdt.core.dom.{ TypeDeclarationStatement => JdtTypeDeclarationStatement }
 import org.eclipse.jdt.core.dom.{ VariableDeclarationStatement => JdtVariableDeclarationStatement }
 
 import dwt.jport.JPorter
@@ -37,6 +38,7 @@ import dwt.jport.ast.MethodDeclaration
 import dwt.jport.ast.TypeDeclaration
 import dwt.jport.ast.statements.Block
 import dwt.jport.ast.statements.BreakStatement
+import dwt.jport.ast.statements.CatchClause
 import dwt.jport.ast.statements.ConstructorInvocation
 import dwt.jport.ast.statements.ContinueStatement
 import dwt.jport.ast.statements.DoStatement
@@ -47,6 +49,7 @@ import dwt.jport.ast.statements.IfStatement
 import dwt.jport.ast.statements.LabeledStatement
 import dwt.jport.ast.statements.ReturnStatement
 import dwt.jport.ast.statements.TypedStatement
+import dwt.jport.ast.statements.Statement
 import dwt.jport.ast.statements.SuperConstructorInvocation
 import dwt.jport.ast.statements.VariableDeclarationStatement
 import dwt.jport.ast.statements.SwitchStatement
@@ -54,8 +57,7 @@ import dwt.jport.ast.statements.SwitchCase
 import dwt.jport.ast.statements.SynchronizedStatement
 import dwt.jport.ast.statements.ThrowStatement
 import dwt.jport.ast.statements.TryStatement
-import dwt.jport.ast.statements.CatchClause
-import dwt.jport.ast.statements.Statement
+import dwt.jport.ast.statements.TypeDeclarationStatement
 
 object JPortConverter {
   def convert[T <: ASTNode](nodes: Iterable[T]): Iterator[AstNode[ASTNode]] = {
@@ -137,6 +139,7 @@ object JPortConverter {
       case n: JdtSynchronizedStatement => new SynchronizedStatement(n, visitData)
       case n: JdtThrowStatement => new ThrowStatement(n, visitData)
       case n: JdtTryStatement => new TryStatement(n, visitData)
+      case n: JdtTypeDeclarationStatement => new TypeDeclarationStatement(n, visitData)
       case _ => {
         JPorter.diagnostic.unhandled(s"unhandled node ${node.getClass.getName} in ${getClass.getName}")
         null

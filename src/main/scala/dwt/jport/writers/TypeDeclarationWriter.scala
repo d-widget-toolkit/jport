@@ -11,7 +11,9 @@ class TypeDeclarationWriter extends BodyDeclarationWriter[TypeDeclaration]
   override def write(importWriter: ImportWriter, node: TypeDeclaration): Unit = {
     super.write(importWriter, node)
 
-    writeModifiers
+    if (!node.isLocal)
+      writeModifiers
+
     writeDeclaration
     writeTypeParameters
     writeBases

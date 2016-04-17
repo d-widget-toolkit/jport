@@ -23,14 +23,7 @@ class CompilationUnit(val unit: JdtCompilationUnit) {
 
   def process(): String = {
     dcoder.reset()
-    val jportNodes = JPortConverter.convert(nodes)
-
-    for (node <- jportNodes) {
-      node match {
-        case n: TypeDeclaration => visitor.visit(n)
-        case _ => JPorter.diagnostic.unhandled(s"unhandled node ${node.getClass.getName} in ${getClass.getName}")
-      }
-    }
+    JPortConverter.convert(nodes).foreach(visitor.visit(_))
 
     importWriter.write()
     val r = dcoder.result

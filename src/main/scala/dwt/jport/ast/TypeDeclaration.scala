@@ -25,6 +25,9 @@ class TypeDeclaration(node: JdtTypeDeclaration, private[jport] override val visi
   val unescapedName = node.getName.getIdentifier
   val name = Symbol.translate(unescapedName)
 
+  lazy val isLocal =
+    parent.map(_.nodeType != ASTNode.COMPILATION_UNIT).getOrElse(false)
+
   private lazy val binding = node.resolveBinding
   private val base = Option(binding.getSuperclass)
   private val isJavaLangObject = base.map(_.getQualifiedName).exists(_ == "java.lang.Object")
