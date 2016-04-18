@@ -30,6 +30,20 @@ class Suite extends FunSuite with Matchers with BeforeAndAfterEach with Code {
     compose((java: String) => JPorter.port(java))
 
   /**
+   * Port the given Java code written to a file with the given filename.
+   *
+   * @param java the Java code to port
+   *
+   *  @param filename the full path, excluding file extension, where to write
+   *    the original Java code
+   */
+  def port(java: String, filename: String) = {
+    val path = basePath / filename
+    val p = Path.fromString(path.path + ".java").tap(_.write(java))
+    JPorter.portFromFile(p.path, sourcepathEntries = Array(basePath.path))
+  }
+
+  /**
    * Custom matcher for comparing the ported Java code to the exected D code.
    *
    * @param filename the full path, excluding file extension, where to write the

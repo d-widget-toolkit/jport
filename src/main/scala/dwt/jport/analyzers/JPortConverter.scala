@@ -15,6 +15,7 @@ import org.eclipse.jdt.core.dom.{ ExpressionStatement => JdtExpressionStatement 
 import org.eclipse.jdt.core.dom.{ FieldDeclaration => JdtFieldDeclaration }
 import org.eclipse.jdt.core.dom.{ ForStatement => JdtForStatement }
 import org.eclipse.jdt.core.dom.{ IfStatement => JdtIfStatement }
+import org.eclipse.jdt.core.dom.{ Initializer => JdtInitializer }
 import org.eclipse.jdt.core.dom.{ LabeledStatement => JdtLabeledStatement }
 import org.eclipse.jdt.core.dom.{ MethodDeclaration => JdtMethodDeclaration }
 import org.eclipse.jdt.core.dom.{ ReturnStatement => JdtReturnStatement }
@@ -37,6 +38,7 @@ import dwt.jport.ast.BodyDeclaration
 import dwt.jport.ast.FieldDeclaration
 import dwt.jport.ast.MethodDeclaration
 import dwt.jport.ast.TypeDeclaration
+import dwt.jport.ast.declarations.Initializer
 import dwt.jport.ast.statements.Block
 import dwt.jport.ast.statements.BreakStatement
 import dwt.jport.ast.statements.CatchClause
@@ -110,6 +112,7 @@ object JPortConverter {
     node match {
       case n: JdtMethodDeclaration => new MethodDeclaration(n, visitData)
       case n: JdtFieldDeclaration => new FieldDeclaration(n, visitData)
+      case n: JdtInitializer => new Initializer(n, visitData)
       case _ => {
         JPorter.diagnostic.unhandled(s"unhandled node ${node.getClass.getName} in ${getClass.getName}")
         null

@@ -17,9 +17,11 @@ object DCoder {
 class DCoder {
   import DCoder.nl
 
-  private var buffer = new StringBuilder
-  private var level = 0
-  private var indent_? = false
+  private var buffer: StringBuilder = _
+  private var level: Int = _
+  private var indent_? : Boolean = _
+
+  reset()
 
   def result = {
     stripNewlines()
@@ -109,7 +111,12 @@ class DCoder {
     this
   }
 
-  def reset() = this.tap(buffer = new StringBuilder)
+  def reset() = {
+    buffer = new StringBuilder
+    level = 0
+    indent_? = false
+    this
+  }
 
   private def doIndent() = if (indent_?) buffer.append(" " * 4 * level)
 }

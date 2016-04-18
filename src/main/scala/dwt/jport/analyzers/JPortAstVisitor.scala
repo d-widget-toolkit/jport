@@ -12,6 +12,9 @@ import dwt.jport.ast.BodyDeclaration
 import dwt.jport.ast.FieldDeclaration
 import dwt.jport.ast.MethodDeclaration
 import dwt.jport.ast.TypeDeclaration
+
+import dwt.jport.ast.declarations.Initializer
+
 import dwt.jport.ast.statements.Block
 import dwt.jport.ast.statements.BreakStatement
 import dwt.jport.ast.statements.CatchClause
@@ -38,8 +41,10 @@ import dwt.jport.ast.statements.WhileStatement
 
 import dwt.jport.writers.FieldDeclarationWriter
 import dwt.jport.writers.ImportWriter
+import dwt.jport.writers.InitializerWriter
 import dwt.jport.writers.MethodDeclarationWriter
 import dwt.jport.writers.TypeDeclarationWriter
+
 import dwt.jport.writers.statements.BlockWriter
 import dwt.jport.writers.statements.ConstructorInvocationWriter
 import dwt.jport.writers.statements.ControlFlowStatementWriter
@@ -83,6 +88,7 @@ class JPortAstVisitor(private val importWriter: ImportWriter) {
       node match {
         case n: MethodDeclaration => visit(n)
         case n: FieldDeclaration => visit(n)
+        case n: Initializer => visit(n)
         case _ => JPorter.diagnostic.unhandled(s"unhandled node ${node.getClass.getName} in ${getClass.getName}")
       }
     }
@@ -100,6 +106,12 @@ class JPortAstVisitor(private val importWriter: ImportWriter) {
   def visit(node: FieldDeclaration): Unit = {
     FieldDeclarationWriter.write(importWriter, node)
     FieldDeclarationWriter.postWrite
+  }
+
+  def visit(node: Initializer): Unit = {
+    InitializerWriter.write(importWriter, node)
+    visit(node.body)
+    InitializerWriter.postWrite
   }
 
   def visit(node: VariableDeclarationStatement): Unit = {
