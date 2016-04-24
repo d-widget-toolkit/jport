@@ -70,6 +70,7 @@ class IfStatementSuite extends Suite {
       if (true)
       {
         int a = 3;
+        int b = 4;
       }
       """
     }
@@ -79,6 +80,7 @@ class IfStatementSuite extends Suite {
       if (true)
       {
           int a = 3;
+          int b = 4;
       }
       """
     }
@@ -92,9 +94,10 @@ class IfStatementSuite extends Suite {
       if (true)
       {
         int a = 3;
+        int b = 4;
       }
 
-      int b = 0;
+      int c = 0;
       """
     }
 
@@ -103,9 +106,10 @@ class IfStatementSuite extends Suite {
       if (true)
       {
           int a = 3;
+          int b = 4;
       }
 
-      int b = 0;
+      int c = 0;
       """
     }
 
@@ -119,6 +123,7 @@ class IfStatementSuite extends Suite {
       else
       {
         int a = 3;
+        int b = 4;
       }
       """
     }
@@ -130,6 +135,7 @@ class IfStatementSuite extends Suite {
       else
       {
           int a = 3;
+          int b = 4;
       }
       """
     }
@@ -144,9 +150,10 @@ class IfStatementSuite extends Suite {
       else
       {
         int a = 3;
+        int b = 4;
       }
 
-      int b = 0;
+      int c = 0;
       """
     }
 
@@ -157,9 +164,10 @@ class IfStatementSuite extends Suite {
       else
       {
           int a = 3;
+          int b = 4;
       }
 
-      int b = 0;
+      int c = 0;
       """
     }
 
@@ -174,6 +182,7 @@ class IfStatementSuite extends Suite {
       if (true)
       {
         Bar a = new Bar();
+        int b = 4;
       }
       """
     }
@@ -183,6 +192,7 @@ class IfStatementSuite extends Suite {
       if (true)
       {
           Bar a = new Bar();
+          int b = 4;
       }
       """
     }
@@ -200,6 +210,7 @@ class IfStatementSuite extends Suite {
       else
       {
         Bar a = new Bar();
+        int b = 4;
       }
       """
     }
@@ -211,11 +222,63 @@ class IfStatementSuite extends Suite {
       else
       {
           Bar a = new Bar();
+          int b = 4;
       }
       """
     }
 
     val d = "import Bar;\n\n" + ifStatement
+    java should portFromFileTo("Foo", d)
+  }
+
+  test("with single statement body") {
+    val java = javaCode {
+      """
+      int a;
+
+      if (false)
+        a = 3;
+      else
+        a = 4;
+      """
+    }
+
+    val d = dCode {
+      """
+      int a;
+
+      if (false)
+          a = 3;
+
+      else
+          a = 4;
+      """
+    }
+
+    java should portFromFileTo("Foo", d)
+  }
+
+  test("with single statement body and next node") {
+    val java = javaCode {
+      """
+      int a;
+      if (false)
+        a = 3;
+      int b = 4;
+      """
+    }
+
+    val d = dCode {
+      """
+      int a;
+
+      if (false)
+          a = 3;
+
+      int b = 4;
+      """
+    }
+
     java should portFromFileTo("Foo", d)
   }
 }

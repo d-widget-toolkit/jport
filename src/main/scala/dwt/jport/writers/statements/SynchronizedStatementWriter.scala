@@ -12,8 +12,17 @@ class SynchronizedStatementWriter extends Writer[SynchronizedStatement] {
     super.write(importWriter, node)
     writeHeader
 
+    if (node.hasSingleStatementBody) {
+      buffer += nl
+      buffer.increaseIndentation
+    }
+
     importWriter += node.imports
   }
+
+  override def postWrite =
+    if (node.hasSingleStatementBody)
+      buffer.decreaseIndentation
 
   private def writeHeader = {
     buffer.append("synchronized (", node.expression.translate, ')');

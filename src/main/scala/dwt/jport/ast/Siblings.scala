@@ -5,7 +5,7 @@ import dwt.jport.analyzers.VisitData
 trait Siblings {
   private[jport] def visitData: VisitData
 
-  val hasNext = visitData.next.isDefined
+  lazy val hasNext = visitData.next.isDefined
   val hasPrev = visitData.prev.isDefined
 
   val next = visitData.next

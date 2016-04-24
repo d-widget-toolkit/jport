@@ -14,6 +14,8 @@ abstract class AstNode[+T <: ASTNode](val node: T) {
   val nodeType = node.getNodeType
   val startPosition = node.getStartPosition
 
+  lazy val hasSingleStatementBody = false
+
   def parent = Option(node.getParent).
     filterNot(_.getNodeType == ASTNode.COMPILATION_UNIT).
     map(JPortConverter.convert(_))

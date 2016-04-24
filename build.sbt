@@ -10,6 +10,8 @@ unmanagedSourceDirectories in Test := (scalaSource in Test).value :: Nil
 
 parallelExecution in Test := false
 
+testOptions in Test += Tests.Argument("-oDF")
+
 EclipseKeys.withSource := true
 
 libraryDependencies ++= Seq(

@@ -43,6 +43,7 @@ class SynchronizedStatementSuite extends Suite {
       """
       synchronized (new Object()) {
         int a = 3;
+        int b = 4;
       }
       """
     }
@@ -52,6 +53,7 @@ class SynchronizedStatementSuite extends Suite {
       synchronized (new Object())
       {
           int a = 3;
+          int b = 4;
       }
       """
     }
@@ -66,6 +68,7 @@ class SynchronizedStatementSuite extends Suite {
       """
       synchronized (new Object()) {
         Bar b = new Bar();
+        int a = 4;
       }
       """
     }
@@ -75,11 +78,31 @@ class SynchronizedStatementSuite extends Suite {
       synchronized (new Object())
       {
           Bar b = new Bar();
+          int a = 4;
       }
       """
     }
 
     val d = "import Bar;\n\n" + synchronizedStatement
+    java should portFromFileTo("Foo", d)
+  }
+
+  test("with single statement body") {
+    val java = javaCode {
+      """
+      synchronized (new Object()) {
+        int a = 3;
+      }
+      """
+    }
+
+    val d = dCode {
+      """
+      synchronized (new Object())
+          int a = 3;
+      """
+    }
+
     java should portFromFileTo("Foo", d)
   }
 }

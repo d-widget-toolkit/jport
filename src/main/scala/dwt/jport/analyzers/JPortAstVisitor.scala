@@ -126,14 +126,13 @@ class JPortAstVisitor(private val importWriter: ImportWriter) {
 
   def visit(node: ForStatement): Unit = {
     ForStatementWriter.write(importWriter, node)
-    visit(JPortConverter.convert(node.body, node.visitData))
+    visit(node.body)
     ForStatementWriter.postWrite
   }
 
   def visit(node: Block): Unit = {
     BlockWriter.write(importWriter, node)
-    JPortConverter.convert(node.statements).map(_.asInstanceOf[Statement]).
-      foreach(visit)
+    node.statements.foreach(visit)
     BlockWriter.postWrite
   }
 
@@ -196,23 +195,13 @@ class JPortAstVisitor(private val importWriter: ImportWriter) {
   }
 
   def visit(node: IfStatement): Unit = {
-    val elseStatement = node.elseStatement.map(
-      JPortConverter.convert(_, node.visitData))
-
     IfStatementWriter.write(importWriter, node)
-
-    val next = if (elseStatement.isDefined)
-      elseStatement.asInstanceOf[Option[AstNode[ASTNode]]]
-    else
-      node.next
-
-    val thenVisit = new VisitData(node.visitData.isFirst,
-      next, node.visitData.prev)
-    visit(JPortConverter.convert(node.thenStatement, thenVisit))
+    visit(node.thenStatement)
+    IfStatementWriter.postWrite
 
     IfStatementWriter.writeElse
-    elseStatement.map(visit)
-    IfStatementWriter.postWrite
+    node.elseStatement.map(visit)
+    IfStatementWriter.postWriteElse
   }
 
   def visit(node: ReturnStatement): Unit = {
@@ -234,7 +223,7 @@ class JPortAstVisitor(private val importWriter: ImportWriter) {
 
   def visit(node: SynchronizedStatement): Unit = {
     SynchronizedStatementWriter.write(importWriter, node)
-    visit(JPortConverter.convert(node.body, node.visitData))
+    visit(node.body)
     SynchronizedStatementWriter.postWrite
   }
 

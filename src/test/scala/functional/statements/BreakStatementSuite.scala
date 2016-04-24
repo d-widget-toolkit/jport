@@ -4,12 +4,20 @@ import functional.support.Suite
 
 class BreakStatementSuite extends Suite {
   test("basic break statement") {
-    val java = javaCode("for(;;) { break; }")
+    val java = javaCode {
+      """
+      for(;;) {
+        int a = 3;
+        break;
+      }
+      """
+    }
 
     val d = dCode {
       """
       for (;;)
       {
+          int a = 3;
           break;
       }
       """
@@ -22,8 +30,8 @@ class BreakStatementSuite extends Suite {
     val java = javaCode {
       """
       foo:
-        for(;;)
-        {
+        for(;;) {
+          int a = 3;
           break foo;
         }
       """
@@ -38,6 +46,7 @@ class BreakStatementSuite extends Suite {
           foo:
               for (;;)
               {
+                  int a = 3;
                   break foo;
               }
           }

@@ -14,10 +14,10 @@ trait NewlineWriter[T <: Siblings with AstNode[_]] extends Node[T] with Buffer {
 
     if (!hasNext) return
 
-    if (node.isMultiline || next.isMultiline)
+    if (node.isMultiline || next.isMultiline || parentHasSingleStatementBody)
       buffer += nl
 
-    else if (bothIsSingleline) {
+    else if (bothIsSingleline && !parentHasSingleStatementBody) {
       if (!nextIsAdjecent)
         buffer += nl
     }
@@ -37,4 +37,7 @@ trait NewlineWriter[T <: Siblings with AstNode[_]] extends Node[T] with Buffer {
 
   private def parentIsDoStatement =
     node.parent.map(_.nodeType == ASTNode.DO_STATEMENT).getOrElse(false)
+
+  private def parentHasSingleStatementBody =
+    node.parent.filter(_.hasSingleStatementBody).isDefined
 }

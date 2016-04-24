@@ -68,12 +68,13 @@ class ForStatementSuite extends Suite {
     java should portFromFileTo("Foo", d)
   }
 
-  test("with body") {
+  test("with multi statement body") {
     val java = javaCode {
       """
       for(int a = 0; a < 10; a++)
       {
         int b = 0;
+        int c = 0;
       }
       """
     }
@@ -83,6 +84,7 @@ class ForStatementSuite extends Suite {
       for (int a = 0; a < 10; a++)
       {
           int b = 0;
+          int c = 0;
       }
       """
     }
@@ -98,6 +100,7 @@ class ForStatementSuite extends Suite {
       for(int a = 0; a < 10; a++)
       {
         Bar b = new Bar();
+        int c = 0;
       }
       """
     }
@@ -107,6 +110,7 @@ class ForStatementSuite extends Suite {
       for (int a = 0; a < 10; a++)
       {
           Bar b = new Bar();
+          int c = 0;
       }
       """
     }
@@ -121,6 +125,7 @@ class ForStatementSuite extends Suite {
       for(int a = 0; a < 10; a++)
       {
         int b = 0;
+        int c = 0;
       }
 
       int c = 0;
@@ -132,9 +137,55 @@ class ForStatementSuite extends Suite {
       for (int a = 0; a < 10; a++)
       {
           int b = 0;
+          int c = 0;
       }
 
       int c = 0;
+      """
+    }
+
+    java should portFromFileTo("Foo", d)
+  }
+
+  test("with single statement body") {
+    val java = javaCode {
+      """
+      int a;
+      for (int i = 0; i < 10; i++)
+        a = 3;
+      """
+    }
+
+    val d = dCode {
+      """
+      int a;
+
+      for (int i = 0; i < 10; i++)
+          a = 3;
+      """
+    }
+
+    java should portFromFileTo("Foo", d)
+  }
+
+  test("with single statement body and next node") {
+    val java = javaCode {
+      """
+      int a;
+      for (int i = 0; i < 10; i++)
+        a = 3;
+      int b = 4;
+      """
+    }
+
+    val d = dCode {
+      """
+      int a;
+
+      for (int i = 0; i < 10; i++)
+          a = 3;
+
+      int b = 4;
       """
     }
 

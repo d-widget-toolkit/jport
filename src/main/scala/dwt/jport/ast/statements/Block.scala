@@ -15,15 +15,17 @@ class Block(node: JdtBlock, private[jport] override val visitData: VisitData)
   extends Statement(node)
   with Siblings {
 
-  val statements =
-    node.statements.asInstanceOf[JavaList[JdtStatement]].to[Array]
+  val statements = {
+    val s = node.statements.asInstanceOf[JavaList[JdtStatement]].to[Array]
+    JPortConverter.convert(s).map(_.asInstanceOf[Statement]).to[Array]
+  }
 
   val isEmpty = statements.isEmpty
 
-  override val hasNext = {
+  override lazy val hasNext = {
     if (parent.isDefined && parent.get.nodeType == ASTNode.IF_STATEMENT) {
       val ifSatement = parent.get.asInstanceOf[IfStatement]
-      (ifSatement.thenStatement == node &&
+      (ifSatement.thenStatement.node == node &&
         ifSatement.elseStatement.isDefined) ||
         visitData.next.isDefined
     }

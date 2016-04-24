@@ -12,7 +12,10 @@ class BlockWriter extends Writer[Block] with NewlineWriter[Block] {
   override def write(importWriter: ImportWriter, node: Block): Unit = {
     super.write(importWriter, node)
 
-    if (node.isEmpty)
+    if (node.hasSingleStatementBody)
+      buffer += nl
+
+    else if (node.isEmpty)
       buffer += " {"
 
     else
@@ -22,7 +25,11 @@ class BlockWriter extends Writer[Block] with NewlineWriter[Block] {
   }
 
   override def postWrite(): Unit = {
-    buffer.decreaseIndentation.append('}')
+    buffer.decreaseIndentation
+
+    if (!node.hasSingleStatementBody)
+      buffer.append('}')
+
     super[NewlineWriter].postWrite()
   }
 }

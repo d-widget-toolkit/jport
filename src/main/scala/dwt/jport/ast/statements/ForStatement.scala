@@ -10,11 +10,12 @@ import dwt.jport.analyzers.VisitData
 import dwt.jport.ast.AstNode
 import dwt.jport.ast.Siblings
 import dwt.jport.ast.expressions.ExpressionImplicits._
+import dwt.jport.analyzers.JPortConverter
 
 class ForStatement(node: JdtForStatement, override val visitData: VisitData)
   extends Statement(node) with Siblings {
 
-  val body = node.getBody
+  lazy val body = extractBody(node.getBody, visitData)
   val expression = Option(node.getExpression).map(_.toJPort)
 
   private val typedInitiailzers =
@@ -31,5 +32,10 @@ class ForStatement(node: JdtForStatement, override val visitData: VisitData)
     updaters.flatMap(_.imports) ++
     expression.map(_.imports).getOrElse(Seq())
 
-  val hasEmptyBody = body.getNodeType == ASTNode.EMPTY_STATEMENT
+  lazy val hasEmptyBody = body.nodeType == ASTNode.EMPTY_STATEMENT
+
+  override lazy val hasSingleStatementBody = {
+    val nodeType = body.nodeType
+    nodeType != ASTNode.BLOCK && nodeType != ASTNode.EMPTY_STATEMENT
+  }
 }

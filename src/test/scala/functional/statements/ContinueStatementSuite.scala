@@ -4,12 +4,21 @@ import functional.support.Suite
 
 class ContinueStatementSuite extends Suite {
   test("basic continue statement") {
-    val java = javaCode("for(;;) { continue; }")
+    val java = javaCode {
+      """
+      for(;;) {
+        int a = 3;
+        continue;
+      }
+      """
+    }
 
     val d = dCode {
       """
       for (;;)
       {
+          int a = 3;
+
           continue;
       }
       """
@@ -22,8 +31,8 @@ class ContinueStatementSuite extends Suite {
     val java = javaCode {
       """
       foo:
-        for(;;)
-        {
+        for(;;) {
+          int a = 3;
           continue foo;
         }
       """
@@ -38,6 +47,8 @@ class ContinueStatementSuite extends Suite {
           foo:
               for (;;)
               {
+                  int a = 3;
+
                   continue foo;
               }
           }

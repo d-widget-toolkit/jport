@@ -12,7 +12,12 @@ class SynchronizedStatement(node: JdtSynchronizedStatement, private[jport] overr
   extends Statement(node)
   with Siblings {
 
-  val body = node.getBody
+  lazy val body = extractBody(node.getBody, visitData)
   val expression = node.getExpression.toJPort
   val imports = expression.imports
+
+  override lazy val hasSingleStatementBody = {
+    val nodeType = body.nodeType
+    nodeType != ASTNode.BLOCK && nodeType != ASTNode.EMPTY_STATEMENT
+  }
 }
