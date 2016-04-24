@@ -29,9 +29,7 @@ class MethodDeclaration(node: JdtMethodDeclaration, private[jport] override val 
   private lazy val binding = node.resolveBinding
 
   val imports = {
-    val paramTypes = binding.getParameterTypes.
-      map(e => if (e.isArray) e.getElementType else e)
-
+    val paramTypes = binding.getParameterTypes
     val boundTypes = binding.getTypeParameters.flatMap(_.getTypeBounds)
     val returnType = binding.getReturnType
     val types = boundTypes ++ paramTypes :+ returnType

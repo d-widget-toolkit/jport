@@ -15,9 +15,6 @@ object Type {
   }
 
   def fullyQualfiedName(binding: ITypeBinding): String = {
-    if (binding.isArray)
-      return Type.fullyQualfiedName(binding.getComponentType())
-
     val pac = binding.getPackage
     assert(pac != null)
 

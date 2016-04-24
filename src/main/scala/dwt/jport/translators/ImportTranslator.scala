@@ -6,8 +6,15 @@ import dwt.jport.Type
 
 object ImportTranslator {
   def translate(types: Seq[ITypeBinding], declaringClass: ITypeBinding) =
-    types.filterNot(e => e.isPrimitive || e.isTypeVariable || e.isNullType()).
+    types.filterNot(e => isPrimitive(e) || e.isTypeVariable || e.isNullType).
       filterNot(_ == declaringClass).
       filterNot(Type.isBuiltIn(_, "Class")).
+      map(elementType).
       distinct.map(Type.fullyQualfiedName(_))
+
+  private def isPrimitive(t: ITypeBinding): Boolean =
+    if (t.isArray) isPrimitive(t.getElementType) else t.isPrimitive
+
+  private def elementType(t: ITypeBinding): ITypeBinding =
+    if (t.isArray) elementType(t.getElementType) else t
 }

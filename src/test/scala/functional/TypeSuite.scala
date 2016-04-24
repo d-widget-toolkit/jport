@@ -9,4 +9,30 @@ class TypeSuite extends Suite {
 
     java should portFromFileTo("Foo", d)
   }
+
+  test("returning array with primitive element type") {
+    val java = code {
+      """
+      public class Foo {
+        public char[] foo() {
+          return new char[1];
+        }
+      }
+      """
+    }
+
+    val d = code {
+      """
+      class Foo
+      {
+          char[] foo()
+          {
+              return new char[1];
+          }
+      }
+      """
+    }
+
+    java should portFromFileTo("Foo", d)
+  }
 }
