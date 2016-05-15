@@ -14,8 +14,8 @@ class TypeSuite extends Suite {
     val java = code {
       """
       public class Foo {
-        public char[] foo() {
-          return new char[1];
+        public int[] foo() {
+          return new int[1];
         }
       }
       """
@@ -25,13 +25,20 @@ class TypeSuite extends Suite {
       """
       class Foo
       {
-          char[] foo()
+          int[] foo()
           {
-              return new char[1];
+              return new int[1];
           }
       }
       """
     }
+
+    java should portFromFileTo("Foo", d)
+  }
+
+  test("'char' is translated to 'wchar'") {
+    val java = javaCode("char a;")
+    val d = dCode("wchar a;")
 
     java should portFromFileTo("Foo", d)
   }

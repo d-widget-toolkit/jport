@@ -32,7 +32,12 @@ object Type {
   private def translatePrimitive(binding: ITypeBinding) = {
     assert(binding.isPrimitive)
     val name = binding.getName
-    if (name == "boolean") "bool" else name
+
+    name match {
+      case "boolean" => "bool"
+      case "char" => "wchar"
+      case _ => name
+    }
   }
 }
 
