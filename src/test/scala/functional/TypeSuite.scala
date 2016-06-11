@@ -42,4 +42,11 @@ class TypeSuite extends Suite {
 
     java should portFromFileTo("Foo", d)
   }
+
+  test("'Class' in java.lang is translated to 'ClassInfo'") {
+    val java = javaCode("Class a;")
+    val d = dCode("ClassInfo a;")
+
+    java should portFromFileTo("Foo", d)
+  }
 }

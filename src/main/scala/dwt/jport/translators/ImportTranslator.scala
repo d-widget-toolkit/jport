@@ -8,7 +8,7 @@ object ImportTranslator {
   def translate(types: Seq[ITypeBinding], declaringClass: ITypeBinding) =
     types.filterNot(e => isPrimitive(e) || e.isTypeVariable || e.isNullType).
       filterNot(_ == declaringClass).
-      filterNot(Type.isBuiltIn(_, "Class")).
+      filterNot(Type.isJavaLangType(_, "Class")).
       map(elementType).
       distinct.map(Type.fullyQualfiedName(_))
 

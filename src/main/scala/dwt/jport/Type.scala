@@ -7,8 +7,8 @@ object Type {
     if (binding.isPrimitive())
       translatePrimitive(binding)
     else {
-      if (isBuiltIn(binding, "Class"))
-        "ClassInfo"
+      if (isJavaLangType(binding))
+        translateJavaLangType(binding)
       else
         Symbol.translate(binding.getName)
     }
@@ -26,8 +26,11 @@ object Type {
 
   def canonicalType(binding: ITypeBinding) = if (binding.isArray()) binding.getElementType
 
-  def isBuiltIn(binding: ITypeBinding, name: String) =
-    binding.getQualifiedName == "java.lang." + name
+  def isJavaLangType(binding: ITypeBinding): Boolean =
+    Option(binding.getPackage).filter(_.getName == "java.lang").isDefined
+
+  def isJavaLangType(binding: ITypeBinding, name: String): Boolean =
+    isJavaLangType(binding) && binding.getName == name
 
   private def translatePrimitive(binding: ITypeBinding) = {
     assert(binding.isPrimitive)
@@ -37,6 +40,16 @@ object Type {
       case "boolean" => "bool"
       case "char" => "wchar"
       case _ => name
+    }
+  }
+
+  private def translateJavaLangType(binding: ITypeBinding) = {
+    assert(isJavaLangType(binding))
+    val name = binding.getName
+
+    name match {
+      case "Class" => "ClassInfo"
+      case _ => Symbol.translate(name)
     }
   }
 }
