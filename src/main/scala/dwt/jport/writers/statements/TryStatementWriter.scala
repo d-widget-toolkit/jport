@@ -6,15 +6,12 @@ import dwt.jport.writers.WriterObject
 import dwt.jport.writers.ImportWriter
 import dwt.jport.writers.NewlineWriter
 
-object TryStatementWriter extends WriterObject[TryStatement, TryStatementWriter] {
-  def writeFinally = writer.writeFinally
-}
+object TryStatementWriter extends WriterObject[TryStatement, TryStatementWriter]
 
 class TryStatementWriter extends Writer[TryStatement] {
-  override def write(importWriter: ImportWriter, node: TryStatement): Unit = {
-    super.write(importWriter, node)
-
+  override def write() = {
     buffer += "try"
+    this
   }
 
   def writeFinally = if (node.`finally`.isDefined) buffer.append(nl, "finally")

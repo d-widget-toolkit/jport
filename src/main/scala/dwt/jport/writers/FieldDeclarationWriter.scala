@@ -6,13 +6,11 @@ import dwt.jport.writers.statements.VariableDeclarationWriter
 object FieldDeclarationWriter extends WriterObject[FieldDeclaration, FieldDeclarationWriter]
 
 class FieldDeclarationWriter extends BodyDeclarationWriter[FieldDeclaration] with VariableDeclarationWriter[FieldDeclaration] {
-  override def write(importWriter: ImportWriter, node: FieldDeclaration): Unit = {
-    this.node = node
-    this.importWriter = importWriter
-
+  override def write() = {
     writeModifiers
     writeType
     writeNamesAndInitializers
     buffer += ';'
+    this
   }
 }

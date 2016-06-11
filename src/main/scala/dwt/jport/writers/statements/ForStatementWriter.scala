@@ -8,8 +8,7 @@ import dwt.jport.writers.WriterObject
 object ForStatementWriter extends WriterObject[ForStatement, ForStatementWriter]
 
 class ForStatementWriter extends Writer[ForStatement] {
-  override def write(importWriter: ImportWriter, node: ForStatement): Unit = {
-    super.write(importWriter, node)
+  override def write() = {
     writeHeader
 
     if (node.hasSingleStatementBody) {
@@ -18,6 +17,7 @@ class ForStatementWriter extends Writer[ForStatement] {
     }
 
     importWriter += node.imports
+    this
   }
 
   override def postWrite =

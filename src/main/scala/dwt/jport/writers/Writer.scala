@@ -2,6 +2,8 @@ package dwt.jport.writers
 
 import org.eclipse.jdt.core.dom.ASTNode
 
+import dwt.jport.core.JPortAny._
+
 import dwt.jport.DCoder
 import dwt.jport.JPorter
 import dwt.jport.ast.AstNode
@@ -17,13 +19,9 @@ trait Node[T] {
 }
 
 trait Writer[T <: AstNode[_]] extends Node[T] with Buffer {
-  protected var importWriter: ImportWriter = null
+  var importWriter: ImportWriter = null
 
-  def write(importWriter: ImportWriter, node: T): Unit = {
-    this.node = node
-    this.importWriter = importWriter
-  }
-
+  def write(): Writer[_]
   def postWrite: Unit = {}
 
   protected def isAdjacentLine(node: AstNode[_]) =
@@ -38,9 +36,9 @@ trait Writer[T <: AstNode[_]] extends Node[T] with Buffer {
 
 abstract class WriterObject[Node <: AstNode[_], Subclass <: Writer[Node]](implicit manifest: Manifest[Subclass]) {
   private def newInstance = manifest.runtimeClass.newInstance.asInstanceOf[Subclass]
-  private val _writer = new ThreadLocalVariable(newInstance)
-  protected def writer = _writer.get
 
-  def write(importWriter: ImportWriter, node: Node) = writer.write(importWriter, node)
-  def postWrite: Unit = writer.postWrite
+  def apply(importWriter: ImportWriter, node: Node) = newInstance.tap { e =>
+    e.importWriter = importWriter
+    e.node = node
+  }
 }

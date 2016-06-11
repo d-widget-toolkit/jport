@@ -11,10 +11,9 @@ object EmptyStatementWriter extends WriterObject[EmptyStatement, EmptyStatementW
 class EmptyStatementWriter extends Writer[EmptyStatement]
   with NewlineWriter[EmptyStatement] {
 
-  override def write(importWriter: ImportWriter, node: EmptyStatement): Unit = {
-    super.write(importWriter, node)
-
+  override def write() = {
     buffer.append(" {}")
+    this
   }
 
   override def postWrite = super[NewlineWriter].postWrite()

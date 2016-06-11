@@ -11,11 +11,10 @@ object DoStatementWriter extends WriterObject[DoStatement, DoStatementWriter]
 class DoStatementWriter extends Writer[DoStatement]
   with NewlineWriter[DoStatement] {
 
-  override def write(importWriter: ImportWriter, node: DoStatement): Unit = {
-    super.write(importWriter, node)
-
+  override def write() = {
     buffer += "do"
     importWriter += node.imports
+    this
   }
 
   override def postWrite = {

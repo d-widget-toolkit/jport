@@ -14,11 +14,11 @@ class ConstructorInvocationWriter
   with InvocationTranslator
   with NewlineWriter[ConstructorInvocation] {
 
-  override def write(importWriter: ImportWriter, node: ConstructorInvocation): Unit = {
-    super.write(importWriter, node)
+  override def write() = {
     buffer += translate(node)
 
     importWriter += node.imports
+    this
   }
 
   override def postWrite: Unit = {

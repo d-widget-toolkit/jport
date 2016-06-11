@@ -13,9 +13,7 @@ class MethodDeclarationWriter extends BodyDeclarationWriter[MethodDeclaration]
   with TypeParametersWriter[MethodDeclaration]
   with NewlineWriter[MethodDeclaration] {
 
-  override def write(importWriter: ImportWriter, node: MethodDeclaration): Unit = {
-    super.write(importWriter, node)
-
+  override def write() = {
     writeModifiers
     writeReturnType
     writeName
@@ -25,6 +23,7 @@ class MethodDeclarationWriter extends BodyDeclarationWriter[MethodDeclaration]
 
     importWriter :+ node.imports
     buffer.increaseIndentation
+    this
   }
 
   override def postWrite(): Unit = {

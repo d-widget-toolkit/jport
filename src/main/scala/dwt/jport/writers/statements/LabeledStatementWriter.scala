@@ -8,11 +8,11 @@ import dwt.jport.writers.WriterObject
 object LabeledStatementWriter extends WriterObject[LabeledStatement, LabeledStatementWriter]
 
 class LabeledStatementWriter extends Writer[LabeledStatement] {
-  override def write(importWriter: ImportWriter, node: LabeledStatement): Unit = {
-    super.write(importWriter, node)
-
+  override def write() = {
     buffer.unindent {
       buffer.append(node.label.translate, ':', nl)
     }
+
+    this
   }
 }

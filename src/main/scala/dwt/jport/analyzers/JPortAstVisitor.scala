@@ -81,7 +81,7 @@ class JPortAstVisitor(private val importWriter: ImportWriter) {
   def visit(node: TypeDeclaration): Unit = {
     val nodes = node.bodyDeclarations
 
-    TypeDeclarationWriter.write(importWriter, node)
+    val writer = TypeDeclarationWriter(importWriter, node).write()
     val jportNodes = JPortConverter.convert(nodes)
 
     for (node <- jportNodes) {
@@ -93,47 +93,41 @@ class JPortAstVisitor(private val importWriter: ImportWriter) {
       }
     }
 
-    TypeDeclarationWriter.postWrite
+    writer.postWrite
   }
 
   def visit(node: MethodDeclaration): Unit = {
-    MethodDeclarationWriter.write(importWriter, node)
+    val writer = MethodDeclarationWriter(importWriter, node).write()
     JPortConverter.convert(node.statements).map(_.asInstanceOf[Statement])
       .foreach(visit)
-    MethodDeclarationWriter.postWrite
+    writer.postWrite
   }
 
-  def visit(node: FieldDeclaration): Unit = {
-    FieldDeclarationWriter.write(importWriter, node)
-    FieldDeclarationWriter.postWrite
-  }
+  def visit(node: FieldDeclaration): Unit =
+    FieldDeclarationWriter(importWriter, node).write().postWrite()
 
   def visit(node: Initializer): Unit = {
-    InitializerWriter.write(importWriter, node)
+    val writer = InitializerWriter(importWriter, node).write()
     visit(node.body)
-    InitializerWriter.postWrite
+    writer.postWrite
   }
 
-  def visit(node: VariableDeclarationStatement): Unit = {
-    VariableDeclarationStatementWriter.write(importWriter, node)
-    VariableDeclarationStatementWriter.postWrite
-  }
+  def visit(node: VariableDeclarationStatement): Unit =
+    VariableDeclarationStatementWriter(importWriter, node).write().postWrite()
 
-  def visit(node: ExpressionStatement): Unit = {
-    ExpressionStatementWriter.write(importWriter, node)
-    ExpressionStatementWriter.postWrite
-  }
+  def visit(node: ExpressionStatement): Unit =
+    ExpressionStatementWriter(importWriter, node).write().postWrite()
 
   def visit(node: ForStatement): Unit = {
-    ForStatementWriter.write(importWriter, node)
+    val writer = ForStatementWriter(importWriter, node).write()
     visit(node.body)
-    ForStatementWriter.postWrite
+    writer.postWrite
   }
 
   def visit(node: Block): Unit = {
-    BlockWriter.write(importWriter, node)
+    val writer = BlockWriter(importWriter, node).write()
     node.statements.foreach(visit)
-    BlockWriter.postWrite
+    writer.postWrite
   }
 
   def visit(node: Statement): Unit = {
@@ -162,90 +156,76 @@ class JPortAstVisitor(private val importWriter: ImportWriter) {
     }
   }
 
-  def visit(node: EmptyStatement): Unit = {
-    EmptyStatementWriter.write(importWriter, node)
-    EmptyStatementWriter.postWrite
-  }
+  def visit(node: EmptyStatement): Unit =
+    EmptyStatementWriter(importWriter, node).write().postWrite()
 
   def visit(node: LabeledStatement): Unit = {
-    LabeledStatementWriter.write(importWriter, node)
+    val writer = LabeledStatementWriter(importWriter, node).write()
     visit(JPortConverter.convert(node.body, node.visitData))
-    LabeledStatementWriter.postWrite
+    writer.postWrite
   }
 
-  def visit(node: ControlFlowStatement): Unit = {
-    ControlFlowStatementWriter.write(importWriter, node)
-    ControlFlowStatementWriter.postWrite
-  }
+  def visit(node: ControlFlowStatement): Unit =
+    ControlFlowStatementWriter(importWriter, node).write().postWrite()
 
-  def visit(node: ConstructorInvocation): Unit = {
-    ConstructorInvocationWriter.write(importWriter, node)
-    ConstructorInvocationWriter.postWrite
-  }
+  def visit(node: ConstructorInvocation): Unit =
+    ConstructorInvocationWriter(importWriter, node).write().postWrite()
 
-  def visit(node: SuperConstructorInvocation): Unit = {
-    SuperConstructorInvocationWriter.write(importWriter, node)
-    SuperConstructorInvocationWriter.postWrite
-  }
+  def visit(node: SuperConstructorInvocation): Unit =
+    SuperConstructorInvocationWriter(importWriter, node).write().postWrite()
 
   def visit(node: DoStatement): Unit = {
-    DoStatementWriter.write(importWriter, node)
+    val writer = DoStatementWriter(importWriter, node).write()
     visit(JPortConverter.convert(node.body, node.visitData))
-    DoStatementWriter.postWrite
+    writer.postWrite
   }
 
   def visit(node: IfStatement): Unit = {
-    IfStatementWriter.write(importWriter, node)
+    val writer = IfStatementWriter(importWriter, node).write()
     visit(node.thenStatement)
-    IfStatementWriter.postWrite
+    writer.postWrite
 
-    IfStatementWriter.writeElse
+    writer.writeElse
     node.elseStatement.map(visit)
-    IfStatementWriter.postWriteElse
+    writer.postWriteElse
   }
 
-  def visit(node: ReturnStatement): Unit = {
-    ReturnStatementWriter.write(importWriter, node)
-    ReturnStatementWriter.postWrite
-  }
+  def visit(node: ReturnStatement): Unit =
+    ReturnStatementWriter(importWriter, node).write().postWrite()
 
   def visit(node: SwitchStatement): Unit = {
-    SwitchStatementWriter.write(importWriter, node)
+    val writer = SwitchStatementWriter(importWriter, node).write()
     JPortConverter.convert(node.statements).map(_.asInstanceOf[Statement])
       .foreach(visit)
-    SwitchStatementWriter.postWrite
+    writer.postWrite
   }
 
-  def visit(node: SwitchCase): Unit = {
-    SwitchCaseWriter.write(importWriter, node)
-    SwitchCaseWriter.postWrite
-  }
+  def visit(node: SwitchCase): Unit =
+    SwitchCaseWriter(importWriter, node).write().postWrite()
 
   def visit(node: SynchronizedStatement): Unit = {
-    SynchronizedStatementWriter.write(importWriter, node)
+    val writer = SynchronizedStatementWriter(importWriter, node).write()
     visit(node.body)
-    SynchronizedStatementWriter.postWrite
+    writer.postWrite
   }
 
-  def visit(node: ThrowStatement): Unit = {
-    ThrowStatementWriter.write(importWriter, node)
-    ThrowStatementWriter.postWrite
-  }
+  def visit(node: ThrowStatement): Unit =
+    ThrowStatementWriter(importWriter, node).write().postWrite()
 
   def visit(node: TryStatement): Unit = {
-    TryStatementWriter.write(importWriter, node)
+    val writer = TryStatementWriter(importWriter, node).write()
     visit(node.body)
     node.catchClauses.foreach(visit)
 
-    TryStatementWriter.writeFinally
+    writer.writeFinally
     node.`finally`.map(visit)
-    TryStatementWriter.postWrite
+    writer.postWrite
   }
 
   def visit(node: CatchClause): Unit = {
-    CatchClauseWriter.write(importWriter, node)
+    val writer = CatchClauseWriter(importWriter, node).write()
     visit(node.body)
-    CatchClauseWriter.postWrite
+    writer.postWrite
   }
 
   def visit(node: TypeDeclarationStatement): Unit = {
@@ -253,8 +233,8 @@ class JPortAstVisitor(private val importWriter: ImportWriter) {
   }
 
   def visit(node: WhileStatement): Unit = {
-    WhileStatementWriter.write(importWriter, node)
+    val writer = WhileStatementWriter(importWriter, node).write()
     visit(JPortConverter.convert(node.body, node.visitData))
-    WhileStatementWriter.postWrite
+    writer.postWrite
   }
 }

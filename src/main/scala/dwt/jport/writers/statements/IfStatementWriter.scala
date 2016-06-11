@@ -7,15 +7,10 @@ import dwt.jport.writers.Writer
 import dwt.jport.writers.WriterObject
 import dwt.jport.writers.ImportWriter
 
-object IfStatementWriter extends WriterObject[IfStatement, IfStatementWriter] {
-  def writeElse = writer.writeElse
-  def postWriteElse = writer.postWriteElse
-}
+object IfStatementWriter extends WriterObject[IfStatement, IfStatementWriter]
 
 class IfStatementWriter extends Writer[IfStatement] {
-  override def write(importWriter: ImportWriter, node: IfStatement): Unit = {
-    super.write(importWriter, node)
-
+  override def write() = {
     buffer.append("if (", node.expression.translate, ")")
 
     if (node.hasSingleStatementBody) {
@@ -24,6 +19,7 @@ class IfStatementWriter extends Writer[IfStatement] {
     }
 
     importWriter += node.imports
+    this
   }
 
   override def postWrite =

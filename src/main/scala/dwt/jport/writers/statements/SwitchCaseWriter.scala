@@ -11,9 +11,7 @@ object SwitchCaseWriter extends WriterObject[SwitchCase, SwitchCaseWriter]
 class SwitchCaseWriter extends Writer[SwitchCase]
   with NewlineWriter[SwitchCase] {
 
-  override def write(importWriter: ImportWriter, node: SwitchCase): Unit = {
-    super.write(importWriter, node)
-
+  override def write() = {
     buffer.unindent {
       if (node.isDefault)
         buffer += "default:"
@@ -22,6 +20,7 @@ class SwitchCaseWriter extends Writer[SwitchCase]
     }
 
     importWriter += node.imports
+    this
   }
 
   override protected def hasNext = false

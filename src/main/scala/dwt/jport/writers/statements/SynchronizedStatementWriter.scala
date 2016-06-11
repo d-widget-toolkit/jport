@@ -8,8 +8,7 @@ import dwt.jport.writers.WriterObject
 object SynchronizedStatementWriter extends WriterObject[SynchronizedStatement, SynchronizedStatementWriter]
 
 class SynchronizedStatementWriter extends Writer[SynchronizedStatement] {
-  override def write(importWriter: ImportWriter, node: SynchronizedStatement): Unit = {
-    super.write(importWriter, node)
+  override def write() = {
     writeHeader
 
     if (node.hasSingleStatementBody) {
@@ -18,6 +17,7 @@ class SynchronizedStatementWriter extends Writer[SynchronizedStatement] {
     }
 
     importWriter += node.imports
+    this
   }
 
   override def postWrite =

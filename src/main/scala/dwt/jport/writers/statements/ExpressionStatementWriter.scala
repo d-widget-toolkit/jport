@@ -11,12 +11,11 @@ object ExpressionStatementWriter extends WriterObject[ExpressionStatement, Expre
 class ExpressionStatementWriter extends Writer[ExpressionStatement]
   with NewlineWriter[ExpressionStatement] {
 
-  override def write(importWriter: ImportWriter, node: ExpressionStatement): Unit = {
-    super.write(importWriter, node)
-
+  override def write() = {
     buffer.append(node.expression.translate, ';')
 
     importWriter += node.imports
+    this
   }
 
   override def postWrite(): Unit = super[NewlineWriter].postWrite()

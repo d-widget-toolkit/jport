@@ -11,11 +11,10 @@ object ThrowStatementWriter extends WriterObject[ThrowStatement, ThrowStatementW
 class ThrowStatementWriter extends Writer[ThrowStatement]
   with NewlineWriter[ThrowStatement] {
 
-  override def write(importWriter: ImportWriter, node: ThrowStatement): Unit = {
-    super.write(importWriter, node)
-
+  override def write() = {
     buffer.append("throw ", node.expression.translate)
     importWriter += node.imports
+    this
   }
 
   override def postWrite: Unit = {

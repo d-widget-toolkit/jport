@@ -9,9 +9,7 @@ import dwt.jport.writers.NewlineWriter
 object BlockWriter extends WriterObject[Block, BlockWriter]
 
 class BlockWriter extends Writer[Block] with NewlineWriter[Block] {
-  override def write(importWriter: ImportWriter, node: Block): Unit = {
-    super.write(importWriter, node)
-
+  override def write() = {
     if (node.hasSingleStatementBody)
       buffer += nl
 
@@ -22,6 +20,7 @@ class BlockWriter extends Writer[Block] with NewlineWriter[Block] {
       buffer.append(nl, '{', nl)
 
     buffer.increaseIndentation
+    this
   }
 
   override def postWrite(): Unit = {

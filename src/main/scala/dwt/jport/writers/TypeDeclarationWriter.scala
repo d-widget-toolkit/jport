@@ -8,9 +8,7 @@ class TypeDeclarationWriter extends BodyDeclarationWriter[TypeDeclaration]
   with TypeParametersWriter[TypeDeclaration]
   with NewlineWriter[TypeDeclaration] {
 
-  override def write(importWriter: ImportWriter, node: TypeDeclaration): Unit = {
-    super.write(importWriter, node)
-
+  override def write() = {
     if (!node.isLocal)
       writeModifiers
 
@@ -22,6 +20,7 @@ class TypeDeclarationWriter extends BodyDeclarationWriter[TypeDeclaration]
 
     importWriter :+ node.imports
     buffer.increaseIndentation
+    this
   }
 
   override def postWrite(): Unit = {

@@ -10,14 +10,13 @@ object ReturnStatementWriter extends WriterObject[ReturnStatement, ReturnStateme
 
 class ReturnStatementWriter extends Writer[ReturnStatement]
   with NewlineWriter[ReturnStatement] {
-  override def write(importWriter: ImportWriter, node: ReturnStatement): Unit = {
-    super.write(importWriter, node)
-
+  override def write() = {
     buffer += "return"
     buffer += node.expression.map(' ' + _.translate).getOrElse("")
     buffer += ';'
 
     importWriter += node.imports
+    this
   }
 
   override def postWrite: Unit = super[NewlineWriter].postWrite()

@@ -12,9 +12,7 @@ import dwt.jport.writers.NewlineWriter
 object CatchClauseWriter extends WriterObject[CatchClause, CatchClauseWriter]
 
 class CatchClauseWriter extends Writer[CatchClause] {
-  override def write(importWriter: ImportWriter, node: CatchClause): Unit = {
-    super.write(importWriter, node)
-
+  override def write() = {
     if (node.visitData.isFirst)
       buffer += nl
 
@@ -23,6 +21,7 @@ class CatchClauseWriter extends Writer[CatchClause] {
     buffer += ')'
 
     importWriter += node.imports
+    this
   }
 
   private def writeException = {

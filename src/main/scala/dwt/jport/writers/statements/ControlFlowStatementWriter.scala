@@ -11,12 +11,12 @@ object ControlFlowStatementWriter extends WriterObject[ControlFlowStatement, Con
 class ControlFlowStatementWriter extends Writer[ControlFlowStatement]
   with NewlineWriter[ControlFlowStatement] {
 
-  override def write(importWriter: ImportWriter, node: ControlFlowStatement): Unit = {
-    super.write(importWriter, node)
-
+  override def write() = {
     buffer += node.keyword
     buffer += node.label.map(' ' + _.translate).getOrElse("")
     buffer += ';'
+
+    this
   }
 
   override def postWrite = super[NewlineWriter].postWrite()

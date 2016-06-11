@@ -11,10 +11,11 @@ class VariableDeclarationStatementWriter
   extends Writer[VariableDeclarationStatement]
   with VariableDeclarationWriter[VariableDeclarationStatement] {
 
-  override def write(importWriter: ImportWriter, node: VariableDeclarationStatement): Unit = {
-    super.write(importWriter, node)
+  override def write() = {
+    super.write()
     buffer += ';'
 
     importWriter += node.imports
+    this
   }
 }

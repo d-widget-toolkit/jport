@@ -12,11 +12,10 @@ trait VariableDeclarationWriter[AstNodeType <: AstNode[_] with VariableDeclarati
   extends Writer[AstNodeType]
   with NewlineWriter[AstNodeType] {
 
-  override def write(importWriter: ImportWriter, node: AstNodeType): Unit = {
-    super.write(importWriter, node)
-
+  override def write() = {
     writeType
     writeNamesAndInitializers
+    this
   }
 
   override def postWrite(): Unit = super[NewlineWriter].postWrite()

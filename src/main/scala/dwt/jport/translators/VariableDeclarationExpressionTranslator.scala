@@ -6,7 +6,7 @@ import dwt.jport.DCoder
 
 object VariableDeclarationExpressionTranslator extends ExpressionTranslator {
   def translate(node: VariableDeclarationExpression): String = {
-    VariableDeclarationExpressionWriter.write(null, node)
+    VariableDeclarationExpressionWriter(null, node).write()
     ""
   }
 }

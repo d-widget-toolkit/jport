@@ -11,13 +11,12 @@ object SwitchStatementWriter extends WriterObject[SwitchStatement, SwitchStateme
 class SwitchStatementWriter extends Writer[SwitchStatement]
   with NewlineWriter[SwitchStatement] {
 
-  override def write(importWriter: ImportWriter, node: SwitchStatement): Unit = {
-    super.write(importWriter, node)
-
+  override def write() = {
     buffer.append("switch (", node.expression.translate, ')', nl, '{', nl)
     buffer.increaseIndentation(2)
 
     importWriter += node.imports
+    this
   }
 
   override def postWrite(): Unit = {

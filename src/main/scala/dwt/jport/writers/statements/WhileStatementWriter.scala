@@ -9,10 +9,9 @@ import dwt.jport.writers.NewlineWriter
 object WhileStatementWriter extends WriterObject[WhileStatement, WhileStatementWriter]
 
 class WhileStatementWriter extends Writer[WhileStatement] {
-  override def write(importWriter: ImportWriter, node: WhileStatement): Unit = {
-    super.write(importWriter, node)
-
+  override def write() = {
     buffer.append("while (", node.expression.translate, ")")
     importWriter += node.imports
+    this
   }
 }
