@@ -281,4 +281,31 @@ class IfStatementSuite extends Suite {
 
     java should portFromFileTo("Foo", d)
   }
+
+  test("nested") {
+    val java = javaCode {
+      """
+      if ((1 & 2) != 0) {
+        int a = 3;
+        if ((1 & 2) != 0) {
+          int b = 4;
+        }
+      }
+      """
+    }
+
+    val d = dCode {
+      """
+      if ((1 & 2) != 0)
+      {
+          int a = 3;
+
+          if ((1 & 2) != 0)
+              int b = 4;
+      }
+      """
+    }
+
+    java should portFromFileTo("Foo", d)
+  }
 }
