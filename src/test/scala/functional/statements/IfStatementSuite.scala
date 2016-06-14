@@ -308,4 +308,33 @@ class IfStatementSuite extends Suite {
 
     java should portFromFileTo("Foo", d)
   }
+
+  test("single line if with multiline else") {
+    val java = javaCode {
+      """
+      if (true) {
+        int a = 3;
+      }
+      else {
+        int b = 4;
+        int c = 5;
+      }
+      """
+    }
+
+    val d = dCode {
+      """
+      if (true)
+          int a = 3;
+
+      else
+      {
+          int b = 4;
+          int c = 5;
+      }
+      """
+    }
+
+    java should portFromFileTo("Foo", d)
+  }
 }

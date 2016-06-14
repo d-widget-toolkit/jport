@@ -36,4 +36,8 @@ class IfStatement(node: JdtIfStatement, private[jport] override val visitData: V
     val nodeType = thenStatement.nodeType
     nodeType != ASTNode.BLOCK && nodeType != ASTNode.EMPTY_STATEMENT
   }
+
+  lazy val hasSingleElseStatementBody =
+    elseStatement.map(_.nodeType).
+      filter(e => e != ASTNode.BLOCK && e != ASTNode.EMPTY_STATEMENT).isDefined
 }

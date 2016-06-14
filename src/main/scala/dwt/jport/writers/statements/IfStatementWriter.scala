@@ -28,15 +28,21 @@ class IfStatementWriter extends Writer[IfStatement] {
 
   def writeElse =
     if (node.elseStatement.isDefined) {
+      if (node.hasSingleStatementBody && !node.hasSingleElseStatementBody)
+        buffer += nl
+
       buffer.append("else")
 
-      if (node.hasSingleStatementBody) {
+      if (hasSingleStatementBodies) {
         buffer += nl
         buffer.increaseIndentation
       }
     }
 
   def postWriteElse =
-    if (node.elseStatement.isDefined && node.hasSingleStatementBody)
+    if (node.elseStatement.isDefined && hasSingleStatementBodies)
       buffer.decreaseIndentation
+
+  private lazy val hasSingleStatementBodies =
+    node.hasSingleStatementBody && node.hasSingleElseStatementBody
 }
