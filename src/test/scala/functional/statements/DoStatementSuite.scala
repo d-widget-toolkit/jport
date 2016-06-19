@@ -21,7 +21,7 @@ class DoStatementSuite extends Suite {
     codeToFile("Bar")("public class Bar {}")
 
     val java = javaCode("do; while(new Bar() != null );")
-    val d = "import Bar;\n\n" + dCode("do {} while(new Bar() != null);")
+    val d = "import Bar;\n\n" + dCode("do {} while(new Bar() !is null);")
 
     java should portFromFileTo("Foo", d)
   }

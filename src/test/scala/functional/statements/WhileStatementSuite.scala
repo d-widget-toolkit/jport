@@ -21,7 +21,7 @@ class WhileStatementSuite extends Suite {
     codeToFile("Bar")("public class Bar {}")
 
     val java = javaCode("while (new Bar() != null );")
-    val d = "import Bar;\n\n" + dCode("while (new Bar() != null) {}")
+    val d = "import Bar;\n\n" + dCode("while (new Bar() !is null) {}")
 
     java should portFromFileTo("Foo", d)
   }

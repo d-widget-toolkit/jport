@@ -19,7 +19,7 @@ class ConditionalExpressionSuite extends Suite {
 
     val imports = Array("import A", "import B", "import C").mkString(";\n")
     val d = imports + ";\n\n" +
-      dCode("Object foo = new A() == null ? new B() : new C();")
+      dCode("Object foo = new A() is null ? new B() : new C();")
 
     java should portFromFileTo("Foo", d)
   }

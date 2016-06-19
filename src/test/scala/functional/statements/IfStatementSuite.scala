@@ -21,7 +21,7 @@ class IfStatementSuite extends Suite {
     codeToFile("Bar")("public class Bar {}")
 
     val java = javaCode("if (new Bar() != null) {}")
-    val d = "import Bar;\n\n" + dCode("if (new Bar() != null) {}")
+    val d = "import Bar;\n\n" + dCode("if (new Bar() !is null) {}")
 
     java should portFromFileTo("Foo", d)
   }
