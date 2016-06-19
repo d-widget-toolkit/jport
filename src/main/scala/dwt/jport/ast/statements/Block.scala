@@ -21,6 +21,9 @@ class Block(node: JdtBlock, private[jport] override val visitData: VisitData)
   }
 
   val isEmpty = statements.isEmpty
+  val nonEmpty = !isEmpty
+
+  override def isMultiline = statements.length != 1
 
   override lazy val hasNext = {
     if (parent.isDefined && parent.get.nodeType == ASTNode.IF_STATEMENT) {

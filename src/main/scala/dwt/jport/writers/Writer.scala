@@ -35,7 +35,9 @@ trait Writer[T <: AstNode[_]] extends Node[T] with Buffer {
 }
 
 abstract class WriterObject[Node <: AstNode[_], Subclass <: Writer[Node]](implicit manifest: Manifest[Subclass]) {
-  private def newInstance = manifest.runtimeClass.newInstance.asInstanceOf[Subclass]
+  protected type NodeType = Node
+
+  protected def newInstance = manifest.runtimeClass.newInstance.asInstanceOf[Subclass]
 
   def apply(importWriter: ImportWriter, node: Node) = newInstance.tap { e =>
     e.importWriter = importWriter

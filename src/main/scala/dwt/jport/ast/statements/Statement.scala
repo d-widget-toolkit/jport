@@ -10,6 +10,8 @@ import dwt.jport.ast.AstNode
 abstract class TypedStatement[T <: ASTNode](node: T) extends AstNode(node) {
   def isMultiline = true
 
+  override def canonicalize = this
+
   protected def extractBody(statement: JdtStatement, visitData: VisitData) = {
     val body = JPortConverter.convert(statement, visitData)
 
@@ -21,5 +23,28 @@ abstract class TypedStatement[T <: ASTNode](node: T) extends AstNode(node) {
 
     else
       body
+  }
+
+  /**
+   * Canonicalizes the given node body by wrapping it in a block.
+   *
+   * @param node = the node to canonicalize
+   * @param block = the given block is called if node was canonicalized.
+   *  The block has to remove the parent of the given node, directly or
+   *  indirectly
+   */
+  protected def canonicalizeBody(node: JdtStatement, block: JdtStatement => Unit): Unit = {
+    if (node == null) return
+    val nodeType = node.getNodeType
+
+    if (nodeType != ASTNode.BLOCK) {
+      val newBody = node.getAST.newBlock
+      block(newBody)
+
+      if (nodeType != ASTNode.EMPTY_STATEMENT) {
+        val statements = newBody.statements.asInstanceOf[JavaList[JdtStatement]]
+        statements.add(node)
+      }
+    }
   }
 }

@@ -13,36 +13,13 @@ class IfStatementWriter extends Writer[IfStatement] {
   override def write() = {
     buffer.append("if (", node.expression.translate, ")")
 
-    if (node.hasSingleStatementBody) {
-      buffer += nl
-      buffer.increaseIndentation
-    }
-
     importWriter += node.imports
     this
   }
 
+  def writeElse = if (node.elseStatement.isDefined) buffer.append("else")
+
   override def postWrite =
-    if (node.hasSingleStatementBody)
-      buffer.decreaseIndentation
-
-  def writeElse =
-    if (node.elseStatement.isDefined) {
-      if (node.hasSingleStatementBody && !node.hasSingleElseStatementBody)
-        buffer += nl
-
-      buffer.append("else")
-
-      if (hasSingleStatementBodies) {
-        buffer += nl
-        buffer.increaseIndentation
-      }
-    }
-
-  def postWriteElse =
-    if (node.elseStatement.isDefined && hasSingleStatementBodies)
-      buffer.decreaseIndentation
-
-  private lazy val hasSingleStatementBodies =
-    node.hasSingleStatementBody && node.hasSingleElseStatementBody
+    if (node.hasSingleStatementBody && node.thenStatement.hasNext)
+      buffer += nl
 }

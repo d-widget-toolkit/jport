@@ -15,7 +15,8 @@ import dwt.jport.analyzers.JPortConverter
 class ForStatement(node: JdtForStatement, override val visitData: VisitData)
   extends Statement(node) with Siblings {
 
-  lazy val body = extractBody(node.getBody, visitData)
+  //  lazy val body = extractBody(node.getBody, visitData)
+  lazy val body = JPortConverter.convert(node.getBody, visitData).asInstanceOf[Block]
   val expression = Option(node.getExpression).map(_.toJPort)
 
   private val typedInitiailzers =
@@ -34,8 +35,10 @@ class ForStatement(node: JdtForStatement, override val visitData: VisitData)
 
   lazy val hasEmptyBody = body.nodeType == ASTNode.EMPTY_STATEMENT
 
-  override lazy val hasSingleStatementBody = {
-    val nodeType = body.nodeType
-    nodeType != ASTNode.BLOCK && nodeType != ASTNode.EMPTY_STATEMENT
+  override lazy val hasSingleStatementBody = body.statements.length == 1
+
+  override def canonicalize() = {
+    canonicalizeBody(node.getBody, node.setBody(_))
+    this
   }
 }

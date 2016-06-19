@@ -124,8 +124,8 @@ class JPortAstVisitor(private val importWriter: ImportWriter) {
     writer.postWrite
   }
 
-  def visit(node: Block): Unit = {
-    val writer = BlockWriter(importWriter, node).write()
+  def visit(node: Block, elseStatement: Boolean): Unit = {
+    val writer = BlockWriter(importWriter, node, elseStatement).write()
     node.statements.foreach(visit)
     writer.postWrite
   }
@@ -135,7 +135,7 @@ class JPortAstVisitor(private val importWriter: ImportWriter) {
       case n: VariableDeclarationStatement => visit(n)
       case n: ReturnStatement => visit(n)
       case n: ExpressionStatement => visit(n)
-      case n: Block => visit(n)
+      case n: Block => visit(n, false)
       case n: EmptyStatement => visit(n)
       case n: ForStatement => visit(n)
       case n: LabeledStatement => visit(n)
@@ -182,12 +182,11 @@ class JPortAstVisitor(private val importWriter: ImportWriter) {
 
   def visit(node: IfStatement): Unit = {
     val writer = IfStatementWriter(importWriter, node).write()
-    visit(node.thenStatement)
+    visit(node.thenStatement, false)
     writer.postWrite
 
     writer.writeElse
-    node.elseStatement.map(visit)
-    writer.postWriteElse
+    node.elseStatement.map(visit(_, true))
   }
 
   def visit(node: ReturnStatement): Unit =

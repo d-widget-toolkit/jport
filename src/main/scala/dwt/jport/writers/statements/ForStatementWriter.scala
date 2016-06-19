@@ -11,18 +11,13 @@ class ForStatementWriter extends Writer[ForStatement] {
   override def write() = {
     writeHeader
 
-    if (node.hasSingleStatementBody) {
-      buffer += nl
-      buffer.increaseIndentation
-    }
-
     importWriter += node.imports
     this
   }
 
   override def postWrite =
-    if (node.hasSingleStatementBody)
-      buffer.decreaseIndentation
+    if (node.hasSingleStatementBody && node.hasNext)
+      buffer += nl
 
   private def writeHeader = {
     buffer.append("for (");

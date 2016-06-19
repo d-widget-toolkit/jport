@@ -16,6 +16,11 @@ abstract class AstNode[+T <: ASTNode](val node: T) {
 
   lazy val hasSingleStatementBody = false
 
+  /**
+   * Canonicalizes the node by performing any necessary changes to the node.
+   */
+  def canonicalize() = this
+
   def parent = Option(node.getParent).
     filterNot(_.getNodeType == ASTNode.COMPILATION_UNIT).
     map(JPortConverter.convert(_))

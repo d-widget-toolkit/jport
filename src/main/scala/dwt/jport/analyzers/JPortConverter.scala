@@ -125,7 +125,7 @@ object JPortConverter {
     new CatchClause(node, visitData)
 
   def convert(node: JdtStatement, visitData: VisitData): Statement = {
-    node match {
+    val jportNode = node match {
       case n: JdtVariableDeclarationStatement => new VariableDeclarationStatement(n, visitData)
       case n: JdtReturnStatement => new ReturnStatement(n, visitData)
       case n: JdtExpressionStatement => new ExpressionStatement(n, visitData)
@@ -151,6 +151,8 @@ object JPortConverter {
         null
       }
     }
+
+    jportNode.canonicalize()
   }
 
   private def window[T](list: Iterable[T]) =

@@ -5,6 +5,7 @@ import scala.collection.JavaConversions._
 import org.eclipse.jdt.core.dom.ASTNode
 import org.eclipse.jdt.core.dom.{ IfStatement => JdtIfStatement }
 
+import dwt.jport.core.JPortAny._
 import dwt.jport.analyzers.JPortConverter
 import dwt.jport.analyzers.VisitData
 import dwt.jport.ast.AstNode
@@ -18,7 +19,8 @@ class IfStatement(node: JdtIfStatement, private[jport] override val visitData: V
   lazy val expression = node.getExpression.toJPort
 
   lazy val elseStatement =
-    Option(node.getElseStatement).map(JPortConverter.convert(_, visitData))
+    Option(node.getElseStatement).
+      map(JPortConverter.convert(_, visitData).asInstanceOf[Block])
 
   lazy val imports = expression.imports
 
@@ -29,15 +31,18 @@ class IfStatement(node: JdtIfStatement, private[jport] override val visitData: V
       visitData.next
 
     val thenVisit = new VisitData(visitData.isFirst, next, visitData.prev)
-    extractBody(node.getThenStatement, thenVisit)
+    JPortConverter.convert(node.getThenStatement, thenVisit).asInstanceOf[Block]
   }
 
-  override lazy val hasSingleStatementBody = {
-    val nodeType = thenStatement.nodeType
-    nodeType != ASTNode.BLOCK && nodeType != ASTNode.EMPTY_STATEMENT
-  }
+  override lazy val hasSingleStatementBody =
+    thenStatement.statements.length == 1
 
   lazy val hasSingleElseStatementBody =
-    elseStatement.map(_.nodeType).
-      filter(e => e != ASTNode.BLOCK && e != ASTNode.EMPTY_STATEMENT).isDefined
+    elseStatement.filter(_.statements.length == 1).isDefined
+
+  override def canonicalize() = {
+    canonicalizeBody(node.getThenStatement, node.setThenStatement(_))
+    canonicalizeBody(node.getElseStatement, node.setElseStatement(_))
+    this
+  }
 }
