@@ -22,4 +22,8 @@ class IfStatementWriter extends Writer[IfStatement] {
   override def postWrite =
     if (node.hasSingleStatementBody && node.thenStatement.hasNext)
       buffer += nl
+
+  def postWriteElse =
+    if (node.hasSingleElseStatementBody && node.elseStatement.get.hasNext)
+      buffer += nl
 }

@@ -187,6 +187,7 @@ class JPortAstVisitor(private val importWriter: ImportWriter) {
 
     writer.writeElse
     node.elseStatement.map(visit(_, true))
+    writer.postWriteElse
   }
 
   def visit(node: ReturnStatement): Unit =

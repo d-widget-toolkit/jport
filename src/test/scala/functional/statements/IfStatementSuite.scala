@@ -416,4 +416,35 @@ class IfStatementSuite extends Suite {
 
     java should portFromFileTo("Foo", d)
   }
+
+  test("single line if and single line else with adjacent single line statement") {
+    val java = javaCode {
+      """
+      int a = 1;
+      if (true) {
+        a = 2;
+      }
+      else {
+        a = 3;
+      }
+      a = 4;
+      """
+    }
+
+    val d = dCode {
+      """
+      int a = 1;
+
+      if (true)
+          a = 2;
+
+      else
+          a = 3;
+
+      a = 4;
+      """
+    }
+
+    java should portFromFileTo("Foo", d)
+  }
 }
