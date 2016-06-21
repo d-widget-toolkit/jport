@@ -45,8 +45,9 @@ trait VariableDeclaration extends Siblings {
 
   def translatedModifiers =
     Modifiers.convert(modifiers, variable = true,
-      primitiveType = rawType.isPrimitiveType())
+      primitiveType = rawType.isPrimitiveType || isJavaLangString)
 
   def constantValues = fragmentBindings.map(_.getConstantValue)
 
+  private def isJavaLangString = Type.isJavaLangType(typeBinding, "String")
 }

@@ -212,4 +212,25 @@ int d;
 
     java should portFromFileTo("Foo", d)
   }
+
+  test("'final' for String is translated to 'const'") {
+    val java = code {
+      """
+      public class Foo {
+        public final String a = "foo";
+      }
+      """
+    }
+
+    val d = code {
+      """
+      class Foo
+      {
+          const String a = "foo";
+      }
+      """
+    }
+
+    java should portFromFileTo("Foo", d)
+  }
 }
