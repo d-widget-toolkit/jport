@@ -24,11 +24,11 @@ object Modifiers {
     val rest = mods.filterNot(isAccessModifier)
     val keywords = Array(accessModifier) ++ rest.map(_.getKeyword.toString())
 
-    if (variable && primitiveType) {
+    if (variable) {
       val index = keywords.indexOf("final")
 
       if (index != -1)
-        keywords(index) = "const"
+        keywords(index) = if (primitiveType) "const" else "/*head_const*/"
     }
 
     keywords.filter(_.nonEmpty).mkString(" ")

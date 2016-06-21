@@ -119,6 +119,16 @@ class ModifiersSpec extends Spec {
             convert(modifiers) shouldBe "package const"
           }
         }
+
+        context("when declaration is a variable of non-primitive type") {
+          def convert(modifiers: Iterable[IExtendedModifier]) =
+            Modifiers.convert(modifiers = modifiers, variable = true, primitiveType = false)
+
+          it("converts 'final' to 'package /*head_const*/'") {
+            val modifiers = Array(newModifier(FINAL_KEYWORD))
+            convert(modifiers) shouldBe "package /*head_const*/"
+          }
+        }
       }
     }
   }
