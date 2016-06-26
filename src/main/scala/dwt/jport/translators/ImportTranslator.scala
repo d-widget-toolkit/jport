@@ -9,6 +9,7 @@ object ImportTranslator {
     types.filterNot(e => isPrimitive(e) || e.isTypeVariable || e.isNullType).
       filterNot(_ == declaringClass).
       filterNot(Type.isJavaLangType(_, "Class")).
+      filterNot(Type.isJavaLangType(_, "String")).
       map(elementType).
       distinct.map(Type.fullyQualfiedName(_))
 

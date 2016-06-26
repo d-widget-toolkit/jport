@@ -49,4 +49,11 @@ class TypeSuite extends Suite {
 
     java should portFromFileTo("Foo", d)
   }
+
+  test("'String' in java.lang is translated to 'wstring'") {
+    val java = javaCode("String a;")
+    val d = dCode("wstring a;")
+
+    java should portFromFileTo("Foo", d)
+  }
 }

@@ -49,6 +49,7 @@ object Type {
 
     name match {
       case "Class" => "ClassInfo"
+      case "String" => "wstring"
       case _ => Symbol.translate(name)
     }
   }

@@ -226,7 +226,7 @@ int d;
       """
       class Foo
       {
-          const String a = "foo";
+          const wstring a = "foo";
       }
       """
     }
