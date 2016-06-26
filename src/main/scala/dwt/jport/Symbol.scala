@@ -145,7 +145,8 @@ object Symbol {
       "__EOF__" |
 
       // not keywords but otherwise reserved
-      "string" => true
+      "string" |
+      "sizeof" => true
 
     case _ => str.nonEmpty && str(0) == '@'
   }

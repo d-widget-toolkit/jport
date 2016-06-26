@@ -26,6 +26,10 @@ class SymbolSpec extends Spec {
       it("""it translates "string" to "string_" """) {
         Symbol.translate("string") shouldBe "string_"
       }
+
+      it("""it translates "sizeof" to "sizeof_" """) {
+        Symbol.translate("sizeof") shouldBe "sizeof_"
+      }
     }
   }
 }
