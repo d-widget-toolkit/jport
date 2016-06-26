@@ -22,6 +22,10 @@ class SymbolSpec extends Spec {
           }
         }
       }
+
+      it("""it translates "string" to "string_" """) {
+        Symbol.translate("string") shouldBe "string_"
+      }
     }
   }
 }

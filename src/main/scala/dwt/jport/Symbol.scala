@@ -142,7 +142,10 @@ object Symbol {
       "__thread" |
       "__traits" |
 
-      "__EOF__" => true
+      "__EOF__" |
+
+      // not keywords but otherwise reserved
+      "string" => true
 
     case _ => str.nonEmpty && str(0) == '@'
   }
