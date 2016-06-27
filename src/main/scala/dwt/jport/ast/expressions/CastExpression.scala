@@ -7,7 +7,7 @@ import dwt.jport.Type
 
 class CastExpression(node: JdtCastExpression) extends Expression(node) {
   val expression = node.getExpression.toJPort
-  private val typeBinding = node.getType.resolveBinding
+  override val typeBinding = node.getType.resolveBinding
   val typ = Type.translate(typeBinding)
 
   override lazy val importTypeBindings =

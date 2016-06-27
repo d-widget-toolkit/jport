@@ -76,6 +76,8 @@ abstract class Expression(node: JdtExpression) extends AstNode(node) with Import
   def isMultiline = false
 
   protected override def declaringClass = super[AstNode].declaringClass
+
+  val typeBinding = node.resolveTypeBinding
 }
 
 trait Imports {

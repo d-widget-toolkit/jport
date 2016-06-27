@@ -7,7 +7,7 @@ import org.eclipse.jdt.core.dom.{ TypeLiteral => JdtTypeLiteral }
 import dwt.jport.translators.TypeLiteralTranslator
 
 class TypeLiteral(node: JdtTypeLiteral) extends Expression(node) {
-  val typeBinding = node.getType.resolveBinding
+  override val typeBinding = node.getType.resolveBinding
 
   override def translate = TypeLiteralTranslator.translate(this)
 
