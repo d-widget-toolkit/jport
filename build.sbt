@@ -12,7 +12,7 @@ parallelExecution in Test := false
 
 testOptions in Test += Tests.Argument("-oDF")
 
-EclipseKeys.withSource := true
+// EclipseKeys.withSource := true
 
 libraryDependencies ++= Seq(
   "org.eclipse.birt.runtime" % "org.eclipse.core.resources" % "3.9.0.v20140514-1307",
